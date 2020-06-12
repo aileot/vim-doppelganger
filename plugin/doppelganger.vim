@@ -42,8 +42,11 @@ let g:doppelganger#pairs = get(g:, 'doppelganger#pairs', [
       \ ['\[', ']'],
       \ ])
 
-command! -bar -range=% DoppelGanger
+command! -bar DoppelGangerClear :call doppelganger#clear()
+command! -bar -range=% DoppelGangerUpdate
       \ :call doppelganger#update(<line1>, <line2>)
+command! -bar -range=% DoppelGangerToggle
+      \ :call doppelganger#toggle(<line1>, <line2>)
 
 let s:default_top = {-> max([0, line('w0') - g:doppelganger#max_offset])}
 let s:default_bot = {-> min([line('$'), line('w$') + g:doppelganger#max_offset])}
