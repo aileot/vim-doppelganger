@@ -33,7 +33,7 @@ let s:namespace = nvim_create_namespace('doppelganger')
 let s:hl_group = 'Doppelganger'
 exe 'hi def link' s:hl_group 'NonText'
 
-let s:is_enabled = 0
+let s:is_visible = 0
 
 function! s:last_item(arr) abort
   return a:arr[len(a:arr) - 1]
@@ -41,7 +41,7 @@ endfunction
 
 function! doppelganger#clear() abort "{{{1
   call nvim_buf_clear_namespace(0, s:namespace, 1, -1)
-  let s:is_enabled = 0
+  let s:is_visible = 0
 endfunction
 
 function! doppelganger#update(upper, lower) abort "{{{1
@@ -50,15 +50,22 @@ function! doppelganger#update(upper, lower) abort "{{{1
 endfunction
 
 function! doppelganger#toggle(upper, lower) abort "{{{1
-  if s:is_enabled
+  if s:is_visible
     call doppelganger#clear()
     return
   endif
   call doppelganger#update(a:upper, a:lower)
-  let s:is_enabled = 1
+  let s:is_visible = 1
 endfunction
 
 function! s:update_doppelanger(upper, lower) abort "{{{1
+  " Guard if virtualtext is unavailable. {{{
+  if !exists('*nvim_buf_set_virtual_text')
+    echoerr 'DoppelGanger requires nvim_buf_set_virtual_text() available;'
+    echoerr 'you have to use Neovim 0.3.2+.'
+    return
+  endif
+  "}}}
   if mode() ==? 's' | return | endif
 
   let save_view = winsaveview()
