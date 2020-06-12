@@ -41,7 +41,7 @@ let g:doppelganger#pairs = get(g:, 'doppelganger#pairs', [
       \ ])
 
 command! -bar -range=% DoppelGanger
-      \ :call doppelganger#create(<line1>, <line2>)
+      \ :call doppelganger#update(<line1>, <line2>)
 
 let s:default_top = {-> max([0, line('w0') - g:doppelganger#max_offset])}
 let s:default_bot = {-> min([line('$'), line('w$') + g:doppelganger#max_offset])}
@@ -49,7 +49,7 @@ let s:default_bot = {-> min([line('$'), line('w$') + g:doppelganger#max_offset])
 augroup doppelganger
   " TODO: Update text on fold open, or map to `zo`, `zr` and so on?
   au! BufWinEnter,InsertLeave,TextChanged *
-        \ call doppelganger#create(s:default_top(), s:default_bot())
+        \ call doppelganger#update(s:default_top(), s:default_bot())
 augroup END
 
 " restore 'cpoptions' {{{1

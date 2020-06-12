@@ -37,7 +37,7 @@ function! s:last_item(arr) abort "{{{1
   return a:arr[len(a:arr) - 1]
 endfunction
 
-function! doppelganger#create(upper, lower) abort "{{{1
+function! doppelganger#update(upper, lower) abort "{{{1
   if mode() ==? 's' | return | endif
 
   let save_view = winsaveview()
