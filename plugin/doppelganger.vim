@@ -48,7 +48,6 @@ let s:default_bot = {-> min([line('$'), line('w$') + g:doppelganger#max_offset])
 
 augroup doppelganger
   " TODO: Update text on fold open, or map to `zo`, `zr` and so on?
-  " FIXME: Let this plugin work with vim-closetag
   au! BufWinEnter,InsertLeave,TextChanged *
         \ call doppelganger#create(s:default_top(), s:default_bot())
 augroup END
