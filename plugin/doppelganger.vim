@@ -24,6 +24,8 @@
 " }}}
 " ============================================================================
 
+if !exists('*nvim_buf_set_virtual_text') | finish | endif
+
 if exists('g:loaded_doppelganger') | finish | endif
 let g:loaded_doppelganger = 1
 
