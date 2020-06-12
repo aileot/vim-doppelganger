@@ -33,15 +33,35 @@ let s:namespace = nvim_create_namespace('doppelganger')
 let s:hl_group = 'Doppelganger'
 exe 'hi def link' s:hl_group 'NonText'
 
-function! s:last_item(arr) abort "{{{1
+let s:is_enabled = 0
+
+function! s:last_item(arr) abort
   return a:arr[len(a:arr) - 1]
 endfunction
 
+function! doppelganger#clear() abort "{{{1
+  call nvim_buf_clear_namespace(0, s:namespace, 1, -1)
+  let s:is_enabled = 0
+endfunction
+
 function! doppelganger#update(upper, lower) abort "{{{1
+  call doppelganger#clear()
+  call s:update_doppelanger(a:upper, a:lower)
+endfunction
+
+function! doppelganger#toggle(upper, lower) abort "{{{1
+  if s:is_enabled
+    call doppelganger#clear()
+    return
+  endif
+  call doppelganger#update(a:upper, a:lower)
+  let s:is_enabled = 1
+endfunction
+
+function! s:update_doppelanger(upper, lower) abort "{{{1
   if mode() ==? 's' | return | endif
 
   let save_view = winsaveview()
-  call nvim_buf_clear_namespace(0, s:namespace, 1, -1)
 
   " Search upward from a line under the bottom of window (by an offset).
   let s:cur_lnum = s:get_bottom_lnum(a:lower)
