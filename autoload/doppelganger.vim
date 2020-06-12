@@ -29,9 +29,9 @@ let s:save_cpo = &cpo
 set cpo&vim
 "}}}
 
-hi def link DoppelGanger NonText
-
 let s:namespace = nvim_create_namespace('doppelganger')
+let s:hl_group = 'Doppelganger'
+exe 'hi def link' s:hl_group 'NonText'
 
 function! s:last_item(arr) abort "{{{1
   return a:arr[len(a:arr) - 1]
@@ -184,7 +184,7 @@ endfunction
 function! s:set_text_on_lnum(lnum_open) abort "{{{1
   let text = getline(a:lnum_open)
   let text = s:modify_text(text, a:lnum_open)
-  let chunks = [[text, 'DoppelGanger']]
+  let chunks = [[text, s:hl_group]]
   let print_lnum = s:cur_lnum - 1
   call nvim_buf_set_virtual_text(
         \ 0,
