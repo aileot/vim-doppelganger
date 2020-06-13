@@ -34,14 +34,24 @@ let s:save_cpo = &cpo
 set cpo&vim
 "}}}
 
-let g:doppelganger#prefix = get(g:, 'doppelganger#prefix', '◂ ')
-let g:doppelganger#pairs = get(g:, 'doppelganger#pairs', [
+function! s:set_default(var, default) abort
+  let prefix = matchstr(a:var, '^\w:')
+  let suffix = substitute(a:var, prefix, '', '')
+  if empty(prefix) || prefix ==# 'l:'
+    throw 'l:var is unsupported'
+  endif
+
+  let {a:var} = get({prefix}, suffix, a:default)
+endfunction
+
+call s:set_default('g:doppelganger#prefix', '◂ ')
+call s:set_default('g:doppelganger#pairs', [
       \ ['{', '}'],
       \ ['(', ')'],
       \ ['\[', ']'],
       \ ])
 
-let g:doppelganger#ego#max_offset = get(g:, 'doppelganger#ego#max_offset', 100)
+call s:set_default('g:doppelganger#ego#max_offset', 100)
 
 command! -bar DoppelgangerClear :call doppelganger#clear()
 command! -bar -range=% DoppelgangerUpdate
