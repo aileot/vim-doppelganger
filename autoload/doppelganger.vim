@@ -59,14 +59,17 @@ function! doppelganger#toggle(upper, lower) abort "{{{1
 endfunction
 
 function! s:update_doppelanger(upper, lower) abort "{{{1
-  " Guard if virtualtext is unavailable. {{{
+  " Guards {{{
+  " Guard if virtualtext is unavailable.
   if !exists('*nvim_buf_set_virtual_text')
     echoerr 'DoppelGanger requires nvim_buf_set_virtual_text() available;'
     echoerr 'you have to use Neovim 0.3.2+.'
     return
   endif
+
+  " Guard for compatibility with snippets.
+  if mode() ==? 's' | return | endi
   "}}}
-  if mode() ==? 's' | return | endif
 
   let save_view = winsaveview()
 
