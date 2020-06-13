@@ -130,10 +130,8 @@ endfunction
 function! s:set_pairs() abort "{{{1
   if exists('b:doppelganger_pairs')
     return b:doppelganger_pairs
-  endif
-
-  if exists('b:match_words')
-    let b:doppelganger_pairs = s:parse_matchwords()
+  elseif exists('b:match_words')
+    let b:doppelganger_pairs = s:parse_matchwords() + g:doppelganger#pairs
   endif
 
   return g:doppelganger#pairs
