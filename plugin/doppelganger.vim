@@ -43,15 +43,15 @@ let g:doppelganger#pairs = get(g:, 'doppelganger#pairs', [
 
 let g:doppelganger#ego#max_offset = get(g:, 'doppelganger#ego#max_offset', 100)
 
-command! -bar DoppelGangerClear :call doppelganger#clear()
-command! -bar -range=% DoppelGangerUpdate
+command! -bar DoppelgangerClear :call doppelganger#clear()
+command! -bar -range=% DoppelgangerUpdate
       \ :call doppelganger#update(<line1>, <line2>)
-command! -bar -range=% DoppelGangerToggle
+command! -bar -range=% DoppelgangerToggle
       \ :call doppelganger#toggle(<line1>, <line2>)
 
-command! -bar DoppelGangerEgoDisable :call doppelganger#ego#disable()
-command! -bar DoppelGangerEgoEnable  :call doppelganger#ego#enable()
-command! -bar DoppelGangerEgoToggle  :call doppelganger#ego#toggle()
+command! -bar DoppelgangerEgoDisable :call doppelganger#ego#disable()
+command! -bar DoppelgangerEgoEnable  :call doppelganger#ego#enable()
+command! -bar DoppelgangerEgoToggle  :call doppelganger#ego#toggle()
 
 call doppelganger#ego#enable()
 
