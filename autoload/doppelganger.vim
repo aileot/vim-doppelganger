@@ -239,7 +239,19 @@ endfunction
 
 function! s:truncate_pat_open(text) abort "{{{1
   let pat_open = s:the_pair[0]
-  return substitute(a:text, pat_open .'\(.*'. pat_open .'\)\@!\S*', '', 'e')
+  " Truncate text at dispensable part:
+  " Remove pat_open in head/tail on text.
+  "   call s:foo( -> s:foo
+  "   function! s:bar(aaa, bbb) -> s:bar(aaa, bbb)
+  " Leave pat_open halfway on text.
+  "   call s:baz(ccc,ddd) -> call s:baz(ccc,ddd), leave it.
+  " The complex pat is especially for nested patterns like
+  "   {qux: {
+  "     eee : fff,
+  "   }}
+  " Truncate such texts into `{qux:`, not `qux: {`.
+  let pat = pat_open .'\(.*'. pat_open .'\)\@!\S*'
+  return substitute(a:text, pat .'\s*$\|^\s*'. pat, '', 'e')
 endfunction
 
 " restore 'cpoptions' {{{1
