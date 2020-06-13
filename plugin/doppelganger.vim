@@ -49,8 +49,9 @@ command! -bar -range=% DoppelGangerUpdate
 command! -bar -range=% DoppelGangerToggle
       \ :call doppelganger#toggle(<line1>, <line2>)
 
-let s:default_top = {-> max([0, line('w0') - g:doppelganger#max_offset])}
-let s:default_bot = {-> min([line('$'), line('w$') + g:doppelganger#max_offset])}
+command! -bar DoppelGangerEgoDisable :call doppelganger#ego#disable()
+command! -bar DoppelGangerEgoEnable  :call doppelganger#ego#enable()
+command! -bar DoppelGangerEgoToggle  :call doppelganger#ego#toggle()
 
 call doppelganger#ego#enable()
 
