@@ -1,6 +1,6 @@
 " ============================================================================
 " Repo: kaile256/vim-doppelganger
-" File: plugin/doppelganger.vim
+" File: autoload/doppelganger/ego.vim
 " Author: kaile256
 " License: MIT license {{{
 "     Permission is hereby granted, free of charge, to any person obtaining
@@ -24,35 +24,40 @@
 " }}}
 " ============================================================================
 
-if !exists('*nvim_buf_set_virtual_text') | finish | endif
-
-if exists('g:loaded_doppelganger') | finish | endif
-let g:loaded_doppelganger = 1
-
 " save 'cpoptions' {{{
 let s:save_cpo = &cpo
 set cpo&vim
 "}}}
 
-let g:doppelganger#prefix = get(g:, 'doppelganger#prefix', '◂ ')
-let g:doppelganger#pairs = get(g:, 'doppelganger#pairs', [
-      \ ['{', '}'],
-      \ ['(', ')'],
-      \ ['\[', ']'],
-      \ ])
+let s:has_ego = 0
+let s:default_top = {-> max([0, line('w0') - g:doppelganger#ego#max_offset])}
+let s:default_bot = {-> min([line('$'), line('w$') + g:doppelganger#ego#max_offset])}
 
-let g:doppelganger#ego#max_offset = get(g:, 'doppelganger#ego#max_offset', 100)
+function! doppelganger#ego#disable() abort "{{{1
+  let s:has_ego = 0
+  windo call doppelganger#clear()
+  augroup doppelganger
+    au!
+  augroup END
+endfunction
 
-command! -bar DoppelGangerClear :call doppelganger#clear()
-command! -bar -range=% DoppelGangerUpdate
-      \ :call doppelganger#update(<line1>, <line2>)
-command! -bar -range=% DoppelGangerToggle
-      \ :call doppelganger#toggle(<line1>, <line2>)
+function! doppelganger#ego#enable() abort "{{{1
+  let s:has_ego = 1
+  windo call doppelganger#update(s:default_top(), s:default_bot())
+  augroup doppelganger
+    " TODO: Update text on fold open, or map to `zo`, `zr` and so on?
+    au! BufWinEnter,InsertLeave,TextChanged *
+          \ call doppelganger#update(s:default_top(), s:default_bot())
+  augroup END
+endfunction
 
-let s:default_top = {-> max([0, line('w0') - g:doppelganger#max_offset])}
-let s:default_bot = {-> min([line('$'), line('w$') + g:doppelganger#max_offset])}
-
-call doppelganger#ego#enable()
+function! doppelganger#ego#toggle() abort "{{{1
+  if s:has_ego
+    call doppelganger#ego#disable()
+    return
+  endif
+  call doppelganger#ego#enable()
+endfunction
 
 " restore 'cpoptions' {{{1
 let &cpo = s:save_cpo
