@@ -94,6 +94,12 @@ function! doppelganger#fill(upper, lower) abort "{{{1
   let stop_lnum = s:get_top_lnum(a:upper)
   while s:cur_lnum >= stop_lnum
     let s:cur_lnum = s:update_curpos(stop_lnum)
+    if s:is_skip_hl_group()
+      " Note: It's too slow without this guard up to hl_group though this check
+      " is too rough for a line which contains both codes and the hl_group.
+      let s:cur_lnum -= 1
+      continue
+    endif
     let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
     if the_pair != []
       let lnum_open = s:get_lnum_open(the_pair)
