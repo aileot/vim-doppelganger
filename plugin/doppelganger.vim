@@ -60,6 +60,7 @@ call s:set_default('g:doppelganger#ego#update_events', [
       \ 'CursorMoved',
       \ 'BufWinEnter',
       \ ])
+call s:set_default('g:doppelganger#ego#update_on_CursorMoved', 1)
 
 call s:set_default('g:doppelganger#keymappings', 'oraORA')
 

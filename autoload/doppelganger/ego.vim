@@ -53,6 +53,10 @@ function! doppelganger#ego#enable() abort "{{{1
     exe 'au' events
           \ '* call doppelganger#update(s:top(), s:bot())'
   augroup END
+
+  if s:get_config('update_on_CursorMoved')
+    call s:update_on_CursorMoved()
+  endif
 endfunction
 
 function! doppelganger#ego#toggle() abort "{{{1
@@ -61,6 +65,19 @@ function! doppelganger#ego#toggle() abort "{{{1
     return
   endif
   call doppelganger#ego#enable()
+endfunction
+
+function! s:update_on_CursorMoved() abort "{{{1
+  let s:last_lnum = line('.')
+  augroup doppelganger
+    au CursorMoved * call s:update_for_CursorMoved()
+  augroup END
+endfunction
+
+function! s:update_for_CursorMoved() abort "{{{2
+  if line('.') == s:last_lnum | return | endif
+  call doppelganger#update(s:top(), s:bot())
+  let s:last_lnum = line('.')
 endfunction
 
 " restore 'cpoptions' {{{1
