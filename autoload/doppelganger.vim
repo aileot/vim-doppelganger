@@ -93,16 +93,18 @@ endfunction
 
 function! s:get_top_lnum(lnum) abort "{{{2
   " close side like '}'
-  let foldend = foldclosedend(a:lnum)
-  let lnum = foldend == -1 ? a:lnum : foldend
-  return lnum
+  let lnum = a:lnum < 0 ? 1 : a:lnum
+  let foldend = foldclosedend(lnum)
+  let ret = foldend == -1 ? lnum : foldend
+  return ret
 endfunction
 
 function! s:get_bottom_lnum(lnum) abort "{{{2
   " open side like '{'
-  let foldstart = foldclosed(a:lnum)
-  let lnum = foldstart == -1 ? a:lnum : foldstart
-  return lnum
+  let lnum = a:lnum > line('$') ? line('$') : a:lnum
+  let foldstart = foldclosed(lnum)
+  let ret = foldstart == -1 ? lnum : foldstart
+  return ret
 endfunction
 
 function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
