@@ -66,7 +66,7 @@ call s:set_default('g:doppelganger#ego#update_events', [
       \ ])
 call s:set_default('g:doppelganger#ego#update_on_CursorMoved', 1)
 
-call s:set_default('g:doppelganger#keymappings', 'oraORA')
+call s:set_default('g:doppelganger#mapping#fold_suffixes', 'oraORA')
 
 command! -bar DoppelgangerClear :call doppelganger#clear()
 command! -bar -range=% DoppelgangerUpdate
@@ -79,6 +79,10 @@ command! -bar DoppelgangerEgoEnable  :call doppelganger#ego#enable()
 command! -bar DoppelgangerEgoToggle  :call doppelganger#ego#toggle()
 
 call doppelganger#ego#enable()
+
+if g:doppelganger#mapping#fold_suffixes !=# ''
+  call doppelganger#mapping#apply()
+endif
 
 " restore 'cpoptions' {{{1
 let &cpo = s:save_cpo
