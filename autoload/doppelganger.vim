@@ -213,6 +213,7 @@ endfunction
 
 function! s:set_text_on_lnum(lnum_open) abort "{{{2
   let text = getline(a:lnum_open)
+  if text ==# '' | return | endif
   let text = s:modify_text(text, a:lnum_open)
   let chunks = [[text, s:hl_group]]
   let print_lnum = s:cur_lnum - 1
