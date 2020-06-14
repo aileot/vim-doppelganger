@@ -93,14 +93,14 @@ function! s:update_doppelanger(upper, lower) abort "{{{1
   call winrestview(save_view)
 endfunction
 
-function! s:get_bottom_lnum(lnum) abort "{{{2
+function! s:get_top_lnum(lnum) abort "{{{2
   " close side like '}'
   let foldend = foldclosedend(a:lnum)
   let lnum = foldend == -1 ? a:lnum : foldend
   return lnum
 endfunction
 
-function! s:get_top_lnum(lnum) abort "{{{2
+function! s:get_bottom_lnum(lnum) abort "{{{2
   " open side like '{'
   let foldstart = foldclosed(a:lnum)
   let lnum = foldstart == -1 ? a:lnum : foldstart
