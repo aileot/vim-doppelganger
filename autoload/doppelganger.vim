@@ -54,7 +54,7 @@ endfunction
 
 function! doppelganger#update(upper, lower) abort "{{{1
   call doppelganger#clear()
-  call s:update_doppelanger(a:upper, a:lower)
+  call doppelganger#fill(a:upper, a:lower)
 endfunction
 
 function! doppelganger#toggle(upper, lower) abort "{{{1
@@ -66,7 +66,7 @@ function! doppelganger#toggle(upper, lower) abort "{{{1
   let s:is_visible = 1
 endfunction
 
-function! s:update_doppelanger(upper, lower) abort "{{{1
+function! doppelganger#fill(upper, lower) abort "{{{1
   " Guards {{{
   " Guard if virtualtext is unavailable.
   if !exists('*nvim_buf_set_virtual_text')
