@@ -191,13 +191,13 @@ endfunction
 
 function! s:set_curpos(stop_lnum) abort "{{{2
   let lnum = s:cur_lnum
-  if !s:is_inside_fold(lnum)
+  if !s:is_folded(lnum)
     exe lnum
     return lnum
   endif
 
   let save_next = lnum
-  while s:is_inside_fold(lnum) || lnum > a:stop_lnum
+  while s:is_folded(lnum) || lnum > a:stop_lnum
     if lnum > 0
       let save_next = lnum
       let lnum -= 1
@@ -209,7 +209,7 @@ function! s:set_curpos(stop_lnum) abort "{{{2
   return save_next
 endfunction
 
-function! s:is_inside_fold(lnum) abort "{{{2
+function! s:is_folded(lnum) abort "{{{2
   return foldclosed(a:lnum) != -1
 endfunction
 
