@@ -35,6 +35,9 @@ exe 'hi def link' s:hl_group 'NonText'
 
 let s:is_visible = 0
 
+" Helper Functions {{{1
+let s:get_config = function('doppelganger#util#get_config', [''])
+
 function! s:last_item(arr) abort
   return a:arr[len(a:arr) - 1]
 endfunction
@@ -233,7 +236,7 @@ function! s:modify_text(text, lnum) abort "{{{2
     if text !~# '^\s*$' | break | endif
     let lnum -= 1
   endwhile
-  let text = g:doppelganger#prefix . text
+  let text = s:get_config('prefix') . text
   return text
 endfunction
 
