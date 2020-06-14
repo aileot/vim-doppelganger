@@ -83,7 +83,7 @@ function! s:update_doppelanger(upper, lower) abort "{{{1
     let s:cur_lnum = s:set_curpos(stop_lnum)
     let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
     if the_pair != []
-      let lnum_open = s:get_lnum_open(the_pair, stop_lnum)
+      let lnum_open = s:get_lnum_open(the_pair)
       if lnum_open > stop_lnum
         call s:set_text_on_lnum(lnum_open)
       endif
@@ -167,7 +167,7 @@ function! s:swap_atoms(_, pat) abort "{{{2
   return pat
 endfunction
 
-function! s:get_lnum_open(pair_dict, stop_lnum) abort "{{{2
+function! s:get_lnum_open(pair_dict) abort "{{{2
   let pat_open = a:pair_dict[0]
   let pat_close = s:last_item(a:pair_dict)
   let flags_mobile_upward_inc = 'cbW'
