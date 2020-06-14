@@ -57,8 +57,8 @@ call s:set_default('g:doppelganger#skip_hl_groups', [
 
 call s:set_default('g:doppelganger#ego#max_offset', 3)
 call s:set_default('g:doppelganger#ego#update_events', [
-      \ 'CursorMoved',
       \ 'BufWinEnter',
+      \ 'TextChanged',
       \ ])
 call s:set_default('g:doppelganger#ego#update_on_CursorMoved', 1)
 
