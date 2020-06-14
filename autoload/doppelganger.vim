@@ -93,7 +93,7 @@ function! doppelganger#fill(upper, lower) abort "{{{1
   let s:cur_lnum = s:get_bottom_lnum(a:lower)
   let stop_lnum = s:get_top_lnum(a:upper)
   while s:cur_lnum >= stop_lnum
-    let s:cur_lnum = s:set_curpos(stop_lnum)
+    let s:cur_lnum = s:update_curpos(stop_lnum)
     let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
     if the_pair != []
       let lnum_open = s:get_lnum_open(the_pair)
@@ -201,7 +201,7 @@ function! s:get_lnum_open(pair_dict) abort "{{{2
   return lnum_open
 endfunction
 
-function! s:set_curpos(stop_lnum) abort "{{{2
+function! s:update_curpos(stop_lnum) abort "{{{2
   let lnum = s:cur_lnum
   if !s:is_folded(lnum)
     exe lnum
