@@ -225,7 +225,7 @@ endfunction
 function! s:modify_text(text, lnum) abort "{{{1
   let lnum = a:lnum
   let text = a:text
-  while 1
+  while lnum > 0
     let text = getline(lnum)
     let text = s:truncate_pat_open(text)
     let text = substitute(text, '^\s*', '', 'e')
