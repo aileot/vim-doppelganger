@@ -95,7 +95,7 @@ function! s:get_bottom_lnum(lnum) abort "{{{2
   " close side like '}'
   let lnum = a:lnum < 0 ? 1 : a:lnum
   let foldend = foldclosedend(lnum)
-  let ret = foldend == -1 ? lnum : foldend
+  let ret = foldend == -1 ? lnum : foldend + a:lnum - foldclosed(a:lnum)
   return ret
 endfunction
 
