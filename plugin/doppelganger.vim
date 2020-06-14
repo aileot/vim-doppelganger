@@ -55,7 +55,13 @@ call s:set_default('g:doppelganger#skip_hl_groups', [
       \ 'String',
       \ ])
 
-call s:set_default('g:doppelganger#ego#max_offset', 100)
+call s:set_default('g:doppelganger#ego#max_offset', 3)
+call s:set_default('g:doppelganger#ego#update_events', [
+      \ 'CursorMoved',
+      \ 'BufWinEnter',
+      \ ])
+
+call s:set_default('g:doppelganger#keymappings', 'oraORA')
 
 command! -bar DoppelgangerClear :call doppelganger#clear()
 command! -bar -range=% DoppelgangerUpdate

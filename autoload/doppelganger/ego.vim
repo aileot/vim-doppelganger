@@ -30,6 +30,8 @@ set cpo&vim
 "}}}
 
 let s:has_ego = 0
+
+let s:get_config = function('doppelganger#util#get_config', ['ego'])
 let s:default_top = {-> max([0, line('w0') - g:doppelganger#ego#max_offset])}
 let s:default_bot = {-> min([line('$'), line('w$') + g:doppelganger#ego#max_offset])}
 
@@ -44,10 +46,12 @@ endfunction
 function! doppelganger#ego#enable() abort "{{{1
   let s:has_ego = 1
   windo call doppelganger#update(s:default_top(), s:default_bot())
+  let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
     " TODO: Update text on fold open, or map to `zo`, `zr` and so on?
-    au! BufWinEnter,InsertLeave,TextChanged *
-          \ call doppelganger#update(s:default_top(), s:default_bot())
+    au!
+    exe 'au' events
+          \ '* call doppelganger#update(s:top(), s:bot())'
   augroup END
 endfunction
 
