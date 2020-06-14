@@ -50,6 +50,10 @@ call s:set_default('g:doppelganger#pairs', [
       \ ['(', ')'],
       \ ['\[', ']'],
       \ ])
+call s:set_default('g:doppelganger#skip_hl_groups', [
+      \ 'Comment',
+      \ 'String',
+      \ ])
 
 call s:set_default('g:doppelganger#ego#max_offset', 100)
 
