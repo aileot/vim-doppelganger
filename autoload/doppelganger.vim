@@ -113,9 +113,19 @@ endfunction
 function! s:get_bottom_lnum(lnum) abort "{{{2
   " close side like '}'
   let lnum = a:lnum < 0 ? 1 : a:lnum
-  let foldend = foldclosedend(lnum)
-  let ret = foldend == -1 ? lnum : foldend + a:lnum - foldclosed(a:lnum)
-  return ret
+  if !s:is_folded(lnum)
+    return lnum
+  endif
+
+  let diff = lnum - foldclosed(lnum)
+  while diff > 0
+    " FIXME: Consider range over mixed lines folded and raw.
+    let ret = lnum + diff
+    if !s:is_folded(ret)
+      return ret
+    endif
+    let diff = ret - foldclosed(ret)
+  endwhile
 endfunction
 
 function! s:get_top_lnum(lnum) abort "{{{2
