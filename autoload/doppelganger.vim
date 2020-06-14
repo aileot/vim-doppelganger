@@ -43,8 +43,16 @@ function! s:last_item(arr) abort
 endfunction
 
 function! s:is_skip_hl_group() abort "{{{1
+  let hl_groups = get(b:, 'doppelganger_skip_hl_groups')
+  if !hl_groups
+    if has_key(g:doppelganger#skip_hl_groups, &ft)
+      let hl_groups = g:doppelganger#skip_hl_groups[&ft]
+    else
+      let hl_groups = g:doppelganger#skip_hl_groups['_']
+    endif
+  endif
   return synIDattr(synID(line('.'), col('.'), 0), 'name')
-        \ =~? join(s:get_config('skip_hl_groups'), '\|')
+        \ =~? join(hl_groups, '\|')
 endfunction
 
 function! doppelganger#clear() abort "{{{1
