@@ -84,9 +84,7 @@ function! s:update_doppelanger(upper, lower) abort "{{{1
     let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
     if the_pair != []
       let lnum_open = s:get_lnum_open(the_pair)
-      if lnum_open > stop_lnum
-        call s:set_text_on_lnum(lnum_open)
-      endif
+      call s:set_text_on_lnum(lnum_open)
     endif
     let s:cur_lnum -= 1
   endwhile
