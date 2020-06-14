@@ -59,6 +59,7 @@ call s:set_default('g:doppelganger#skip_hl_groups', {
       \   'jsonKeyword',
       \ ]})
 
+call s:set_default('g:doppelganger#ego#disable_autostart', 0)
 call s:set_default('g:doppelganger#ego#max_offset', 3)
 call s:set_default('g:doppelganger#ego#update_events', [
       \ 'BufWinEnter',
@@ -78,7 +79,9 @@ command! -bar DoppelgangerEgoDisable :call doppelganger#ego#disable()
 command! -bar DoppelgangerEgoEnable  :call doppelganger#ego#enable()
 command! -bar DoppelgangerEgoToggle  :call doppelganger#ego#toggle()
 
-call doppelganger#ego#enable()
+if g:doppelganger#ego#disable_autostart
+  call doppelganger#ego#enable()
+endif
 
 if g:doppelganger#mapping#fold_suffixes !=# ''
   call doppelganger#mapping#apply()
