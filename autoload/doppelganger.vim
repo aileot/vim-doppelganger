@@ -42,6 +42,11 @@ function! s:last_item(arr) abort
   return a:arr[len(a:arr) - 1]
 endfunction
 
+function! s:is_skip_hl_group() abort "{{{1
+  return synIDattr(synID(line('.'), col('.'), 0), 'name')
+        \ =~? join(s:get_config('skip_hl_groups'), '\|')
+endfunction
+
 function! doppelganger#clear() abort "{{{1
   call nvim_buf_clear_namespace(0, s:namespace, 1, -1)
   let s:is_visible = 0
@@ -172,8 +177,7 @@ function! s:get_lnum_open(pair_dict) abort "{{{2
   let pat_close = s:last_item(a:pair_dict)
   let flags_mobile_upward_inc = 'cbW'
   let flags_unmove_upward_exc = 'nbWz'
-  let Skip_comments = 'synIDattr(synID(line("."), col("."), 0), "name") =~? '.
-        \ string(join(s:get_config('skip_hl_groups'), '\|'))
+  let Skip_comments = 's:is_skip_hl_group()'
 
   norm! $
   let lnum_close = search(pat_close, flags_mobile_upward_inc)
