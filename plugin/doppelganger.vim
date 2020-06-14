@@ -79,7 +79,7 @@ command! -bar DoppelgangerEgoDisable :call doppelganger#ego#disable()
 command! -bar DoppelgangerEgoEnable  :call doppelganger#ego#enable()
 command! -bar DoppelgangerEgoToggle  :call doppelganger#ego#toggle()
 
-if g:doppelganger#ego#disable_autostart
+if !g:doppelganger#ego#disable_autostart
   call doppelganger#ego#enable()
 endif
 
