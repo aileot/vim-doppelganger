@@ -47,7 +47,6 @@ function! doppelganger#ego#enable() abort "{{{1
   windo call doppelganger#update(s:top(), s:bot())
   let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
-    " TODO: Update text on fold open, or map to `zo`, `zr` and so on?
     au!
     exe 'au' events
           \ '* call doppelganger#update(s:top(), s:bot())'
