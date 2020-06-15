@@ -36,15 +36,14 @@ let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
 let s:bot = {-> min([line('w$'), line('.') + g:doppelganger#ego#max_offset])}
 
 function! doppelganger#ego#disable() abort "{{{1
-  let s:has_ego = 0
   windo call doppelganger#clear()
   augroup doppelganger
     au!
   augroup END
+  let s:has_ego = 0
 endfunction
 
 function! doppelganger#ego#enable() abort "{{{1
-  let s:has_ego = 1
   windo call doppelganger#update(s:top(), s:bot())
   let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
@@ -57,6 +56,7 @@ function! doppelganger#ego#enable() abort "{{{1
   if s:get_config('update_on_CursorMoved')
     call s:update_on_CursorMoved()
   endif
+  let s:has_ego = 1
 endfunction
 
 function! doppelganger#ego#toggle() abort "{{{1
