@@ -60,6 +60,12 @@ call s:set_default('g:doppelganger#skip_hl_groups', {
       \ ]})
 
 call s:set_default('g:doppelganger#ego#disable_autostart', 0)
+call s:set_default('g:doppelganger#ego#disable_on_filetypes', [
+      \ 'markdown',
+      \ 'help',
+      \ 'text'
+      \ ])
+
 call s:set_default('g:doppelganger#ego#max_offset', 3)
 call s:set_default('g:doppelganger#ego#update_events', [
       \ 'BufWinEnter',

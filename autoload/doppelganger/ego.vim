@@ -44,7 +44,10 @@ function! doppelganger#ego#disable() abort "{{{1
 endfunction
 
 function! doppelganger#ego#enable() abort "{{{1
-  windo call doppelganger#update(s:top(), s:bot())
+  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
+  windo if &ft !~# filetypes_disabled |
+        \ call doppelganger#update(s:top(), s:bot())
+        \ | endif
   let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
     au!
@@ -73,6 +76,8 @@ function! s:update_on_CursorMoved() abort "{{{1
 endfunction
 
 function! s:update_for_CursorMoved() abort "{{{2
+  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
+  if &ft =~# filetypes_disabled | return | endif
   if line('.') == s:last_lnum | return | endif
   call doppelganger#update(s:top(), s:bot())
   let s:last_lnum = line('.')
