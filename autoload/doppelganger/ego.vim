@@ -36,10 +36,10 @@ let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
 let s:bot = {-> min([line('w$'), line('.') + g:doppelganger#ego#max_offset])}
 
 function! doppelganger#ego#disable() abort "{{{1
-  windo call doppelganger#clear()
   augroup doppelganger
     au!
   augroup END
+  windo call doppelganger#clear()
   let s:has_ego = 0
 endfunction
 
