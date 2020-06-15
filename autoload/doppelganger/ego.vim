@@ -48,8 +48,7 @@ function! doppelganger#ego#enable() abort "{{{1
   let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
     au!
-    exe 'au' events
-          \ '* call doppelganger#update(s:top(), s:bot())'
+    exe 'au' events '* call doppelganger#update(s:top(), s:bot())'
   augroup END
 
   if s:get_config('update_on_CursorMoved')
