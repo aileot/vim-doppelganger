@@ -209,7 +209,7 @@ function! s:get_lnum_open(pair_dict) abort "{{{2
   let lnum_open = searchpair(pat_open, '', pat_close,
         \ flags_unmove_upward_exc, Skip_comments)
 
-  if lnum_open == lnum_close
+  if lnum_open > lnum_close - g:doppelganger#min_range_of_pairs
     " Continue the while loop anyway.
     return 0
   endif
