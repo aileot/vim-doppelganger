@@ -1,0 +1,140 @@
+*doppelganger.txt*
+
+Version: 1.0.0
+Author: kaile256 <kaile256acc at gmail.com>
+License: MIT license
+
+==============================================================================
+CONTENTS						 *doppelganger-contents*
+
+Introduction		|doppelganger-introduction|
+Feature			|doppelganger-feature|
+Usage			|doppelganger-usage|
+Variable			|doppelganger-variable|
+Command				|doppelganger-command|
+Compatibility		|doppelganger-compatibility|
+
+==============================================================================
+INTRODUCTION					     *doppelganger-introduction*
+
+	*doppelganger*
+
+Latest version:
+https://github.com/kaile256/vim-doppelganger
+
+==============================================================================
+FEATURE							  *doppelganger-feature*
+
+ego							      *doppelganger-ego*
+	|doppelganger| will automatically update virtualtext
+	|g:doppelganger#ego#update_events| after
+	ego-feature is enabled via either |:DoppelgangerEgoEnable| or
+	|:DoppelgangerEgoToggle|.
+
+	It's automatically enabled as |vim-doppelganger| is loaded unless
+	|g:doppelganger#ego#auto_start| is set to 0.
+
+	See also |g:doppelganger#ego#update_events| and
+	|g:doppelganger#ego#update_on_CursorMoved|.
+
+==============================================================================
+USAGE							    *doppelganger-usage*
+
+------------------------------------------------------------------------------
+VARIABLE						 *doppelganger-variable*
+
+g:doppelganger#prefix					 *g:doppelganger#prefix*
+	(default: '◂ ')
+	Set in |String|.
+
+g:doppelganger#pairs					  *g:doppelganger#pairs*
+	(default: {
+		\ '_': ['{', '}'], ['(', ')'], ['\[', ']'],
+		\ })
+	Set in |Dict|.
+	Each key should represent a filetype; '_' is a special key for the
+	rest of filetypes specified in the keys.
+	The actual pairs detected will be improved if |b:match_words| exists.
+
+g:doppelganger#skip_hl_groups			 *g:doppelganger#skip_hl_groups*
+	(default: {
+		\ "_": ['Comment', 'String'],
+		\ "json": ['jsonKeyword'],
+		\ })
+	Set in |Dict|.
+	Each key should represent a filetype; '_' is a special key for the
+	rest of filetypes specified in the keys.
+
+g:doppelganger#min_range_of_pairs	     *g:doppelganger#min_range_of_pairs*
+	(default: 4)
+	Set in |Number|.
+	Minimum range of pairs to set virtualtext.
+	Set 0 to show virtualtext even when a pair is in the same line.
+
+g:doppelganger#ego#disable_autostart	  *g:doppelganger#ego#disable_autostart*
+	(default: 0)
+	Set in |Number|.
+	If not 0, disable auto start when this plugin is loaded.
+
+				       *g:doppelganger#ego#disable_on_filetypes*
+g:doppelganger#ego#disable_on_filetypes
+	(default: ["markdown", "help", "text"])
+	Set in |List|.
+
+g:doppelganger#ego#max_offset			 *g:doppelganger#ego#max_offset*
+	(default: 3)
+	Set in |Number|.
+	|doppelganger| will try to set virtualtext in the offset around cursor.
+
+g:doppelganger#ego#update_events	      *g:doppelganger#ego#update_events*
+	(default: ['BufWinEnter', 'TextChanged'])
+	Set in |List|.
+	It's recommended to update by |autocmd|s via this variable.
+
+	Note:
+	It's deprecated to set |CursorMoved| in this variable.
+	See also |g:doppelganger#ego#update_on_CursorMoved|.
+
+				      *g:doppelganger#ego#update_on_CursorMoved*
+g:doppelganger#ego#update_on_CursorMoved
+	(default: 1)
+	Set in |Number|.
+	Set 0 to disable updates on |CursorMoved|.
+	It's recommended to use this variable to update on |CursorMoved| because
+	it's too frequent to update every time |CursorMoved| is triggered.
+
+g:doppelganger#mapping#fold_suffixes	  *g:doppelganger#mapping#fold_suffixes*
+	(default: "voraxcmORAXCM")
+	Set in |String|.
+	Set suffixes for fold commands.  These mappings are for ego-feature.
+	When ego-feature is enabled, update virtualtext of |doppelganger| on
+	opening/closing fold via mappings for "zo", "zr", "za" and so on.
+	Mapping will not be applied when the target key has been already
+	mapped.
+
+------------------------------------------------------------------------------
+COMMAND							  *doppelganger-command*
+
+:DoppelgangerClear					    *:DoppelgangerClear*
+	Clear all virtualtext set by |vim-doppelganger|.
+
+:[range]DoppelgangerUpdate				   *:DoppelgangerUpdate*
+
+:[range]DoppelgangerToggle				   *:DoppelgangerToggle*
+
+:DoppelgangerEgoDisable				       *:DoppelgangerEgoDisable*
+
+:DoppelgangerEgoEnable[!]				*:DoppelgangerEgoEnable*
+	Update virtualtext on events in |g:doppelganger#ego#update_events| and
+	so on.  The filetype buffers will be ignored in
+	|g:doppelganger#ego#disable_on_filetypes|.
+	With "!", it ignores |g:doppelganger#ego#disable_on_filetypes|.
+
+:DoppelgangerEgoToggle[!]				*:DoppelgangerEgoToggle*
+	See |:DoppelgangerEgoEnable|.
+
+==============================================================================
+COMPATIBILITY					    *doppelganger-compatibility*
+
+==============================================================================
+vim:ft=help:tw=78:ts=8:sts=8:sw=8:norl:noet:fen:joinspaces
