@@ -49,7 +49,9 @@ function! doppelganger#ego#disable() abort "{{{1
   augroup doppelganger
     au!
   augroup END
+  let save_winID = win_getid()
   windo call doppelganger#clear()
+  call win_gotoid(save_winID)
   let s:has_ego = 0
 endfunction
 
@@ -78,6 +80,7 @@ function! doppelganger#ego#toggle(bang) abort "{{{1
 endfunction
 
 function! s:windo_update(bang) abort "{{{1
+  let save_winID = win_getid()
   if a:bang
     windo call s:update_window()
   else
@@ -85,6 +88,7 @@ function! s:windo_update(bang) abort "{{{1
     windo if &ft !~# filetypes_disabled
           \ | call s:update_window() | endif
   endif
+  call win_gotoid(save_winID)
 endfunction
 
 function! s:update_on_CursorMoved() abort "{{{1
