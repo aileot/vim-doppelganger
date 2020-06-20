@@ -36,6 +36,10 @@ let s:get_config = function('doppelganger#util#get_config', ['ego'])
 let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
 let s:bot = {-> min([line('w$'), line('.') + g:doppelganger#ego#max_offset])}
 
+function! doppelganger#ego#is_enabled() abort "{{{1
+  return s:has_ego
+endfunction
+
 function! doppelganger#ego#disable() abort "{{{1
   augroup doppelganger
     au!
