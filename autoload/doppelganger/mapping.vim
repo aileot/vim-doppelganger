@@ -12,10 +12,14 @@ function! s:set_bot() abort
   return min([line('w$'), line('.') + g:doppelganger#ego#max_offset])
 endfunction
 
-nnoremap <silent> <Plug>(doppelganger-update)
-      \ :<C-u>call doppelganger#update(<SID>set_top(), <SID>set_bot())<CR>
-xnoremap <silent> <Plug>(doppelganger-update)
-      \ :<C-u>call doppelganger#update(<SID>set_top(), <SID>set_bot())<CR>
+function! s:update_text() abort
+  if doppelganger#ego#is_enabled()
+    call doppelganger#update(s:set_top(), s:set_bot())
+  endif
+endfunction
+
+nnoremap <silent> <Plug>(doppelganger-update) :<C-u>call <SID>update_text()<CR>
+xnoremap <silent> <Plug>(doppelganger-update) :<C-u>call <SID>update_text()<CR>
 
 function! doppelganger#mapping#apply() abort
   for char in split(s:get_config('fold_suffixes'), '\zs')
