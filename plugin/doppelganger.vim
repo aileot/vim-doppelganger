@@ -45,11 +45,13 @@ function! s:set_default(var, default) abort
 endfunction
 
 call s:set_default('g:doppelganger#prefix', '◂ ')
-call s:set_default('g:doppelganger#pairs', [
-      \ ['{', '}'],
-      \ ['(', ')'],
-      \ ['\[', ']'],
-      \ ])
+call s:set_default('g:doppelganger#pairs', {
+      \ '_': [
+      \   ['{', '}'],
+      \   ['(', ')'],
+      \   ['\[', ']'],
+      \ ],
+      \ })
 call s:set_default('g:doppelganger#skip_hl_groups', {
       \ '_': [
       \   'Comment',

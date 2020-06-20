@@ -162,11 +162,17 @@ endfunction
 function! s:set_pairs() abort "{{{2
   if exists('b:doppelganger_pairs')
     return b:doppelganger_pairs
-  elseif exists('b:match_words')
-    let b:doppelganger_pairs = s:parse_matchwords() + g:doppelganger#pairs
   endif
 
-  return g:doppelganger#pairs
+  let pairs = has_key(g:doppelganger#pairs, &ft)
+        \ ? g:doppelganger#pairs[&ft]
+        \ : g:doppelganger#pairs['_']
+  if exists('b:match_words')
+    let pairs += s:parse_matchwords()
+    let b:doppelganger_pairs = pairs
+  endif
+
+  return pairs
 endfunction
 
 function! s:parse_matchwords() abort "{{{2
