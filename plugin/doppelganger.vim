@@ -85,11 +85,11 @@ command! -bar -range=% DoppelgangerToggle
       \ :call doppelganger#toggle(<line1>, <line2>)
 
 command! -bar DoppelgangerEgoDisable :call doppelganger#ego#disable()
-command! -bar DoppelgangerEgoEnable  :call doppelganger#ego#enable()
-command! -bar DoppelgangerEgoToggle  :call doppelganger#ego#toggle()
+command! -bar -bang DoppelgangerEgoEnable :call doppelganger#ego#enable(<bang>0)
+command! -bar -bang DoppelgangerEgoToggle :call doppelganger#ego#toggle(<bang>0)
 
 if !g:doppelganger#ego#disable_autostart
-  call doppelganger#ego#enable()
+  call doppelganger#ego#enable(0)
 endif
 
 if g:doppelganger#mapping#fold_suffixes !=# ''

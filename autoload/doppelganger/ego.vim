@@ -30,6 +30,7 @@ set cpo&vim
 "}}}
 
 let s:has_ego = 0
+let s:bang = 0
 
 let s:get_config = function('doppelganger#util#get_config', ['ego'])
 let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
@@ -43,11 +44,10 @@ function! doppelganger#ego#disable() abort "{{{1
   let s:has_ego = 0
 endfunction
 
-function! doppelganger#ego#enable() abort "{{{1
-  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-  windo if &ft !~# filetypes_disabled |
-        \ call doppelganger#update(s:top(), s:bot())
-        \ | endif
+function! doppelganger#ego#enable(bang) abort "{{{1
+  " s:bang, especially for s:update_for_CursorMoved()
+  let s:bang = a:bang
+  call s:windo_update(a:bang)
   let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
     au!
@@ -60,24 +60,38 @@ function! doppelganger#ego#enable() abort "{{{1
   let s:has_ego = 1
 endfunction
 
-function! doppelganger#ego#toggle() abort "{{{1
+function! doppelganger#ego#toggle(bang) abort "{{{1
   if s:has_ego
     call doppelganger#ego#disable()
     return
   endif
-  call doppelganger#ego#enable()
+  call doppelganger#ego#enable(a:bang)
+endfunction
+
+function! s:windo_update(bang) abort "{{{1
+  if a:bang
+    windo call doppelganger#update(s:top(), s:bot())
+  else
+    let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
+    windo if &ft !~# filetypes_disabled |
+          \ call doppelganger#update(s:top(), s:bot())
+          \ | endif
+  endif
 endfunction
 
 function! s:update_on_CursorMoved() abort "{{{1
   let s:last_lnum = line('.')
   augroup doppelganger
+    " Note: a:bang for autocmd causes error as undefined.
     au CursorMoved * call s:update_for_CursorMoved()
   augroup END
 endfunction
 
 function! s:update_for_CursorMoved() abort "{{{2
-  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-  if &ft =~# filetypes_disabled | return | endif
+  if !s:bang
+    let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
+    if &ft =~# filetypes_disabled | return | endif
+  endif
   if line('.') == s:last_lnum | return | endif
   call doppelganger#update(s:top(), s:bot())
   let s:last_lnum = line('.')
