@@ -66,10 +66,13 @@ g:doppelganger#skip_hl_groups			 *g:doppelganger#skip_hl_groups*
 	rest of filetypes specified in the keys.
 
 g:doppelganger#min_range_of_pairs	     *g:doppelganger#min_range_of_pairs*
-	(default: 4)
+	(default: 1)
 	Set in |Number|.
 	Minimum range of pairs to set virtualtext.
 	Set 0 to show virtualtext even when a pair is in the same line.
+	This variable is ignored in ego-feature.
+
+	See also |g:doppelganger#ego#min_range_of_pairs|.
 
 g:doppelganger#ego#disable_autostart	  *g:doppelganger#ego#disable_autostart*
 	(default: 0)
@@ -80,6 +83,15 @@ g:doppelganger#ego#disable_autostart	  *g:doppelganger#ego#disable_autostart*
 g:doppelganger#ego#disable_on_filetypes
 	(default: ["markdown", "help", "text"])
 	Set in |List|.
+
+g:doppelganger#ego#min_range_of_pairs    *g:doppelganger#ego#min_range_of_pairs*
+	(default: 4)
+	Set in |Number|.
+	Minimum range of pairs to set virtualtext.
+	Set 0 to show virtualtext even when a pair is in the same line.
+	This variable is only for ego-feature.
+
+	See also |g:doppelganger#min_range_of_pairs|.
 
 g:doppelganger#ego#max_offset			 *g:doppelganger#ego#max_offset*
 	(default: 3)
