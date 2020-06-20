@@ -36,6 +36,11 @@ let s:get_config = function('doppelganger#util#get_config', ['ego'])
 let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
 let s:bot = {-> min([line('w$'), line('.') + g:doppelganger#ego#max_offset])}
 
+function! s:update_window() abort "{{{1
+  call doppelganger#update(s:top(), s:bot(),
+        \ g:doppelganger#ego#min_range_of_pairs)
+endfunction
+
 function! doppelganger#ego#is_enabled() abort "{{{1
   return s:has_ego
 endfunction
@@ -55,7 +60,7 @@ function! doppelganger#ego#enable(bang) abort "{{{1
   let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
     au!
-    exe 'au' events '* call doppelganger#update(s:top(), s:bot())'
+    exe 'au' events '* call s:update_window()'
   augroup END
 
   if s:get_config('update_on_CursorMoved')
@@ -74,12 +79,11 @@ endfunction
 
 function! s:windo_update(bang) abort "{{{1
   if a:bang
-    windo call doppelganger#update(s:top(), s:bot())
+    windo call s:update_window()
   else
     let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-    windo if &ft !~# filetypes_disabled |
-          \ call doppelganger#update(s:top(), s:bot())
-          \ | endif
+    windo if &ft !~# filetypes_disabled
+          \ | call s:update_window() | endif
   endif
 endfunction
 
@@ -97,7 +101,7 @@ function! s:update_for_CursorMoved() abort "{{{2
     if &ft =~# filetypes_disabled | return | endif
   endif
   if line('.') == s:last_lnum | return | endif
-  call doppelganger#update(s:top(), s:bot())
+  call s:update_window()
   let s:last_lnum = line('.')
 endfunction
 

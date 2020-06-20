@@ -60,9 +60,10 @@ function! doppelganger#clear() abort "{{{1
   let s:is_visible = 0
 endfunction
 
-function! doppelganger#update(upper, lower) abort "{{{1
+function! doppelganger#update(upper, lower, ...) abort "{{{1
   call doppelganger#clear()
-  call doppelganger#fill(a:upper, a:lower)
+  let min_range = a:0 > 0 ? a:1 : g:doppelganger#min_range_of_pairs
+  call doppelganger#fill(a:upper, a:lower, min_range)
 endfunction
 
 function! doppelganger#toggle(upper, lower) abort "{{{1
@@ -74,7 +75,7 @@ function! doppelganger#toggle(upper, lower) abort "{{{1
   let s:is_visible = 1
 endfunction
 
-function! doppelganger#fill(upper, lower) abort "{{{1
+function! doppelganger#fill(upper, lower, min_range) abort "{{{1
   " Guards {{{
   " Guard if virtualtext is unavailable.
   if !exists('*nvim_buf_set_virtual_text')
@@ -102,7 +103,7 @@ function! doppelganger#fill(upper, lower) abort "{{{1
     endif
     let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
     if the_pair != []
-      let lnum_open = s:get_lnum_open(the_pair)
+      let lnum_open = s:get_lnum_open(the_pair, a:min_range)
       call s:set_text_on_lnum(lnum_open)
     endif
     let s:cur_lnum -= 1
@@ -202,7 +203,7 @@ function! s:swap_atoms(_, pat) abort "{{{2
   return pat
 endfunction
 
-function! s:get_lnum_open(pair_dict) abort "{{{2
+function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
   let pat_open = a:pair_dict[0]
   let pat_close = s:last_item(a:pair_dict)
   let flags_mobile_upward_inc = 'cbW'
@@ -215,7 +216,7 @@ function! s:get_lnum_open(pair_dict) abort "{{{2
   let lnum_open = searchpair(pat_open, '', pat_close,
         \ flags_unmove_upward_exc, Skip_comments)
 
-  if lnum_open > lnum_close - g:doppelganger#min_range_of_pairs
+  if lnum_open > lnum_close - a:min_range
     " Continue the while loop anyway.
     return 0
   endif

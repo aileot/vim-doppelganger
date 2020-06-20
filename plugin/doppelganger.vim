@@ -60,7 +60,7 @@ call s:set_default('g:doppelganger#skip_hl_groups', {
       \ 'json': [
       \   'jsonKeyword',
       \ ]})
-call s:set_default('g:doppelganger#min_range_of_pairs', 4)
+call s:set_default('g:doppelganger#min_range_of_pairs', 1)
 
 call s:set_default('g:doppelganger#ego#disable_autostart', 0)
 call s:set_default('g:doppelganger#ego#disable_on_filetypes', [
@@ -69,6 +69,7 @@ call s:set_default('g:doppelganger#ego#disable_on_filetypes', [
       \ 'text'
       \ ])
 
+call s:set_default('g:doppelganger#ego#min_range_of_pairs', 4)
 call s:set_default('g:doppelganger#ego#max_offset', 3)
 call s:set_default('g:doppelganger#ego#update_events', [
       \ 'BufWinEnter',
