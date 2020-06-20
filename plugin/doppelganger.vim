@@ -76,7 +76,7 @@ call s:set_default('g:doppelganger#ego#update_events', [
       \ ])
 call s:set_default('g:doppelganger#ego#update_on_CursorMoved', 1)
 
-call s:set_default('g:doppelganger#mapping#fold_suffixes', 'oraORA')
+call s:set_default('g:doppelganger#mapping#fold_suffixes', 'voraxcmORAXCM')
 
 command! -bar DoppelgangerClear :call doppelganger#clear()
 command! -bar -range=% DoppelgangerUpdate
