@@ -30,7 +30,7 @@ set cpo&vim
 "}}}
 
 let s:namespace = nvim_create_namespace('doppelganger')
-let s:hl_group = 'Doppelganger'
+let s:hl_group = 'DoppelgangerVirtualText'
 exe 'hi def link' s:hl_group 'NonText'
 
 let s:is_visible = 0
