@@ -10,9 +10,9 @@ CONTENTS						 *doppelganger-contents*
 Introduction		|doppelganger-introduction|
 Feature			|doppelganger-feature|
 Usage			|doppelganger-usage|
-Variable			|doppelganger-variable|
-Command				|doppelganger-command|
-Highlight			|doppelganger-highlight|
+  Variable		  |doppelganger-variable|
+  Command		  |doppelganger-command|
+  Highlight		  |doppelganger-highlight|
 Compatibility		|doppelganger-compatibility|
 
 ==============================================================================
