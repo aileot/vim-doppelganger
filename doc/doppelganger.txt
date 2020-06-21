@@ -12,6 +12,7 @@ Feature			|doppelganger-feature|
 Usage			|doppelganger-usage|
 Variable			|doppelganger-variable|
 Command				|doppelganger-command|
+Highlight			|doppelganger-highlight|
 Compatibility		|doppelganger-compatibility|
 
 ==============================================================================
@@ -144,6 +145,12 @@ COMMAND							  *doppelganger-command*
 
 :DoppelgangerEgoToggle[!]				*:DoppelgangerEgoToggle*
 	See |:DoppelgangerEgoEnable|.
+
+------------------------------------------------------------------------------
+HIGHLIGHT						*doppelganger-highlight*
+
+DoppelgangerVirtualText				       *DoppelgangerVirtualText*
+	(default: `:hi def link DoppelgangerVirtualText NonText`)
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
