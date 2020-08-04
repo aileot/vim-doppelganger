@@ -1,0 +1,11 @@
+Describe virtualtext
+  It requires Neovim, not Vim
+    Assert Equals(has('nvim'), 1)
+    Assert Match($THEMIS_VIM, 'nvim')
+  End
+
+  It requires a function to set virtualtext
+    Assert Equals(exists('*nvim_buf_set_virtual_text'), 1)
+  End
+End
+
