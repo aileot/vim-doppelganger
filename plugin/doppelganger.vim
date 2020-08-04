@@ -45,6 +45,7 @@ function! s:set_default(var, default) abort
 endfunction
 
 call s:set_default('g:doppelganger#prefix', '◂ ')
+call s:set_default('g:doppelganger#conceal_pattern_open', 1)
 call s:set_default('g:doppelganger#pairs', {
       \ '_': [
       \   ['{', '}'],
