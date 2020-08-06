@@ -48,6 +48,18 @@ g:doppelganger#prefix					 *g:doppelganger#prefix*
 	(default: '◂ ')
 	Set in |String|.
 
+				  *g:doppelganger#conceal_the_other_end_pattern*
+g:doppelganger#conceal_the_other_end_pattern
+	(default: 1)
+	Set in |Boolean|.
+	If non 0, the other end of pair set in virtualtext will be concealed.
+	For example, the virtualtext for `}` will be just `int main`, not
+	`int main {` in the following text.
+>
+	int main() {
+		return 0;
+	}
+<
 g:doppelganger#pairs					  *g:doppelganger#pairs*
 	(default: {
 		\ '_': ['{', '}'], ['(', ')'], ['\[', ']'],

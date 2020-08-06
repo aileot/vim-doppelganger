@@ -279,6 +279,10 @@ function! s:modify_text(text, lnum) abort "{{{2
 endfunction
 
 function! s:truncate_pat_open(text) abort "{{{2
+  if !g:doppelganger#conceal_the_other_end_pattern
+    return a:text
+  endif
+
   let pat_open = s:the_pair[0]
   " Truncate text at dispensable part:
   " Remove pat_open in head/tail on text.
