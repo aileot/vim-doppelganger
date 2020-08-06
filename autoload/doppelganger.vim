@@ -279,7 +279,7 @@ function! s:modify_text(text, lnum) abort "{{{2
 endfunction
 
 function! s:truncate_pat_open(text) abort "{{{2
-  if !g:doppelganger#conceal_pattern_open
+  if !g:doppelganger#conceal_the_other_end_pattern
     return a:text
   endif
 

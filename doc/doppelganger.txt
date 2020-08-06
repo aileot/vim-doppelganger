@@ -48,7 +48,8 @@ g:doppelganger#prefix					 *g:doppelganger#prefix*
 	(default: '◂ ')
 	Set in |String|.
 
-g:doppelganger#conceal_pattern_open	   *g:doppelganger#conceal_pattern_open*
+				  *g:doppelganger#conceal_the_other_end_pattern*
+g:doppelganger#conceal_the_other_end_pattern
 	(default: 1)
 	Set in |Boolean|.
 	If non 0, the other end of pair set in virtualtext will be concealed.

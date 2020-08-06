@@ -11,7 +11,7 @@ Describe :DoppelgangerUpdate
     Before each
       new
       call setline(1, ['int main() {', '}'])
-      let g:doppelganger#conceal_pattern_open = 0
+      let g:doppelganger#conceal_the_other_end_pattern = 0
       DoppelgangerUpdate
     End
 
@@ -32,8 +32,8 @@ Describe :DoppelgangerUpdate
       Assert Match(virtualtexts[0], expected_virtualtext)
     End
 
-    It conceals pattern to open a pair
-      let g:doppelganger#conceal_pattern_open = 1
+    It conceals pattern to the other end of pairs
+      let g:doppelganger#conceal_the_other_end_pattern = 1
       DoppelgangerUpdate
       let virtualtexts = nvim_buf_get_virtual_text(0, 1)[0]
       let prefix = get(g:, 'doppelganger#prefix', '>')
