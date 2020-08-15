@@ -36,7 +36,22 @@ let s:get_config = function('doppelganger#util#get_config', ['ego'])
 let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
 let s:bot = {-> min([line('w$'), line('.') + g:doppelganger#ego#max_offset])}
 
+function! s:should_disabled() abort "{{{1
+  let should_disabled = 0
+
+  let buftypes_disabled = join(g:doppelganger#ego#disable_on_buftypes, '\|')
+  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
+
+  let should_disabled = should_disabled
+        \ || &bt !~# buftypes_disabled
+  let should_disabled = should_disabled
+        \ || &ft !~# filetypes_disabled
+  return should_disabled
+endfunction
+
 function! s:update_window() abort "{{{1
+  if s:should_disabled() | return | endif
+
   call doppelganger#update(s:top(), s:bot(),
         \ g:doppelganger#ego#min_range_of_pairs)
 endfunction
@@ -79,27 +94,9 @@ function! doppelganger#ego#toggle(bang) abort "{{{1
   call doppelganger#ego#enable(a:bang)
 endfunction
 
-function! s:should_disabled() abort
-  let should_disabled = 0
-
-  let buftypes_disabled = join(g:doppelganger#ego#disable_on_buftypes, '\|')
-  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-
-  let should_disabled = should_disabled
-        \ || &bt !~# buftypes_disabled
-  let should_disabled = should_disabled
-        \ || &ft !~# filetypes_disabled
-  return should_disabled
-endfunction
-
 function! s:windo_update(bang) abort "{{{1
   let save_winID = win_getid()
-  if a:bang
-    windo call s:update_window()
-  else
-    windo if !s:should_disabled()
-          \ | call s:update_window() | endif
-  endif
+  windo call s:update_window()
   call win_gotoid(save_winID)
 endfunction
 
