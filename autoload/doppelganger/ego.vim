@@ -43,9 +43,9 @@ function! s:should_disabled() abort "{{{1
   let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
 
   let should_disabled = should_disabled
-        \ || &bt !~# buftypes_disabled
+        \ || &bt =~# buftypes_disabled
   let should_disabled = should_disabled
-        \ || &ft !~# filetypes_disabled
+        \ || &ft =~# filetypes_disabled
   return should_disabled
 endfunction
 
