@@ -64,6 +64,12 @@ call s:set_default('g:doppelganger#skip_hl_groups', {
 call s:set_default('g:doppelganger#min_range_of_pairs', 1)
 
 call s:set_default('g:doppelganger#ego#disable_autostart', 0)
+call s:set_default('g:doppelganger#ego#disable_on_buftypes', [
+      \ 'help',
+      \ 'prompt',
+      \ 'quickfix',
+      \ 'terminal',
+      \ ])
 call s:set_default('g:doppelganger#ego#disable_on_filetypes', [
       \ 'markdown',
       \ 'help',

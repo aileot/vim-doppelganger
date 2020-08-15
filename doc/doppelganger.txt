@@ -92,6 +92,10 @@ g:doppelganger#ego#disable_autostart	  *g:doppelganger#ego#disable_autostart*
 	Set in |Number|.
 	If not 0, disable auto start when this plugin is loaded.
 
+				        *g:doppelganger#ego#disable_on_buftypes*
+g:doppelganger#ego#disable_on_buftypes
+	(default: ["help", "prompt", "quickfix", "terminal"])
+	Set in |List|.
 				       *g:doppelganger#ego#disable_on_filetypes*
 g:doppelganger#ego#disable_on_filetypes
 	(default: ["markdown", "help", "text"])

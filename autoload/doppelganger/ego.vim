@@ -84,8 +84,10 @@ function! s:windo_update(bang) abort "{{{1
   if a:bang
     windo call s:update_window()
   else
+    let buftypes_disabled = join(g:doppelganger#ego#disable_on_buftypes, '\|')
     let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-    windo if &ft !~# filetypes_disabled
+    windo if &bt !~# buftypes_disabled
+          \ || &ft !~# filetypes_disabled
           \ | call s:update_window() | endif
   endif
   call win_gotoid(save_winID)
