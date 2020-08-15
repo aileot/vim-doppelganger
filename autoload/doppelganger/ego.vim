@@ -79,15 +79,25 @@ function! doppelganger#ego#toggle(bang) abort "{{{1
   call doppelganger#ego#enable(a:bang)
 endfunction
 
+function! s:should_disabled() abort
+  let should_disabled = 0
+
+  let buftypes_disabled = join(g:doppelganger#ego#disable_on_buftypes, '\|')
+  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
+
+  let should_disabled = should_disabled
+        \ || &bt !~# buftypes_disabled
+  let should_disabled = should_disabled
+        \ || &ft !~# filetypes_disabled
+  return should_disabled
+endfunction
+
 function! s:windo_update(bang) abort "{{{1
   let save_winID = win_getid()
   if a:bang
     windo call s:update_window()
   else
-    let buftypes_disabled = join(g:doppelganger#ego#disable_on_buftypes, '\|')
-    let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-    windo if &bt !~# buftypes_disabled
-          \ || &ft !~# filetypes_disabled
+    windo if !s:should_disabled()
           \ | call s:update_window() | endif
   endif
   call win_gotoid(save_winID)
