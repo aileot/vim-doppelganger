@@ -141,9 +141,21 @@ endfunction
 function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
   let line = getline(a:lnum)
   let pairs = s:set_pairs()
+  let separators_at_end = ',;'
 
   for p in pairs
-    let pat_close_at_endOfLine = s:last_item(p) .'[,;]\?$'
+    let pat_close = s:last_item(p)
+
+    let pat_at_end = '['. separators_at_end .']\?$'
+    if pat_close =~# '\\v'
+      let pat_at_end = '['. separators_at_end .']?$'
+    elseif pat_close =~# '\\V'
+      let pat_at_end = '\['. separators_at_end .']\?\$'
+    elseif pat_close =~# '\\M'
+      let pat_at_end = '\['. separators_at_end .']\?$'
+    endif
+
+    let pat_close_at_endOfLine = pat_close . pat_at_end
     let match = matchstr(line, pat_close_at_endOfLine)
     if len(match)
       return p
