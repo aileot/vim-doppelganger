@@ -1,6 +1,7 @@
 Describe :DoppelgangerUpdate
   Before all
     DoppelgangerEgoDisable
+    new
   End
 
   Before each
@@ -9,7 +10,6 @@ Describe :DoppelgangerUpdate
 
   Context in a cpp-like file
     Before each
-      new
       call setline(1, ['int main() {', '}'])
       let g:doppelganger#conceal_the_other_end_pattern = 0
       DoppelgangerUpdate
@@ -44,7 +44,6 @@ Describe :DoppelgangerUpdate
 
   Context with magic patterns
     Before each
-      new
       call setline(1, ['function! foo()', 'endfunction'])
     End
 
