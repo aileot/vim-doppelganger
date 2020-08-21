@@ -60,7 +60,7 @@ g:doppelganger#conceal_the_other_end_pattern
 <
 g:doppelganger#pairs					  *g:doppelganger#pairs*
 	(default: {
-		\ '_': ['{', '}'], ['(', ')'], ['\[', ']'],
+		\ '_': [['{', '}'], ['(', ')'], ['\[', ']']],
 		\ })
 	Set in |Dict|.
 	Each key should represent a filetype; '_' is a special key for the
