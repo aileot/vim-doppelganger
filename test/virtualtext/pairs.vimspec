@@ -64,6 +64,19 @@ Describe :DoppelgangerUpdate
       let b:doppelganger_pairs = [['\Mfun\.\*', '\Mendf\.\*']]
     End
 
+    It gets expected pair with '\v' with '$'
+      let b:doppelganger_pairs = [['\vfun.*', '\vendf.*$']]
+    End
+    It gets expected pair with '\V' with '$'
+      let b:doppelganger_pairs = [['\Vfun\.\*', '\Vendf\.\*\$']]
+    End
+    It gets expected pair with '\m' with '$'
+      let b:doppelganger_pairs = [['\mfun.*', '\mendf.*$']]
+    End
+    It gets expected pair with '\M' with '$'
+      let b:doppelganger_pairs = [['\Mfun\.\*', '\Mendf\.\*$']]
+    End
+
     After each
       DoppelgangerUpdate
       let virtualtexts = nvim_buf_get_virtual_text(0, 1)[0]
