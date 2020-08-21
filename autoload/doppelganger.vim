@@ -198,8 +198,8 @@ function! s:swap_atoms(_, pat) abort "{{{2
   return pat
 endfunction
 
-function! s:sort_by_length_desc(i1, i2) abort "{{{2
-  return len(a:i2) - len(a:i1)
+function! s:sort_by_length_desc(pair1, pair2) abort "{{{2
+  return len(a:pair2[0]) - len(a:pair1[0])
 endfunction
 
 function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
