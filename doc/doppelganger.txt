@@ -66,7 +66,16 @@ b:doppelganger_pairs					  *b:doppelganger_pairs*
 	Set in |Dict|.
 	Each key should represent a filetype; '_' is a special key for the
 	rest of filetypes specified in the keys.
-	The actual pairs detected will be improved if |b:match_words| exists.
+
+	|Doppelganger| will parse |b:match_words|, if it exists, and will
+	convert it with |g:doppelganger#pairs| (as the key) to
+	|b:doppelganger_pairs|.  After all, |Doppelganger| will try to search
+	pairs to set visualtexts as |b:doppelganger_pairs| unless current
+	filetype is set to |g:doppelganger#ego#disable_on_filetypes|.
+
+	Note:
+	You can also set |b:doppelganger_pairs| manually.  It must be set in
+	|List|, not in |Dict|.
 
 g:doppelganger#skip_hl_groups			 *g:doppelganger#skip_hl_groups*
 	(default: {
