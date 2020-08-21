@@ -159,8 +159,8 @@ function! s:set_pairs() abort "{{{2
   endif
 
   let pairs = has_key(g:doppelganger#pairs, &ft)
-        \ ? g:doppelganger#pairs[&ft]
-        \ : g:doppelganger#pairs['_']
+        \ ? deepcopy(g:doppelganger#pairs[&ft])
+        \ : deepcopy(g:doppelganger#pairs['_'])
   if exists('b:match_words')
     let pairs += s:parse_matchwords()
     let pairs = sort(pairs, 's:sort_by_length_desc')
