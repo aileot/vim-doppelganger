@@ -170,6 +170,7 @@ function! s:set_pairs() abort "{{{2
         \ : g:doppelganger#pairs['_']
   if exists('b:match_words')
     let pairs += s:parse_matchwords()
+    let pairs = sort(pairs, 's:sort_by_length_desc')
     let b:doppelganger_pairs = pairs
   endif
 
@@ -202,6 +203,10 @@ function! s:swap_atoms(_, pat) abort "{{{2
     let pat[len(pat) - 1] = substitute(s:last_item(pat), pat_atom, save_match, 'e')
   endwhile
   return pat
+endfunction
+
+function! s:sort_by_length_desc(i1, i2) abort "{{{2
+  return len(a:i2) - len(a:i1)
 endfunction
 
 function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
