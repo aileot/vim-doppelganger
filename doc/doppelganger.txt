@@ -1,4 +1,4 @@
-*doppelganger.txt*
+*doppelganger.txt* *doppelganger* *Doppelganger* *DoppelGanger*
 
 Version: 1.0.0
 Author: kaile256 <kaile256acc at gmail.com>
@@ -17,8 +17,6 @@ Compatibility		|doppelganger-compatibility|
 
 ==============================================================================
 INTRODUCTION					     *doppelganger-introduction*
-
-	*doppelganger*
 
 Latest version:
 https://github.com/kaile256/vim-doppelganger
