@@ -102,6 +102,7 @@ function! doppelganger#fill(upper, lower, min_range) abort "{{{1
       continue
     endif
     let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
+    let s:the_pair = the_pair
     if the_pair != []
       let lnum_open = s:get_lnum_open(the_pair, a:min_range)
       call s:set_text_on_lnum(lnum_open)
@@ -139,25 +140,17 @@ endfunction
 
 function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
   let line = getline(a:lnum)
-  " matchend() never returns 0.
-  let biggest_match_col = 0
-  let the_pair = []
-  silent! unlet s:the_pair
   let pairs = s:set_pairs()
 
   for p in pairs
-    let match_col = 0
-    while match_col != -1
-      let match_col = matchend(line, s:last_item(p), match_col)
-      if match_col > biggest_match_col
-        let biggest_match_col = match_col
-        let the_pair = p
-      endif
-    endwhile
+    let pat_close_at_endOfLine = s:last_item(p) .'[,;]\?$'
+    let match = matchstr(line, pat_close_at_endOfLine)
+    if len(match)
+      return p
+    endif
   endfor
 
-  let s:the_pair = the_pair
-  return the_pair
+  return []
 endfunction
 
 function! s:set_pairs() abort "{{{2
@@ -170,6 +163,7 @@ function! s:set_pairs() abort "{{{2
         \ : g:doppelganger#pairs['_']
   if exists('b:match_words')
     let pairs += s:parse_matchwords()
+    let pairs = sort(pairs, 's:sort_by_length_desc')
     let b:doppelganger_pairs = pairs
   endif
 
@@ -202,6 +196,10 @@ function! s:swap_atoms(_, pat) abort "{{{2
     let pat[len(pat) - 1] = substitute(s:last_item(pat), pat_atom, save_match, 'e')
   endwhile
   return pat
+endfunction
+
+function! s:sort_by_length_desc(i1, i2) abort "{{{2
+  return len(a:i2) - len(a:i1)
 endfunction
 
 function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
