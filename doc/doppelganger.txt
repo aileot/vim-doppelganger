@@ -77,6 +77,21 @@ b:doppelganger_pairs					  *b:doppelganger_pairs*
 	You can also set |b:doppelganger_pairs| manually.  It must be set in
 	|List|, not in |Dict|.
 
+g:doppelganger#pairs_reverse			 *g:doppelganger#pairs_reverse*
+b:doppelganger_pairs_reverse			 *b:doppelganger_pairs_reverse*
+	(default: {
+		\ '_': [['\s*do {.*', '\s*}\s*while (.*).*']],
+		\ })
+	Set in |Dict|.
+	Each key should represent a filetype; '_' is a special key for the
+	rest of filetypes specified in the keys.
+
+	In spite of |g:doppelganger#pairs| and |b:doppelganger_pairs|, it doesn't
+	take in any other config than either |g:doppelganger#pairs_reverse| or
+	|b:doppelganger_pairs_reverse| themselves.  Addtion to that,
+	|b:doppelganger_pairs_reverse| won't be generated unless you set it
+	manually.
+
 g:doppelganger#skip_hl_groups			 *g:doppelganger#skip_hl_groups*
 	(default: {
 		\ "_": ['Comment', 'String'],
