@@ -53,7 +53,7 @@ call s:set_default('g:doppelganger#pairs', {
       \   ['\[', ']'],
       \ ],
       \ })
-call s:set_default('g:doppelganger#groups', {
+call s:set_default('g:doppelganger#pairs_reverse', {
       \ '_': [
       \   ['\s*do {.*', '\s*}\s*while (.*).*'],
       \ ],

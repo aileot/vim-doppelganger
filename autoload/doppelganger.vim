@@ -167,13 +167,13 @@ function! s:get_leader_lnum() abort "{{{2
 endfunction
 
 function! s:set_pairs_reverse() abort "{{{2
-  if exists('b:doppelganger_groups')
-    return b:doppelganger_groups
+  if exists('b:doppelganger_pairs_reverse')
+    return b:doppelganger_pairs_reverse
   endif
 
-  let groups = has_key(g:doppelganger#groups, &ft)
-        \ ? deepcopy(g:doppelganger#groups[&ft])
-        \ : deepcopy(g:doppelganger#groups['_'])
+  let groups = has_key(g:doppelganger#pairs_reverse, &ft)
+        \ ? deepcopy(g:doppelganger#pairs_reverse[&ft])
+        \ : deepcopy(g:doppelganger#pairs_reverse['_'])
 
   return groups
 endfunction
