@@ -102,11 +102,12 @@ function! doppelganger#fill(upper, lower, min_range) abort "{{{1
       continue
     endif
     let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
-    let s:the_pair = the_pair
     if the_pair != []
+      let s:pat_the_other = the_pair[0]
       let lnum_open = s:get_lnum_open(the_pair, a:min_range)
       call s:set_text_on_lnum(lnum_open)
     endif
+
     let s:cur_lnum -= 1
   endwhile
   call winrestview(save_view)
@@ -304,7 +305,7 @@ function! s:truncate_pat_open(text) abort "{{{2
     return a:text
   endif
 
-  let pat_open = s:the_pair[0]
+  let pat_open = s:pat_the_other
   " Truncate text at dispensable part:
   " Remove pat_open in head/tail on text.
   "   call s:foo( -> s:foo
