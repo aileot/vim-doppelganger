@@ -1,6 +1,7 @@
 Describe :DoppelgangerUpdate
   Before all
     DoppelgangerEgoDisable
+    new
   End
 
   Before each
@@ -9,7 +10,6 @@ Describe :DoppelgangerUpdate
 
   Context in a cpp-like file
     Before each
-      new
       call setline(1, ['int main() {', '}'])
       let g:doppelganger#conceal_the_other_end_pattern = 0
       DoppelgangerUpdate
@@ -39,6 +39,48 @@ Describe :DoppelgangerUpdate
       let prefix = get(g:, 'doppelganger#prefix', '>')
       let expected_virtualtext = '^'. prefix .'int main()\s*$'
       Assert Match(virtualtexts[0], expected_virtualtext)
+    End
+  End
+
+  Context with magic patterns
+    Before each
+      call setline(1, ['function! foo()', 'endfunction'])
+    End
+
+    It gets expected pair without any magic
+      let b:doppelganger_pairs = [['fun.*', 'endf.*']]
+    End
+
+    It gets expected pair with '\v'
+      let b:doppelganger_pairs = [['\vfun.*', '\vendf.*']]
+    End
+    It gets expected pair with '\V'
+      let b:doppelganger_pairs = [['\Vfun\.\*', '\Vendf\.\*']]
+    End
+    It gets expected pair with '\m'
+      let b:doppelganger_pairs = [['\mfun.*', '\mendf.*']]
+    End
+    It gets expected pair with '\M'
+      let b:doppelganger_pairs = [['\Mfun\.\*', '\Mendf\.\*']]
+    End
+
+    It gets expected pair with '\v' with '$'
+      let b:doppelganger_pairs = [['\vfun.*', '\vendf.*$']]
+    End
+    It gets expected pair with '\V' with '$'
+      let b:doppelganger_pairs = [['\Vfun\.\*', '\Vendf\.\*\$']]
+    End
+    It gets expected pair with '\m' with '$'
+      let b:doppelganger_pairs = [['\mfun.*', '\mendf.*$']]
+    End
+    It gets expected pair with '\M' with '$'
+      let b:doppelganger_pairs = [['\Mfun\.\*', '\Mendf\.\*$']]
+    End
+
+    After each
+      DoppelgangerUpdate
+      let virtualtexts = nvim_buf_get_virtual_text(0, 1)[0]
+      Assert len(virtualtexts) > 0
     End
   End
 End
