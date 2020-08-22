@@ -190,6 +190,20 @@ HIGHLIGHT						*doppelganger-highlight*
 
 DoppelgangerVirtualText				       *DoppelgangerVirtualText*
 	(default: `:hi def link DoppelgangerVirtualText NonText`)
+	It affects all the other highlights of |doppelganger| unless they're
+	overwritten individually.
+
+DoppelgangerVirtualTextPair			  *DoppelgangerVirtualTextPair*
+	(default: `:hi def link DoppelgangerVirtualText`
+			`\ DoppelgangerVirtualText`)
+	It sets highlight for virtualtexts which created for either
+	|g:doppelganger#pairs| or |b:doppelganger_pairs|.
+
+DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
+	(default: `:hi def link DoppelgangerVirtualText`
+			`\ DoppelgangerVirtualText`)
+	It sets highlight for virtualtexts which created for either
+	|g:doppelganger#pairs_reverse| or |b:doppelganger_pairs_reverse|.
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
