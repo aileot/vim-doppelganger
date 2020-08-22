@@ -32,10 +32,10 @@ set cpo&vim
 let s:namespace = nvim_create_namespace('doppelganger')
 let s:hl_group = 'DoppelgangerVirtualText'
 let s:hl_group_pair = s:hl_group .'Pair'
-let s:hl_group_reverse = s:hl_group .'PairReverse'
+let s:hl_group_pair_reverse = s:hl_group .'PairReverse'
 exe 'hi def link' s:hl_group 'NonText'
 exe 'hi def link' s:hl_group_pair s:hl_group
-exe 'hi def link' s:hl_group_reverse s:hl_group
+exe 'hi def link' s:hl_group_pair_reverse s:hl_group
 
 let s:is_visible = 0
 
