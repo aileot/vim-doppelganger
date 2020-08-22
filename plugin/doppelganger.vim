@@ -53,6 +53,11 @@ call s:set_default('g:doppelganger#pairs', {
       \   ['\[', ']'],
       \ ],
       \ })
+call s:set_default('g:doppelganger#groups', {
+      \ '_': [
+      \   ['\s*do {.*', '\s*}\s*while (.*).*'],
+      \ ],
+      \ })
 call s:set_default('g:doppelganger#skip_hl_groups', {
       \ '_': [
       \   'Comment',
