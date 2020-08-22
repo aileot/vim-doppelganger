@@ -108,14 +108,14 @@ function! doppelganger#fill(upper, lower, min_range) abort "{{{1
 
     let leader_lnum = s:get_leader_lnum()
     if leader_lnum > 0
-      call s:set_text_on_lnum(leader_lnum)
+      call s:set_text_on_lnum(leader_lnum, s:hl_group_pair_reverse)
       let s:pat_the_other = leader_lnum
     else
       let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
       if the_pair != []
         let s:pat_the_other = the_pair[0]
         let lnum_open = s:get_lnum_open(the_pair, a:min_range)
-        call s:set_text_on_lnum(lnum_open)
+        call s:set_text_on_lnum(lnum_open, s:hl_group_pair)
       endif
     endif
 
@@ -322,11 +322,11 @@ function! s:is_folded(lnum) abort "{{{2
   return foldclosed(a:lnum) != -1
 endfunction
 
-function! s:set_text_on_lnum(lnum_open) abort "{{{2
+function! s:set_text_on_lnum(lnum_open, hl_group) abort "{{{2
   let text = getline(a:lnum_open)
   if text ==# '' | return | endif
   let text = s:modify_text(text, a:lnum_open)
-  let chunks = [[text, s:hl_group]]
+  let chunks = [[text, a:hl_group]]
   let print_lnum = s:cur_lnum - 1
   call nvim_buf_set_virtual_text(
         \ 0,
