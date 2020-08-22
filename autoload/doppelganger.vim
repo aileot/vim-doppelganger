@@ -31,7 +31,11 @@ set cpo&vim
 
 let s:namespace = nvim_create_namespace('doppelganger')
 let s:hl_group = 'DoppelgangerVirtualText'
+let s:hl_group_pair = s:hl_group .'Pair'
+let s:hl_group_pair_reverse = s:hl_group .'PairReverse'
 exe 'hi def link' s:hl_group 'NonText'
+exe 'hi def link' s:hl_group_pair s:hl_group
+exe 'hi def link' s:hl_group_pair_reverse s:hl_group
 
 let s:is_visible = 0
 
@@ -101,12 +105,20 @@ function! doppelganger#fill(upper, lower, min_range) abort "{{{1
       let s:cur_lnum -= 1
       continue
     endif
-    let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
-    let s:the_pair = the_pair
-    if the_pair != []
-      let lnum_open = s:get_lnum_open(the_pair, a:min_range)
-      call s:set_text_on_lnum(lnum_open)
+
+    let leader_lnum = s:get_leader_lnum()
+    if leader_lnum > 0
+      call s:set_text_on_lnum(leader_lnum, s:hl_group_pair_reverse)
+      let s:pat_the_other = leader_lnum
+    else
+      let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
+      if the_pair != []
+        let s:pat_the_other = the_pair[0]
+        let lnum_open = s:get_lnum_open(the_pair, a:min_range)
+        call s:set_text_on_lnum(lnum_open, s:hl_group_pair)
+      endif
     endif
+
     let s:cur_lnum -= 1
   endwhile
   call winrestview(save_view)
@@ -136,6 +148,46 @@ function! s:get_top_lnum(lnum) abort "{{{2
   let foldstart = foldclosed(lnum)
   let ret = foldstart == -1 ? lnum : foldstart
   return ret
+endfunction
+
+function! s:get_leader_lnum() abort "{{{2
+  " Return Number. If return 0, it behaves as failure.
+  " Search followers forwards.
+
+  let pairs = s:set_pairs_reverse()
+  let line = getline('.')
+  for p in pairs
+    let leader = p[0]
+    if line =~# leader
+      let followers = p[1:]
+      for f in followers
+        let lnum = s:_search_leader_lnum(leader, f)
+        return lnum
+      endfor
+    endif
+  endfor
+
+  return 0
+endfunction
+
+function! s:set_pairs_reverse() abort "{{{2
+  if exists('b:doppelganger_pairs_reverse')
+    return b:doppelganger_pairs_reverse
+  endif
+
+  let groups = has_key(g:doppelganger#pairs_reverse, &ft)
+        \ ? deepcopy(g:doppelganger#pairs_reverse[&ft])
+        \ : deepcopy(g:doppelganger#pairs_reverse['_'])
+
+  return groups
+endfunction
+
+function! s:_search_leader_lnum(pat_leader, pat_follower) abort
+  let flags_unmove_downward_exc = 'nWz'
+  let Skip_comments = 's:is_skip_hl_group()'
+  let lnum_leader = searchpair(a:pat_leader, '', a:pat_follower,
+        \ flags_unmove_downward_exc, Skip_comments)
+  return lnum_leader
 endfunction
 
 function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
@@ -270,11 +322,11 @@ function! s:is_folded(lnum) abort "{{{2
   return foldclosed(a:lnum) != -1
 endfunction
 
-function! s:set_text_on_lnum(lnum_open) abort "{{{2
+function! s:set_text_on_lnum(lnum_open, hl_group) abort "{{{2
   let text = getline(a:lnum_open)
   if text ==# '' | return | endif
   let text = s:modify_text(text, a:lnum_open)
-  let chunks = [[text, s:hl_group]]
+  let chunks = [[text, a:hl_group]]
   let print_lnum = s:cur_lnum - 1
   call nvim_buf_set_virtual_text(
         \ 0,
@@ -304,7 +356,7 @@ function! s:truncate_pat_open(text) abort "{{{2
     return a:text
   endif
 
-  let pat_open = s:the_pair[0]
+  let pat_open = s:pat_the_other
   " Truncate text at dispensable part:
   " Remove pat_open in head/tail on text.
   "   call s:foo( -> s:foo
