@@ -45,6 +45,7 @@ Describe :DoppelgangerUpdate
   Context with magic patterns
     Before each
       call setline(1, ['function! foo()', 'endfunction'])
+      let b:_doppelganger_pairs = []
     End
 
     It gets expected pair without any magic
