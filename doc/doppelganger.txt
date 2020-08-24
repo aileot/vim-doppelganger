@@ -60,6 +60,7 @@ g:doppelganger#conceal_the_other_end_pattern
 <
 g:doppelganger#pairs					  *g:doppelganger#pairs*
 b:doppelganger_pairs					  *b:doppelganger_pairs*
+b:_doppelganger_pairs					 *b:_doppelganger_pairs*
 	(default: {
 		\ '_': [['{', '}'], ['(', ')'], ['\[', ']']],
 		\ })
