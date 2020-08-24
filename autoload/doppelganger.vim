@@ -89,7 +89,7 @@ function! doppelganger#fill(upper, lower, min_range) abort "{{{1
   endif
 
   " Guard for compatibility with snippets.
-  if mode() ==? 's' | return | endi
+  if mode() ==? 's' | return | endif
   "}}}
 
   let save_view = winsaveview()
@@ -193,32 +193,10 @@ endfunction
 function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
   let line = getline(a:lnum)
   let pairs = s:set_pairs()
-  let separators_at_end = ',;'
 
   for p in pairs
     let pat_close = s:last_item(p)
-
-    " Sample: to get correct pattern
-    " $
-    " \$
-    let pat_at_end = '['. separators_at_end .']\?$'
-    if pat_close =~# '\\v'
-      let pat_at_end = pat_close =~# '\\\@<!$$'
-            \ ? ''
-            \ : '['. separators_at_end .']?$'
-    elseif pat_close =~# '\\V'
-      let pat_at_end = pat_close =~# '\\$$'
-            \ ? ''
-            \ : '\['. separators_at_end .']\?\$'
-    elseif pat_close =~# '\\M'
-      let pat_at_end = pat_close =~# '\\\@<!$$'
-            \ ? ''
-            \ : '\['. separators_at_end .']\?$'
-    elseif pat_close =~# '\\m' && pat_close =~# '\\\@<!$$'
-      let pat_at_end = ''
-    endif
-
-    let pat_close_at_endOfLine = pat_close . pat_at_end
+    let pat_close_at_endOfLine = s:append_endOfLine_pattern(pat_close)
     let match = matchstr(line, pat_close_at_endOfLine)
     if len(match)
       return p
@@ -275,6 +253,32 @@ endfunction
 
 function! s:sort_by_length_desc(pair1, pair2) abort "{{{2
   return len(a:pair2[0]) - len(a:pair1[0])
+endfunction
+
+function! s:append_endOfLine_pattern(pat) abort
+  let separators_at_end = ',;'
+
+  " Sample: to get correct pattern
+  " $
+  " \$
+  let pat_at_end = ''
+  if a:pat =~# '\\v'
+    let pat_at_end = a:pat =~# '\\\@<!$$'
+          \ ? ''
+          \ : '['. separators_at_end .']?$'
+  elseif a:pat =~# '\\V'
+    let pat_at_end = a:pat =~# '\\$$'
+          \ ? ''
+          \ : '\['. separators_at_end .']\?\$'
+  elseif a:pat =~# '\\M'
+    let pat_at_end = a:pat =~# '\\\@<!$$'
+          \ ? ''
+          \ : '\['. separators_at_end .']\?$'
+  elseif a:pat !~# '\\\@<!$$'
+    let pat_at_end = '['. separators_at_end .']\?$'
+  endif
+
+  return a:pat . pat_at_end
 endfunction
 
 function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
