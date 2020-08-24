@@ -201,7 +201,7 @@ function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
     " Sample: to get correct pattern
     " $
     " \$
-    let pat_at_end = '['. separators_at_end .']\?$'
+    let pat_at_end = ''
     if pat_close =~# '\\v'
       let pat_at_end = pat_close =~# '\\\@<!$$'
             \ ? ''
@@ -214,8 +214,8 @@ function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
       let pat_at_end = pat_close =~# '\\\@<!$$'
             \ ? ''
             \ : '\['. separators_at_end .']\?$'
-    elseif pat_close =~# '\\m' && pat_close =~# '\\\@<!$$'
-      let pat_at_end = ''
+    elseif pat_close !~# '\\\@<!$$'
+      let pat_at_end = '['. separators_at_end .']\?$'
     endif
 
     let pat_close_at_endOfLine = pat_close . pat_at_end
