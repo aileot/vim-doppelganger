@@ -207,8 +207,8 @@ function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
 endfunction
 
 function! s:set_pairs() abort "{{{2
-  if exists('b:doppelganger_pairs')
-    return b:doppelganger_pairs
+  if exists('b:_doppelganger_pairs')
+    return get(b:, 'doppelganger_pairs', []) + b:_doppelganger_pairs
   endif
 
   let pairs = has_key(g:doppelganger#pairs, &ft)
@@ -217,7 +217,7 @@ function! s:set_pairs() abort "{{{2
   if exists('b:match_words')
     let pairs += s:parse_matchwords()
     let pairs = sort(pairs, 's:sort_by_length_desc')
-    let b:doppelganger_pairs = pairs
+    let b:_doppelganger_pairs = pairs
   endif
 
   return pairs

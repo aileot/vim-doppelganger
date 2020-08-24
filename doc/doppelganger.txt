@@ -60,22 +60,28 @@ g:doppelganger#conceal_the_other_end_pattern
 <
 g:doppelganger#pairs					  *g:doppelganger#pairs*
 b:doppelganger_pairs					  *b:doppelganger_pairs*
+b:_doppelganger_pairs					 *b:_doppelganger_pairs*
 	(default: {
 		\ '_': [['{', '}'], ['(', ')'], ['\[', ']']],
 		\ })
 	Set in |Dict|.
+	|Doppelganger| will search pairs to set visualtexts as these variables.
+
 	Each key should represent a filetype; '_' is a special key for the
 	rest of filetypes specified in the keys.
 
-	|Doppelganger| will parse |b:match_words|, if it exists, and will
-	convert it with |g:doppelganger#pairs| (as the key) to
-	|b:doppelganger_pairs|.  After all, |Doppelganger| will try to search
-	pairs to set visualtexts as |b:doppelganger_pairs| unless current
-	filetype is set to |g:doppelganger#ego#disable_on_filetypes|.
+	With |b:doppelganger_pairs|, you can append your original buffer-local
+	config.  It should be |List| in |List| format.
 
-	Note:
-	You can also set |b:doppelganger_pairs| manually.  It must be set in
-	|List|, not in |Dict|.
+	|Doppelganger| will parse |b:match_words|, if it exists, and will convert
+	it with |g:doppelganger#pairs| to |b:_doppelganger_pairs|.
+
+	To suppress internal caches (|b:_doppelganger_pairs|), directly
+	overwrite |b:_doppelganger_pairs|.  For example, if |doppelganger| should
+	appear only after `bar` as a pair of `foo` in a buffer whose filetype is
+	`foobar`, write the following script in `ftplugin/foobar.vim`.
+>
+	let b:_doppelganger_pairs = [['foo', 'bar']]
 
 g:doppelganger#pairs_reverse			 *g:doppelganger#pairs_reverse*
 b:doppelganger_pairs_reverse			 *b:doppelganger_pairs_reverse*
