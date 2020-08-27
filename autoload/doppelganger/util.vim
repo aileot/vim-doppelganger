@@ -1,12 +1,21 @@
-function! doppelganger#util#get_config(sub, name, ...) abort
-  " Given ('', 'prefix')
+function! s:set_prefix(sub, name) abort
+  " Given ([''], 'prefix')
   "   => get(b:, 'doppelganger_prefix', g:doppelganger#prefix)
   let plugin = 'doppelganger'
   let prefix = [plugin, a:sub, a:name]
-  call filter(prefix, 'v:val !=# ""')
-  let local_var = join(prefix, '_')
-  let g_var = 'g:'. join(prefix, '#')
 
+  call filter(prefix, 'v:val !=# ""')
+
+  let prefix_glogal = 'g:'. join(prefix, '#')
+  let prefix_local = join(prefix, '_')
+
+  return [prefix_glogal, prefix_local]
+endfunction
+
+function! doppelganger#util#get_config(sub, name, ...) abort
+  " Given ([''], 'prefix')
+  "   => get(b:, 'doppelganger_prefix', g:doppelganger#prefix)
+  let [g_var, local_var] = s:set_prefix(a:sub, a:name)
   let namespace = (a:0 > 0 ? a:1 : 'b') .':'
   return get({namespace}, local_var, {g_var})
 endfunction
