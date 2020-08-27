@@ -41,20 +41,15 @@ let s:is_visible = 0
 
 " Helper Functions {{{1
 let s:get_config = function('doppelganger#util#get_config', [''])
+let s:get_config_as_filetype =
+      \ function('doppelganger#util#get_config_as_filetype', [''])
 
 function! s:last_item(arr) abort
   return a:arr[len(a:arr) - 1]
 endfunction
 
 function! s:is_hl_group_to_skip() abort "{{{1
-  let hl_groups = get(b:, 'doppelganger_hl_groups_to_skip')
-  if !hl_groups
-    if has_key(g:doppelganger#hl_groups_to_skip, &ft)
-      let hl_groups = g:doppelganger#hl_groups_to_skip[&ft]
-    else
-      let hl_groups = g:doppelganger#hl_groups_to_skip['_']
-    endif
-  endif
+  let hl_groups = s:get_config_as_filetype('hl_groups_to_skip')
   return synIDattr(synID(line('.'), col('.'), 0), 'name')
         \ =~? join(hl_groups, '\|')
 endfunction
@@ -171,14 +166,7 @@ function! s:get_leader_lnum() abort "{{{2
 endfunction
 
 function! s:set_pairs_reverse() abort "{{{2
-  if exists('b:doppelganger_pairs_reverse')
-    return b:doppelganger_pairs_reverse
-  endif
-
-  let groups = has_key(g:doppelganger#pairs_reverse, &ft)
-        \ ? deepcopy(g:doppelganger#pairs_reverse[&ft])
-        \ : deepcopy(g:doppelganger#pairs_reverse['_'])
-
+  let groups = s:get_config_as_filetype('pairs_reverse')
   return groups
 endfunction
 
@@ -207,14 +195,12 @@ function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
 endfunction
 
 function! s:set_pairs() abort "{{{2
-  if exists('b:_doppelganger_pairs')
-    return get(b:, 'doppelganger_pairs', []) + b:_doppelganger_pairs
-  endif
+  let pairs = s:get_config_as_filetype('pairs')
 
-  let pairs = has_key(g:doppelganger#pairs, &ft)
-        \ ? deepcopy(g:doppelganger#pairs[&ft])
-        \ : deepcopy(g:doppelganger#pairs['_'])
-  if exists('b:match_words')
+  if exists('b:_doppelganger_pairs')
+    return pairs + b:_doppelganger_pairs
+
+  elseif exists('b:match_words')
     let pairs += s:parse_matchwords()
     let pairs = sort(pairs, 's:sort_by_length_desc')
     let b:_doppelganger_pairs = pairs
