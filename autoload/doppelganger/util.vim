@@ -21,15 +21,15 @@ function! doppelganger#util#get_config(sub, name, ...) abort
 endfunction
 
 function! doppelganger#util#get_config_as_filetypes(sub, name, default) abort
-  " Given: ([''], 'pairs', [])
-  " Return: `pairs` as the following logic:
-  "   if exists('b:_doppelganger_pairs')
-  "     return get(b:, 'doppelganger_pairs', []) + b:_doppelganger_pairs
+  " Given: ([''], 'hl_groups_to_skip', [])
+  " Return: `hl_groups_to_skip` as the following logic:
+  "   if exists('b:doppelganger_hl_groups_to_skip')
+  "     return get(b:, 'doppelganger_hl_groups_to_skip', [])
   "   endif
-
-  "   let pairs = deepcopy(g:doppelganger#pairs['_'])
-  "   if has_key(g:doppelganger#pairs, &ft)
-  "     let pairs += deepcopy(g:doppelganger#pairs[&ft])
+  "
+  "   let hl_groups_to_skip = deepcopy(g:doppelganger#hl_groups_to_skip['_'])
+  "   if has_key(g:doppelganger#hl_groups_to_skip, &ft)
+  "     let hl_groups_to_skip += deepcopy(g:doppelganger#hl_groups_to_skip[&ft])
   "   endif
   "
   "   return pairs
