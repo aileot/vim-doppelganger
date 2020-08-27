@@ -47,12 +47,12 @@ function! s:last_item(arr) abort
 endfunction
 
 function! s:is_hl_group_to_skip() abort "{{{1
-  let hl_groups = get(b:, 'doppelganger_skip_hl_groups')
+  let hl_groups = get(b:, 'doppelganger_hl_groups_to_skip')
   if !hl_groups
-    if has_key(g:doppelganger#skip_hl_groups, &ft)
-      let hl_groups = g:doppelganger#skip_hl_groups[&ft]
+    if has_key(g:doppelganger#hl_groups_to_skip, &ft)
+      let hl_groups = g:doppelganger#hl_groups_to_skip[&ft]
     else
-      let hl_groups = g:doppelganger#skip_hl_groups['_']
+      let hl_groups = g:doppelganger#hl_groups_to_skip['_']
     endif
   endif
   return synIDattr(synID(line('.'), col('.'), 0), 'name')

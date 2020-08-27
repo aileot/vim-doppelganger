@@ -58,7 +58,7 @@ call s:set_default('g:doppelganger#pairs_reverse', {
       \   ['\s*do {.*', '\s*}\s*while (.*).*'],
       \ ],
       \ })
-call s:set_default('g:doppelganger#skip_hl_groups', {
+call s:set_default('g:doppelganger#hl_groups_to_skip', {
       \ '_': [
       \   'Comment',
       \   'String',
