@@ -20,7 +20,7 @@ function! doppelganger#util#get_config(sub, name, ...) abort
   return get({namespace}, local_var, {g_var})
 endfunction
 
-function! doppelganger#util#get_config_as_filetype(sub, name, default) abort
+function! doppelganger#util#get_config_as_filetype(sub, name) abort
   " Given: ([''], 'hl_groups_to_skip', [])
   " Return: `hl_groups_to_skip` as the following logic:
   "   if exists('b:doppelganger_hl_groups_to_skip')
@@ -38,13 +38,13 @@ function! doppelganger#util#get_config_as_filetype(sub, name, default) abort
 
   let b_var = 'b:'. local_var
   if exists(b_var)
-    return get(b:, local_var, a:default)
+    return get(b:, local_var, [])
   endif
 
-  let config = deepcopy(get(g_var, '_', a:default)
+  let config = deepcopy({g_var}['_'])
 
-  if has_key(g_var, &ft)
-    let config += deepcopy(g_var[&ft])
+  if has_key({g_var}, &ft)
+    let config += deepcopy({g_var}[&ft])
   endif
 
   return config
