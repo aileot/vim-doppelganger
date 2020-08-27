@@ -32,5 +32,20 @@ function! doppelganger#util#get_config_as_filetypes(sub, name, default) abort
   "     let hl_groups_to_skip += deepcopy(g:doppelganger#hl_groups_to_skip[&ft])
   "   endif
   "
-  "   return pairs
+  "   return hl_groups_to_skip
+
+  let [g_var, local_var] = s:set_prefix(a:sub, a:name)
+
+  let b_var = 'b:'. local_var
+  if exists(b_var)
+    return get(b:, local_var, a:default)
+  endif
+
+  let config = deepcopy(get(g_var, '_', a:default)
+
+  if has_key(g_var, &ft)
+    let config += deepcopy(g_var[&ft])
+  endif
+
+  return config
 endfunction
