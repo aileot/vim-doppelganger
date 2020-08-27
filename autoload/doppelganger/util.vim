@@ -16,7 +16,7 @@ function! doppelganger#util#get_config(sub, name, ...) abort
   " Given: ([''], 'prefix')
   " Return: get(b:, 'doppelganger_prefix', g:doppelganger#prefix)
   let [g_var, local_var] = s:set_prefix(a:sub, a:name)
-  let namespace = (a:0 > 0 ? a:1 : 'b') .':'
+  let namespace = (a:0 > 0 ? a:1 : 'b') .':' " `b:`, `w:`, `t:`, etc.
   return get({namespace}, local_var, {g_var})
 endfunction
 
