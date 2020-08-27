@@ -46,7 +46,7 @@ function! s:last_item(arr) abort
   return a:arr[len(a:arr) - 1]
 endfunction
 
-function! s:is_skip_hl_group() abort "{{{1
+function! s:is_hl_group_to_skip() abort "{{{1
   let hl_groups = get(b:, 'doppelganger_skip_hl_groups')
   if !hl_groups
     if has_key(g:doppelganger#skip_hl_groups, &ft)
@@ -99,7 +99,7 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
   let stop_lnum = s:get_top_lnum(a:upper)
   while s:cur_lnum >= stop_lnum
     let s:cur_lnum = s:update_curpos(stop_lnum)
-    if s:is_skip_hl_group()
+    if s:is_hl_group_to_skip()
       " Note: It's too slow without this guard up to hl_group though this check
       " is too rough for a line which contains both codes and the hl_group.
       let s:cur_lnum -= 1
@@ -184,7 +184,7 @@ endfunction
 
 function! s:_search_leader_lnum(pat_leader, pat_follower) abort
   let flags_unmove_downward_exc = 'nWz'
-  let Skip_comments = 's:is_skip_hl_group()'
+  let Skip_comments = 's:is_hl_group_to_skip()'
   let lnum_leader = searchpair(a:pat_leader, '', a:pat_follower,
         \ flags_unmove_downward_exc, Skip_comments)
   return lnum_leader
@@ -286,7 +286,7 @@ function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
   let pat_close = s:last_item(a:pair_dict)
   let flags_mobile_upward_inc = 'cbW'
   let flags_unmove_upward_exc = 'nbWz'
-  let Skip_comments = 's:is_skip_hl_group()'
+  let Skip_comments = 's:is_hl_group_to_skip()'
 
   norm! $
   let lnum_close = search(pat_close, flags_mobile_upward_inc)
