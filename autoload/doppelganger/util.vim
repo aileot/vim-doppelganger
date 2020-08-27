@@ -20,7 +20,7 @@ function! doppelganger#util#get_config(sub, name, ...) abort
   return get({namespace}, local_var, {g_var})
 endfunction
 
-function! doppelganger#util#get_config_as_filetypes(sub, name, default) abort
+function! doppelganger#util#get_config_as_filetype(sub, name, default) abort
   " Given: ([''], 'hl_groups_to_skip', [])
   " Return: `hl_groups_to_skip` as the following logic:
   "   if exists('b:doppelganger_hl_groups_to_skip')
