@@ -98,7 +98,7 @@ b:doppelganger_pairs_reverse			 *b:doppelganger_pairs_reverse*
 	|b:doppelganger_pairs_reverse| won't be generated unless you set it
 	manually.
 
-g:doppelganger#skip_hl_groups			 *g:doppelganger#skip_hl_groups*
+g:doppelganger#hl_groups_to_skip	      *g:doppelganger#hl_groups_to_skip*
 	(default: {
 		\ "_": ['Comment', 'String'],
 		\ "json": ['jsonKeyword'],
@@ -213,6 +213,10 @@ DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
+
+2020-08-27
+* Rename g:doppelganger#skip_hl_groups to g:doppelganger#hl_groups_to_skip
+* Rename b:doppelganger_skip_hl_groups to b:doppelganger_hl_groups_to_skip
 
 ==============================================================================
 vim:ft=help:tw=78:ts=8:sts=8:sw=8:norl:noet:fen:joinspaces
