@@ -11,3 +11,15 @@ function! doppelganger#util#get_config(sub, name, ...) abort
   return get({namespace}, local_var, {g_var})
 endfunction
 
+function! doppelganger#util#get_config_as_filetypes(sub, name, default) abort
+  " Given: ([''], 'pairs', [])
+  " Return:
+  "   if exists('b:_doppelganger_pairs')
+  "     return get(b:, 'doppelganger_pairs', []) + b:_doppelganger_pairs
+  "   endif
+
+  "   let pairs = deepcopy(g:doppelganger#pairs['_'])
+  "   if has_key(g:doppelganger#pairs, &ft)
+  "     let pairs += deepcopy(g:doppelganger#pairs[&ft])
+  "   endif
+endfunction
