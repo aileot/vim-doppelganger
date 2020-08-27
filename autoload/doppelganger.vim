@@ -41,6 +41,8 @@ let s:is_visible = 0
 
 " Helper Functions {{{1
 let s:get_config = function('doppelganger#util#get_config', [''])
+let s:get_config_as_filetype =
+      \ function('doppelganger#util#get_config_as_filetype', [''])
 
 function! s:last_item(arr) abort
   return a:arr[len(a:arr) - 1]
