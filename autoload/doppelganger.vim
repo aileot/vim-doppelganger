@@ -65,21 +65,6 @@ function! doppelganger#clear() abort "{{{1
 endfunction
 
 function! doppelganger#update(upper, lower, ...) abort "{{{1
-  call doppelganger#clear()
-  let min_range = a:0 > 0 ? a:1 : g:doppelganger#min_range_of_pairs
-  call doppelganger#fill(a:upper, a:lower, min_range)
-endfunction
-
-function! doppelganger#toggle(upper, lower) abort "{{{1
-  if s:is_visible
-    call doppelganger#clear()
-    return
-  endif
-  call doppelganger#update(a:upper, a:lower)
-  let s:is_visible = 1
-endfunction
-
-function! doppelganger#fill(upper, lower, min_range) abort "{{{1
   " Guards {{{
   " Guard if virtualtext is unavailable.
   if !exists('*nvim_buf_set_virtual_text')
@@ -92,6 +77,21 @@ function! doppelganger#fill(upper, lower, min_range) abort "{{{1
   if mode() ==? 's' | return | endif
   "}}}
 
+  call doppelganger#clear()
+  let min_range = a:0 > 0 ? a:1 : g:doppelganger#min_range_of_pairs
+  call s:deploy_doppelgangers(a:upper, a:lower, min_range)
+endfunction
+
+function! doppelganger#toggle(upper, lower) abort "{{{1
+  if s:is_visible
+    call doppelganger#clear()
+    return
+  endif
+  call doppelganger#update(a:upper, a:lower)
+  let s:is_visible = 1
+endfunction
+
+function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
   let save_view = winsaveview()
 
   " Search upward from a line under the bottom of window (by an offset).
