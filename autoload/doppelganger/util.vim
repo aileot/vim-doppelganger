@@ -1,6 +1,6 @@
 function! s:set_prefix(sub, name) abort
-  " Given ([''], 'prefix')
-  "   => get(b:, 'doppelganger_prefix', g:doppelganger#prefix)
+  " Given: ([''], 'prefix')
+  " Return: ['g:doppelganger#prefix', 'doppelganger_prefix']
   let plugin = 'doppelganger'
   let prefix = [plugin, a:sub, a:name]
 
@@ -13,8 +13,8 @@ function! s:set_prefix(sub, name) abort
 endfunction
 
 function! doppelganger#util#get_config(sub, name, ...) abort
-  " Given ([''], 'prefix')
-  "   => get(b:, 'doppelganger_prefix', g:doppelganger#prefix)
+  " Given: ([''], 'prefix')
+  " Return: get(b:, 'doppelganger_prefix', g:doppelganger#prefix)
   let [g_var, local_var] = s:set_prefix(a:sub, a:name)
   let namespace = (a:0 > 0 ? a:1 : 'b') .':'
   return get({namespace}, local_var, {g_var})
@@ -22,7 +22,7 @@ endfunction
 
 function! doppelganger#util#get_config_as_filetypes(sub, name, default) abort
   " Given: ([''], 'pairs', [])
-  " Return:
+  " Return: `pairs` as the following logic:
   "   if exists('b:_doppelganger_pairs')
   "     return get(b:, 'doppelganger_pairs', []) + b:_doppelganger_pairs
   "   endif
@@ -31,4 +31,6 @@ function! doppelganger#util#get_config_as_filetypes(sub, name, default) abort
   "   if has_key(g:doppelganger#pairs, &ft)
   "     let pairs += deepcopy(g:doppelganger#pairs[&ft])
   "   endif
+  "
+  "   return pairs
 endfunction
