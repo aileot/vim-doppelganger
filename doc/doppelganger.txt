@@ -99,6 +99,7 @@ b:doppelganger_pairs_reverse			 *b:doppelganger_pairs_reverse*
 	manually.
 
 g:doppelganger#hl_groups_to_skip	      *g:doppelganger#hl_groups_to_skip*
+b:doppelganger_hl_groups_to_skip	      *b:doppelganger_hl_groups_to_skip*
 	(default: {
 		\ "_": ['Comment', 'String'],
 		\ "json": ['jsonKeyword'],
