@@ -3,7 +3,7 @@ name: neovim
 on:
   push:
     branches:
-      - '*'
+      - '**'
 
   pull_request:
     branches:
