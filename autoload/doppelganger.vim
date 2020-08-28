@@ -44,10 +44,6 @@ let s:get_config = function('doppelganger#util#get_config', [''])
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', [''])
 
-function! s:last_item(arr) abort
-  return a:arr[len(a:arr) - 1]
-endfunction
-
 function! s:is_hl_group_to_skip() abort "{{{1
   let hl_groups = s:get_config_as_filetype('hl_groups_to_skip')
   return synIDattr(synID(line('.'), col('.'), 0), 'name')
@@ -183,7 +179,7 @@ function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
   let pairs = s:set_pairs()
 
   for p in pairs
-    let pat_close = s:last_item(p)
+    let pat_close = p[-1]
     let pat_close_at_endOfLine = s:append_endOfLine_pattern(pat_close)
     let match = matchstr(line, pat_close_at_endOfLine)
     if len(match)
@@ -218,21 +214,21 @@ function! s:parse_matchwords() abort "{{{2
 endfunction
 
 function! s:swap_atoms(_, pat) abort "{{{2
-  if s:last_item(a:pat) !~# '\\\d'
+  if a:pat[-1] !~# '\\\d'
     return a:pat
   endif
 
   let pat = a:pat
   let cnt = 0
   let pat_to_save = '\\(.\{-}\\)'
-  while s:last_item(pat) =~# '\\\d'
+  while pat[-1] =~# '\\\d'
     " Sample from vim-closetag:
     " ['<\@<=\([^/][^ \t>]*\)\%(>\|$\|[ \t][^>]*\%(>\|$\)\)', '<\@<=/\1>']
     let cnt += 1
     let pat_atom = '\\'. cnt
     let save_match = matchstr(pat[0], pat_to_save)
     let pat[0] = substitute(pat[0], pat_to_save, pat_atom, 'e')
-    let pat[len(pat) - 1] = substitute(s:last_item(pat), pat_atom, save_match, 'e')
+    let pat[len(pat) - 1] = substitute(pat[-1], pat_atom, save_match, 'e')
   endwhile
   return pat
 endfunction
@@ -269,7 +265,7 @@ endfunction
 
 function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
   let pat_open = a:pair_dict[0]
-  let pat_close = s:last_item(a:pair_dict)
+  let pat_close = a:pair_dict[-1]
   let flags_mobile_upward_inc = 'cbW'
   let flags_unmove_upward_exc = 'nbWz'
   let Skip_comments = 's:is_hl_group_to_skip()'
