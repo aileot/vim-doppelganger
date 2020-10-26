@@ -76,9 +76,19 @@ call s:set_default('g:doppelganger#ego#disable_on_buftypes', [
       \ 'terminal',
       \ ])
 call s:set_default('g:doppelganger#ego#disable_on_filetypes', [
-      \ 'markdown',
+      \ 'agit',
+      \ 'defx',
+      \ 'fugitive',
+      \ 'git',
+      \ 'gitcommit',
+      \ 'gitrebase',
       \ 'help',
-      \ 'text'
+      \ 'markdown',
+      \ 'netrw',
+      \ 'pullrequest',
+      \ 'tagbar',
+      \ 'text',
+      \ 'vista',
       \ ])
 
 call s:set_default('g:doppelganger#ego#min_range_of_pairs', 4)
