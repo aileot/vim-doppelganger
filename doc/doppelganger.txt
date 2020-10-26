@@ -128,7 +128,21 @@ g:doppelganger#ego#disable_on_buftypes
 	Set in |List|.
 				       *g:doppelganger#ego#disable_on_filetypes*
 g:doppelganger#ego#disable_on_filetypes
-	(default: ["markdown", "help", "text"])
+	(default: [
+		\ "agit",
+		\ "defx",
+		\ "fugitive",
+		\ "git",
+		\ "gitcommit",
+		\ "gitrebase",
+		\ "help",
+		\ "markdown",
+		\ "netrw",
+		\ "pullrequest",
+		\ "tagbar",
+		\ "text",
+		\ "vista",
+		\ ])
 	Set in |List|.
 
 g:doppelganger#ego#min_range_of_pairs    *g:doppelganger#ego#min_range_of_pairs*
