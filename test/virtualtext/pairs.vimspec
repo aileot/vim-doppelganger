@@ -21,12 +21,12 @@ Describe :DoppelgangerUpdate
 
     It shows a virtualtext at least at this test
       let assert = themis#helper('assert')
-      let virtualtexts = nvim_buf_get_virtual_text(0, 1)
+      let virtualtexts = GetVirtualTexts()[2]
       Assert assert.not_empty(virtualtexts)
     End
 
     It shows the line that contains the other end of pair which ends current line
-      let virtualtexts = nvim_buf_get_virtual_text(0, 1)[0]
+      let virtualtexts = GetVirtualTexts()[2]
       let prefix = get(g:, 'doppelganger#prefix', '>')
       let expected_virtualtext = '^'. prefix .'int main() {$'
       Assert Match(virtualtexts[0], expected_virtualtext)
@@ -35,7 +35,7 @@ Describe :DoppelgangerUpdate
     It conceals pattern to the other end of pairs
       let g:doppelganger#conceal_the_other_end_pattern = 1
       DoppelgangerUpdate
-      let virtualtexts = nvim_buf_get_virtual_text(0, 1)[0]
+      let virtualtexts = GetVirtualTexts()[2]
       let prefix = get(g:, 'doppelganger#prefix', '>')
       let expected_virtualtext = '^'. prefix .'int main()\s*$'
       Assert Match(virtualtexts[0], expected_virtualtext)
@@ -80,7 +80,7 @@ Describe :DoppelgangerUpdate
 
     After each
       DoppelgangerUpdate
-      let virtualtexts = nvim_buf_get_virtual_text(0, 1)[0]
+      let virtualtexts = GetVirtualTexts()
       Assert len(virtualtexts) > 0
     End
   End
