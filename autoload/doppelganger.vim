@@ -206,9 +206,9 @@ function! s:set_pairs() abort "{{{2
 endfunction
 
 function! s:parse_matchwords() abort "{{{2
-  let pairs = split(b:match_words, ',')
+  let pairs = split(b:match_words, '\\\@<!,')
   call filter(pairs, '!empty(v:val)')
-  call map(pairs, 'split(v:val, ":")')
+  call map(pairs, 'split(v:val, ''\\\@<!:'')')
   call map(pairs, function('s:swap_atoms'))
   return pairs
 endfunction
