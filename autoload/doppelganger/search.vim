@@ -7,21 +7,9 @@ function! doppelganger#search#get_leader(lnum, ...) abort
 
   let flags = get(a:, 1, '')
   let min_range = get(a:, 2, line('$') - a:lnum)
-  let line = getline(a:lnum)
 
-  let pairs = s:set_pairs_reverse()
-  for p in pairs
-    let leader = p[0]
-    if line =~# leader
-      let followers = p[1:]
-      for f in followers
-        let lnum = s:_search_leader_lnum(leader, f)
-        return lnum
-      endfor
-    endif
-  endfor
-
-  return 0
+  let leader_info = s:get_leader_info(a:lnum, flags, min_range)
+  return leader_info
 endfunction
 
 function! doppelganger#search#get_open(lnum, ...) abort
@@ -35,6 +23,24 @@ function! doppelganger#search#get_open(lnum, ...) abort
         \     'pattern':  the_pair[0],
         \   }
         \ : {}
+endfunction
+
+function! s:get_leader_info(lnum, flags, min_range) abort
+  let line = getline(a:lnum)
+  let pairs = s:set_pairs_reverse()
+
+  for p in pairs
+    let leader = p[0]
+    if line =~# leader
+      let followers = p[1:]
+      for f in followers
+        let lnum = s:_search_leader_lnum(leader, f)
+        return lnum
+      endfor
+    endif
+  endfor
+
+  return 0
 endfunction
 
 function! s:set_pairs_reverse() abort "{{{1
