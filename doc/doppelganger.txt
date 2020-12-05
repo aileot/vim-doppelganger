@@ -58,9 +58,9 @@ g:doppelganger#conceal_the_other_end_pattern
 		return 0;
 	}
 <
-g:doppelganger#pairs					  *g:doppelganger#pairs*
-b:doppelganger_pairs					  *b:doppelganger_pairs*
-b:_doppelganger_pairs					 *b:_doppelganger_pairs*
+g:doppelganger#search#pairs			  *g:doppelgangersearch##pairs*
+b:doppelganger_search_pairs			  *b:doppelganger_search_pairs*
+b:_doppelganger_search_pairs			 *b:_doppelganger_search_pairs*
 	(default: {
 		\ '_': [['{', '}'], ['(', ')'], ['\[', ']']],
 		\ })
@@ -70,21 +70,21 @@ b:_doppelganger_pairs					 *b:_doppelganger_pairs*
 	Each key should represent a filetype; '_' is a special key for the
 	rest of filetypes specified in the keys.
 
-	With |b:doppelganger_pairs|, you can append your original buffer-local
-	config.  It should be |List| in |List| format.
+	With |b:doppelganger_search_pairs|, you can append your original
+	buffer-local config.  It should be |List| in |List| format.
 
 	|Doppelganger| will parse |b:match_words|, if it exists, and will convert
-	it with |g:doppelganger#pairs| to |b:_doppelganger_pairs|.
+	it with |g:doppelganger#search#pairs| to |b:_doppelganger_search_pairs|.
 
-	To suppress internal caches (|b:_doppelganger_pairs|), directly
-	overwrite |b:_doppelganger_pairs|.  For example, if |doppelganger| should
-	appear only after `bar` as a pair of `foo` in a buffer whose filetype is
-	`foobar`, write the following script in `ftplugin/foobar.vim`.
+	To suppress internal caches (|b:_doppelganger_search_pairs|), directly
+	overwrite |b:_doppelganger_search_pairs|.  For example, if |doppelganger|
+	should appear only after `bar` as a pair of `foo` in a buffer whose
+	filetype is `foobar`, write the following script in `ftplugin/foobar.vim`.
 >
-	let b:_doppelganger_pairs = [['foo', 'bar']]
+	let b:_doppelganger_search_pairs = [['foo', 'bar']]
 
-g:doppelganger#pairs_reverse			 *g:doppelganger#pairs_reverse*
-b:doppelganger_pairs_reverse			 *b:doppelganger_pairs_reverse*
+g:doppelganger#search#pairs_reverse	  *g:doppelganger#search#pairs_reverse*
+b:doppelganger_search_pairs_reverse	  *b:doppelganger_search_pairs_reverse*
 	(default: {
 		\ '_': [['\s*do {.*', '\s*}\s*while (.*).*']],
 		\ })
@@ -92,11 +92,12 @@ b:doppelganger_pairs_reverse			 *b:doppelganger_pairs_reverse*
 	Each key should represent a filetype; '_' is a special key for the
 	rest of filetypes specified in the keys.
 
-	In spite of |g:doppelganger#pairs| and |b:doppelganger_pairs|, it doesn't
-	take in any other config than either |g:doppelganger#pairs_reverse| or
-	|b:doppelganger_pairs_reverse| themselves.  Addtion to that,
-	|b:doppelganger_pairs_reverse| won't be generated unless you set it
-	manually.
+	In spite of |g:doppelganger#search#pairs| and
+	|b:doppelganger_search_pairs|, it doesn't take in any other config
+	than either |g:doppelganger#search#pairs_reverse| or
+	|b:doppelganger_search_pairs_reverse| themselves.  Addtion to that,
+	|b:doppelganger_search_pairs_reverse| won't be generated unless you
+	set it manually.
 
 g:doppelganger#hl_groups_to_skip	      *g:doppelganger#hl_groups_to_skip*
 b:doppelganger_hl_groups_to_skip	      *b:doppelganger_hl_groups_to_skip*
@@ -228,6 +229,13 @@ DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
+
+2020-12-05
+* Rename g:doppelganger#pairs to g:doppelganger#search#pairs.
+* Rename b:doppelganger_pairs to b:doppelganger_search_pairs.
+* Rename b:_doppelganger_pairs to b:_doppelganger_search_pairs.
+* Rename g:doppelganger#pairs_reverse to g:doppelganger#search#pairs_reverse.
+* Rename b:doppelganger_pairs_reverse to b:doppelganger_search_pairs_reverse.
 
 2020-08-27
 * Rename g:doppelganger#skip_hl_groups to g:doppelganger#hl_groups_to_skip
