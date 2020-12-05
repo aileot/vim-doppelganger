@@ -12,6 +12,9 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
     let save_view = winsaveview()
   endif
 
+  " Jump to the line number
+  exe a:lnum
+
   if flags =~# 'b'
     let info = s:get_leader_info(a:lnum, min_range)
   else
