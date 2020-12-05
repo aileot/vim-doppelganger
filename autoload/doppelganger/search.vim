@@ -8,7 +8,13 @@ function! doppelganger#search#get_leader(lnum, ...) abort
   let flags = get(a:, 1, '')
   let min_range = get(a:, 2, line('$') - a:lnum)
 
+  if flags =~# 'n'
+    let save_view = winsaveview()
+  endif
   let leader_info = s:get_leader_info(a:lnum, flags, min_range)
+  if exists('save_view')
+    call winrestview(save_view)
+  endif
   return leader_info
 endfunction
 
@@ -16,7 +22,13 @@ function! doppelganger#search#get_open(lnum, ...) abort
   let flags = get(a:, 1, '')
   let min_range = get(a:, 2, a:lnum)
 
+  if flags =~# 'n'
+    let save_view = winsaveview()
+  endif
   let open_info = s:get_open_info(a:lnum, flags, min_range)
+  if exists('save_view')
+    call winrestview(save_view)
+  endif
   return open_info
 endfunction
 
