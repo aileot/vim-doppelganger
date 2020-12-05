@@ -21,22 +21,6 @@ function! doppelganger#search#leader_lnum() abort
   return 0
 endfunction
 
-function! s:get_outmost_pair(lnum) abort
-  let line = getline(a:lnum)
-  let pairs = s:set_pairs()
-
-  for p in pairs
-    let pat_close = p[-1]
-    let pat_close_at_endOfLine = s:append_endOfLine_pattern(pat_close)
-    let match = matchstr(line, pat_close_at_endOfLine)
-    if len(match)
-      return p
-    endif
-  endfor
-
-  return []
-endfunction
-
 function! doppelganger#search#get_open(lnum, ...) abort
   let flags = get(a:, 1, '')
   let min_range = get(a:, 2, a:lnum)
@@ -156,3 +140,20 @@ function! s:get_lnum_open(pair_dict, min_range) abort
 
   return lnum_open
 endfunction
+
+function! s:get_outmost_pair(lnum) abort "{{{1
+  let line = getline(a:lnum)
+  let pairs = s:set_pairs()
+
+  for p in pairs
+    let pat_close = p[-1]
+    let pat_close_at_endOfLine = s:append_endOfLine_pattern(pat_close)
+    let match = matchstr(line, pat_close_at_endOfLine)
+    if len(match)
+      return p
+    endif
+  endfor
+
+  return []
+endfunction
+
