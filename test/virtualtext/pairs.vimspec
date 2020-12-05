@@ -42,6 +42,19 @@ Describe :DoppelgangerUpdate
     End
   End
 
+  Context with reverse search
+    Before each
+      call setline(1, ['do {', '} while (foo);'])
+      DoppelgangerUpdate
+    End
+    It shows while-statement in a virtual text
+      let virtualtexts = GetVirtualTexts()[1] " after `do {`
+      let prefix = get(g:, 'doppelganger#prefix', '>')
+      let expected_virtualtext = prefix .'} while (foo);'
+      Assert Equals(virtualtexts[0], expected_virtualtext)
+    End
+  End
+
   Context with magic patterns
     Before each
       call setline(1, ['function! foo()', 'endfunction'])
