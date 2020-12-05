@@ -61,7 +61,7 @@ endfunction
 
 function! s:_search_leader_lnum(pat_leader, pat_follower) abort "{{{1
   let flags_unmove_downward_exc = 'nWz'
-  let Skip_comments = 's:is_hl_group_to_skip()'
+  let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
   let lnum_leader = searchpair(a:pat_leader, '', a:pat_follower,
         \ flags_unmove_downward_exc, Skip_comments)
   return lnum_leader
