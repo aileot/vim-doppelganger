@@ -37,6 +37,27 @@ function! doppelganger#search#outmost_pair(lnum) abort
   return []
 endfunction
 
+function! doppelganger#search#lnum_open(pair_dict, min_range) abort
+  let pat_open = a:pair_dict[0]
+  let pat_close = a:pair_dict[-1]
+  let flags_mobile_upward_inc = 'cbW'
+  let flags_unmove_upward_exc = 'nbWz'
+  let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
+
+  norm! $
+  let lnum_close = search(pat_close, flags_mobile_upward_inc)
+  " searchpair() fails to parse line-continuation with 'c'-flag
+  let lnum_open = searchpair(pat_open, '', pat_close,
+        \ flags_unmove_upward_exc, Skip_comments)
+
+  if lnum_open > lnum_close - a:min_range
+    " Continue the while loop anyway.
+    return 0
+  endif
+
+  return lnum_open
+endfunction
+
 function! s:set_pairs_reverse() abort "{{{1
   let groups = s:get_config_as_filetype('pairs_reverse')
   return groups

@@ -93,7 +93,7 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       let the_pair = doppelganger#search#outmost_pair(s:cur_lnum)
       if the_pair != []
         let s:pat_the_other = the_pair[0]
-        let lnum_open = s:get_lnum_open(the_pair, a:min_range)
+        let lnum_open = doppelganger#search#lnum_open(the_pair, a:min_range)
         call s:set_text_on_lnum(lnum_open, g:doppelganger#highlight#_pair)
       endif
     endif
