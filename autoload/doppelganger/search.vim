@@ -15,14 +15,9 @@ endfunction
 function! doppelganger#search#get_open(lnum, ...) abort
   let flags = get(a:, 1, '')
   let min_range = get(a:, 2, a:lnum)
-  let the_pair = s:get_outmost_pair(a:lnum)
 
-  return the_pair != []
-        \ ? {
-        \     'lnum':   s:get_lnum_open(the_pair, min_range),
-        \     'pattern':  the_pair[0],
-        \   }
-        \ : {}
+  let open_info = s:get_open_info(a:lnum, flags, min_range)
+  return open_info
 endfunction
 
 function! s:get_leader_info(lnum, flags, min_range) abort
@@ -41,6 +36,17 @@ function! s:get_leader_info(lnum, flags, min_range) abort
   endfor
 
   return 0
+endfunction
+
+function! s:get_open_info(lnum, flags, min_range) abort
+  let the_pair = s:get_outmost_pair(a:lnum)
+
+  return the_pair != []
+        \ ? {
+        \     'lnum':   s:get_lnum_open(the_pair, a:min_range),
+        \     'pattern':  the_pair[0],
+        \   }
+        \ : {}
 endfunction
 
 function! s:set_pairs_reverse() abort "{{{1
