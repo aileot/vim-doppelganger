@@ -97,12 +97,12 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       continue
     endif
 
-    let leader_lnum = s:get_leader_lnum()
+    let leader_lnum = doppelganger#search#leader_lnum()
     if leader_lnum > 0
       call s:set_text_on_lnum(leader_lnum, s:hl_group_pair_reverse)
       let s:pat_the_other = leader_lnum
     else
-      let the_pair = s:specify_the_outermost_pair_in_the_line(s:cur_lnum)
+      let the_pair = doppelganger#search#outmost_pair(s:cur_lnum)
       if the_pair != []
         let s:pat_the_other = the_pair[0]
         let lnum_open = s:get_lnum_open(the_pair, a:min_range)
@@ -139,128 +139,6 @@ function! s:get_top_lnum(lnum) abort "{{{2
   let foldstart = foldclosed(lnum)
   let ret = foldstart == -1 ? lnum : foldstart
   return ret
-endfunction
-
-function! s:get_leader_lnum() abort "{{{2
-  " Return Number. If return 0, it behaves as failure.
-  " Search followers forwards.
-
-  let pairs = s:set_pairs_reverse()
-  let line = getline('.')
-  for p in pairs
-    let leader = p[0]
-    if line =~# leader
-      let followers = p[1:]
-      for f in followers
-        let lnum = s:_search_leader_lnum(leader, f)
-        return lnum
-      endfor
-    endif
-  endfor
-
-  return 0
-endfunction
-
-function! s:set_pairs_reverse() abort "{{{2
-  let groups = s:get_config_as_filetype('pairs_reverse')
-  return groups
-endfunction
-
-function! s:_search_leader_lnum(pat_leader, pat_follower) abort
-  let flags_unmove_downward_exc = 'nWz'
-  let Skip_comments = 's:is_hl_group_to_skip()'
-  let lnum_leader = searchpair(a:pat_leader, '', a:pat_follower,
-        \ flags_unmove_downward_exc, Skip_comments)
-  return lnum_leader
-endfunction
-
-function! s:specify_the_outermost_pair_in_the_line(lnum) abort "{{{2
-  let line = getline(a:lnum)
-  let pairs = s:set_pairs()
-
-  for p in pairs
-    let pat_close = p[-1]
-    let pat_close_at_endOfLine = s:append_endOfLine_pattern(pat_close)
-    let match = matchstr(line, pat_close_at_endOfLine)
-    if len(match)
-      return p
-    endif
-  endfor
-
-  return []
-endfunction
-
-function! s:set_pairs() abort "{{{2
-  let pairs = s:get_config_as_filetype('pairs')
-
-  if exists('b:_doppelganger_pairs')
-    return pairs + b:_doppelganger_pairs
-
-  elseif exists('b:match_words')
-    let pairs += s:parse_matchwords()
-    let pairs = sort(pairs, 's:sort_by_length_desc')
-    let b:_doppelganger_pairs = pairs
-  endif
-
-  return pairs
-endfunction
-
-function! s:parse_matchwords() abort "{{{2
-  let pairs = split(b:match_words, '\\\@<!,')
-  call filter(pairs, '!empty(v:val)')
-  call map(pairs, 'split(v:val, ''\\\@<!:'')')
-  call map(pairs, function('s:swap_atoms'))
-  return pairs
-endfunction
-
-function! s:swap_atoms(_, pat) abort "{{{2
-  if a:pat[-1] !~# '\\\d'
-    return a:pat
-  endif
-
-  let pat = a:pat
-  let cnt = 0
-  let pat_to_save = '\\(.\{-}\\)'
-  while pat[-1] =~# '\\\d'
-    " Sample from vim-closetag:
-    " ['<\@<=\([^/][^ \t>]*\)\%(>\|$\|[ \t][^>]*\%(>\|$\)\)', '<\@<=/\1>']
-    let cnt += 1
-    let pat_atom = '\\'. cnt
-    let save_match = matchstr(pat[0], pat_to_save)
-    let pat[0] = substitute(pat[0], pat_to_save, pat_atom, 'e')
-    let pat[len(pat) - 1] = substitute(pat[-1], pat_atom, save_match, 'e')
-  endwhile
-  return pat
-endfunction
-
-function! s:sort_by_length_desc(pair1, pair2) abort "{{{2
-  return len(a:pair2[0]) - len(a:pair1[0])
-endfunction
-
-function! s:append_endOfLine_pattern(pat) abort
-  let separators_at_end = ',;'
-
-  " Sample: to get correct pattern
-  " $
-  " \$
-  let pat_at_end = ''
-  if a:pat =~# '\\v'
-    let pat_at_end = a:pat =~# '\\\@<!$$'
-          \ ? ''
-          \ : '['. separators_at_end .']?$'
-  elseif a:pat =~# '\\V'
-    let pat_at_end = a:pat =~# '\\$$'
-          \ ? ''
-          \ : '\['. separators_at_end .']\?\$'
-  elseif a:pat =~# '\\M'
-    let pat_at_end = a:pat =~# '\\\@<!$$'
-          \ ? ''
-          \ : '\['. separators_at_end .']\?$'
-  elseif a:pat !~# '\\\@<!$$'
-    let pat_at_end = '['. separators_at_end .']\?$'
-  endif
-
-  return a:pat . pat_at_end
 endfunction
 
 function! s:get_lnum_open(pair_dict, min_range) abort "{{{2

@@ -46,14 +46,14 @@ endfunction
 
 call s:set_default('g:doppelganger#prefix', '◂ ')
 call s:set_default('g:doppelganger#conceal_the_other_end_pattern', 1)
-call s:set_default('g:doppelganger#pairs', {
+call s:set_default('g:doppelganger#search#pairs', {
       \ '_': [
       \   ['{', '}'],
       \   ['(', ')'],
       \   ['\[', ']'],
       \ ],
       \ })
-call s:set_default('g:doppelganger#pairs_reverse', {
+call s:set_default('g:doppelganger#search#pairs_reverse', {
       \ '_': [
       \   ['\s*do {.*', '\s*}\s*while (.*).*'],
       \ ],
