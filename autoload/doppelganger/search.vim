@@ -11,7 +11,7 @@ function! doppelganger#search#get_leader(lnum, ...) abort
   if flags =~# 'n'
     let save_view = winsaveview()
   endif
-  let leader_info = s:get_leader_info(a:lnum, flags, min_range)
+  let leader_info = s:get_leader_info(a:lnum, min_range)
   if exists('save_view')
     call winrestview(save_view)
   endif
@@ -25,14 +25,14 @@ function! doppelganger#search#get_open(lnum, ...) abort
   if flags =~# 'n'
     let save_view = winsaveview()
   endif
-  let open_info = s:get_open_info(a:lnum, flags, min_range)
+  let open_info = s:get_open_info(a:lnum, min_range)
   if exists('save_view')
     call winrestview(save_view)
   endif
   return open_info
 endfunction
 
-function! s:get_leader_info(lnum, flags, min_range) abort
+function! s:get_leader_info(lnum, min_range) abort
   let line = getline(a:lnum)
   let pairs = s:set_pairs_reverse()
 
@@ -50,7 +50,7 @@ function! s:get_leader_info(lnum, flags, min_range) abort
   return 0
 endfunction
 
-function! s:get_open_info(lnum, flags, min_range) abort
+function! s:get_open_info(lnum, min_range) abort
   let the_pair = s:get_outmost_pair(a:lnum)
 
   return the_pair != []
