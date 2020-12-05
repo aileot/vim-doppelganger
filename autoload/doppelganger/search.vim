@@ -26,6 +26,10 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
 endfunction
 
 function! s:get_leader_info(lnum, min_range) abort
+  " do { // leader
+  "   ...
+  " } while (cond); // follower
+
   let line = getline(a:lnum)
   let pairs = s:set_pairs_reverse()
 
@@ -47,6 +51,10 @@ function! s:get_leader_info(lnum, min_range) abort
 endfunction
 
 function! s:get_open_info(lnum, min_range) abort
+  " if (cond) { // open
+  "   ...
+  " } // close
+
   let the_pair = s:get_outmost_pair(a:lnum)
 
   return the_pair != []
