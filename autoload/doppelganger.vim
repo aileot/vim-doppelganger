@@ -84,15 +84,15 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       continue
     endif
 
-    let leader_lnum = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
-    if leader_lnum > 0
-      call s:set_text_on_lnum(leader_lnum,
+    let leader_info = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
+    if get(leader_info, 'lnum') > 0
+      call s:set_text_on_lnum(leader_info['lnum'],
             \ g:doppelganger#highlight#_pair_reverse)
-      let s:pat_the_other = leader_lnum
+      let s:pat_the_other = leader_info['patterns']
     else
       let info_open = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
       if get(info_open, 'lnum') > 0
-        let s:pat_the_other = info_open['pattern']
+        let s:pat_the_other = info_open['patterns']
         call s:set_text_on_lnum(info_open['lnum'], g:doppelganger#highlight#_pair)
       endif
     endif
@@ -186,7 +186,8 @@ function! s:truncate_pat_open(text) abort "{{{2
     return a:text
   endif
 
-  let pat_open = s:pat_the_other
+  " TODO: make it applicable multiple patterns
+  let pat_open = s:pat_the_other[0]
   " Truncate text at dispensable part:
   " Remove pat_open in head/tail on text.
   "   call s:foo( -> s:foo

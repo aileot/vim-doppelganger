@@ -35,12 +35,15 @@ function! s:get_leader_info(lnum, min_range) abort
       let followers = p[1:]
       for f in followers
         let lnum = s:_search_leader_lnum(leader, f)
-        return lnum
+        return {
+              \ 'lnum': lnum,
+              \ 'patterns': followers,
+              \ }
       endfor
     endif
   endfor
 
-  return 0
+  return {}
 endfunction
 
 function! s:get_open_info(lnum, min_range) abort
@@ -49,7 +52,7 @@ function! s:get_open_info(lnum, min_range) abort
   return the_pair != []
         \ ? {
         \     'lnum':   s:get_lnum_open(the_pair, a:min_range),
-        \     'pattern':  the_pair[0],
+        \     'patterns':  the_pair,
         \   }
         \ : {}
 endfunction
