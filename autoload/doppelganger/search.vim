@@ -1,12 +1,15 @@
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', ['search'])
 
-function! doppelganger#search#leader_lnum() abort
+function! doppelganger#search#get_leader(lnum, ...) abort
   " Return Number. If return 0, it behaves as failure.
   " Search followers forwards.
 
+  let flags = get(a:, 1, '')
+  let min_range = get(a:, 2, line('$') - a:lnum)
+  let line = getline(a:lnum)
+
   let pairs = s:set_pairs_reverse()
-  let line = getline('.')
   for p in pairs
     let leader = p[0]
     if line =~# leader

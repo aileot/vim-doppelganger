@@ -84,7 +84,7 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       continue
     endif
 
-    let leader_lnum = doppelganger#search#leader_lnum()
+    let leader_lnum = doppelganger#search#get_leader(s:cur_lnum, 'n', a:min_range)
     if leader_lnum > 0
       call s:set_text_on_lnum(leader_lnum,
             \ g:doppelganger#highlight#_pair_reverse)
