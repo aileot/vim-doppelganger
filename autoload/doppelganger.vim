@@ -90,11 +90,10 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
             \ g:doppelganger#highlight#_pair_reverse)
       let s:pat_the_other = leader_lnum
     else
-      let the_pair = doppelganger#search#outmost_pair(s:cur_lnum)
-      if the_pair != []
-        let s:pat_the_other = the_pair[0]
-        let lnum_open = doppelganger#search#lnum_open(the_pair, a:min_range)
-        call s:set_text_on_lnum(lnum_open, g:doppelganger#highlight#_pair)
+      let info_open = doppelganger#search#get_open(s:cur_lnum, 'n', a:min_range)
+      if get(info_open, 'lnum') > 0
+        let s:pat_the_other = info_open['pattern']
+        call s:set_text_on_lnum(info_open['lnum'], g:doppelganger#highlight#_pair)
       endif
     endif
 
@@ -127,27 +126,6 @@ function! s:get_top_lnum(lnum) abort "{{{2
   let foldstart = foldclosed(lnum)
   let ret = foldstart == -1 ? lnum : foldstart
   return ret
-endfunction
-
-function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
-  let pat_open = a:pair_dict[0]
-  let pat_close = a:pair_dict[-1]
-  let flags_mobile_upward_inc = 'cbW'
-  let flags_unmove_upward_exc = 'nbWz'
-  let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
-
-  norm! $
-  let lnum_close = search(pat_close, flags_mobile_upward_inc)
-  " searchpair() fails to parse line-continuation with 'c'-flag
-  let lnum_open = searchpair(pat_open, '', pat_close,
-        \ flags_unmove_upward_exc, Skip_comments)
-
-  if lnum_open > lnum_close - a:min_range
-    " Continue the while loop anyway.
-    return 0
-  endif
-
-  return lnum_open
 endfunction
 
 function! s:update_curpos(stop_lnum) abort "{{{2

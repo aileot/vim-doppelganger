@@ -21,7 +21,7 @@ function! doppelganger#search#leader_lnum() abort
   return 0
 endfunction
 
-function! doppelganger#search#outmost_pair(lnum) abort
+function! s:get_outmost_pair(lnum) abort
   let line = getline(a:lnum)
   let pairs = s:set_pairs()
 
@@ -37,8 +37,17 @@ function! doppelganger#search#outmost_pair(lnum) abort
   return []
 endfunction
 
-function! doppelganger#search#lnum_open(pair_dict, min_range) abort
-  return s:get_lnum_open(a:pair_dict, a:min_range)
+function! doppelganger#search#get_open(lnum, ...) abort
+  let flags = get(a:, 1, '')
+  let min_range = get(a:, 2, a:lnum)
+  let the_pair = s:get_outmost_pair(a:lnum)
+
+  return the_pair != []
+        \ ? {
+        \     'lnum':   s:get_lnum_open(the_pair, min_range),
+        \     'pattern':  the_pair[0],
+        \   }
+        \ : {}
 endfunction
 
 function! s:set_pairs_reverse() abort "{{{1
