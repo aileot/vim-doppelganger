@@ -30,25 +30,12 @@ set cpo&vim
 "}}}
 
 let s:namespace = nvim_create_namespace('doppelganger')
-let s:hl_group = 'DoppelgangerVirtualText'
-let s:hl_group_pair = s:hl_group .'Pair'
-let s:hl_group_pair_reverse = s:hl_group .'PairReverse'
-exe 'hi def link' s:hl_group 'NonText'
-exe 'hi def link' s:hl_group_pair s:hl_group
-exe 'hi def link' s:hl_group_pair_reverse s:hl_group
-
 let s:is_visible = 0
 
 " Helper Functions {{{1
 let s:get_config = function('doppelganger#util#get_config', [''])
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', [''])
-
-function! s:is_hl_group_to_skip() abort "{{{1
-  let hl_groups = s:get_config_as_filetype('hl_groups_to_skip')
-  return synIDattr(synID(line('.'), col('.'), 0), 'name')
-        \ =~? join(hl_groups, '\|')
-endfunction
 
 function! doppelganger#clear() abort "{{{1
   call nvim_buf_clear_namespace(0, s:namespace, 1, -1)
@@ -90,7 +77,7 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
   let stop_lnum = s:get_top_lnum(a:upper)
   while s:cur_lnum >= stop_lnum
     let s:cur_lnum = s:update_curpos(stop_lnum)
-    if s:is_hl_group_to_skip()
+    if doppelganger#highlight#_is_hl_group_to_skip()
       " Note: It's too slow without this guard up to hl_group though this check
       " is too rough for a line which contains both codes and the hl_group.
       let s:cur_lnum -= 1
@@ -99,14 +86,15 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
 
     let leader_lnum = doppelganger#search#leader_lnum()
     if leader_lnum > 0
-      call s:set_text_on_lnum(leader_lnum, s:hl_group_pair_reverse)
+      call s:set_text_on_lnum(leader_lnum,
+            \ g:doppelganger#highlight#_pair_reverse)
       let s:pat_the_other = leader_lnum
     else
       let the_pair = doppelganger#search#outmost_pair(s:cur_lnum)
       if the_pair != []
         let s:pat_the_other = the_pair[0]
         let lnum_open = s:get_lnum_open(the_pair, a:min_range)
-        call s:set_text_on_lnum(lnum_open, s:hl_group_pair)
+        call s:set_text_on_lnum(lnum_open, g:doppelganger#highlight#_pair)
       endif
     endif
 
@@ -146,7 +134,7 @@ function! s:get_lnum_open(pair_dict, min_range) abort "{{{2
   let pat_close = a:pair_dict[-1]
   let flags_mobile_upward_inc = 'cbW'
   let flags_unmove_upward_exc = 'nbWz'
-  let Skip_comments = 's:is_hl_group_to_skip()'
+  let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
 
   norm! $
   let lnum_close = search(pat_close, flags_mobile_upward_inc)
