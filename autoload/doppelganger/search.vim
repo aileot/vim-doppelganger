@@ -8,9 +8,7 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
   let flags = get(a:, 1, '')
   let min_range = get(a:, 2, 0)
 
-  if flags =~# 'n'
-    let save_view = winsaveview()
-  endif
+  let save_view = winsaveview()
 
   " Jump to the line number
   exe a:lnum
@@ -21,8 +19,10 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
     let info = s:get_open_info(a:lnum, min_range)
   endif
 
-  if exists('save_view')
+  if flags =~# 'n' || get(info, 'lnum', 0) == 0
     call winrestview(save_view)
+  else
+    exe info['lnum']
   endif
 
   return info
