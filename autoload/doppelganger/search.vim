@@ -2,9 +2,6 @@ let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', ['search'])
 
 function! doppelganger#search#get_pair_info(lnum, ...) abort
-  " Return Number. If return 0, it behaves as failure.
-  " Search followers forwards.
-
   let flags = get(a:, 1, '')
   let min_range = get(a:, 2, 0)
 
