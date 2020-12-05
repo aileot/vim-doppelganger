@@ -6,7 +6,7 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
   " Search followers forwards.
 
   let flags = get(a:, 1, '')
-  let min_range = get(a:, 2, line('$') - a:lnum)
+  let min_range = get(a:, 2, 0)
 
   if flags =~# 'n'
     let save_view = winsaveview()
