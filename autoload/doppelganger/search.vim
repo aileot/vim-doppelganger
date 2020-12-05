@@ -1,7 +1,7 @@
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', ['search'])
 
-function! doppelganger#search#get_leader(lnum, ...) abort
+function! doppelganger#search#get_pair_info(lnum, ...) abort
   " Return Number. If return 0, it behaves as failure.
   " Search followers forwards.
 
@@ -11,25 +11,18 @@ function! doppelganger#search#get_leader(lnum, ...) abort
   if flags =~# 'n'
     let save_view = winsaveview()
   endif
-  let leader_info = s:get_leader_info(a:lnum, min_range)
+
+  if flags =~# 'b'
+    let info = s:get_leader_info(a:lnum, min_range)
+  else
+    let info = s:get_open_info(a:lnum, min_range)
+  endif
+
   if exists('save_view')
     call winrestview(save_view)
   endif
-  return leader_info
-endfunction
 
-function! doppelganger#search#get_open(lnum, ...) abort
-  let flags = get(a:, 1, '')
-  let min_range = get(a:, 2, a:lnum)
-
-  if flags =~# 'n'
-    let save_view = winsaveview()
-  endif
-  let open_info = s:get_open_info(a:lnum, min_range)
-  if exists('save_view')
-    call winrestview(save_view)
-  endif
-  return open_info
+  return info
 endfunction
 
 function! s:get_leader_info(lnum, min_range) abort
