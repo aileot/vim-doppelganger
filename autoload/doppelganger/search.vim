@@ -107,13 +107,13 @@ endfunction
 function! s:set_pairs() abort "{{{1
   let pairs = s:get_config_as_filetype('pairs')
 
-  if exists('b:_doppelganger_pairs')
-    return pairs + b:_doppelganger_pairs
+  if exists('b:_doppelganger_search_pairs')
+    return pairs + b:_doppelganger_search_pairs
 
   elseif exists('b:match_words')
     let pairs += s:parse_matchwords()
     let pairs = sort(pairs, 's:sort_by_length_desc')
-    let b:_doppelganger_pairs = pairs
+    let b:_doppelganger_search_pairs = pairs
   endif
 
   return pairs
