@@ -150,8 +150,8 @@ function! s:is_folded(lnum) abort "{{{2
   return foldclosed(a:lnum) != -1
 endfunction
 
-function! s:set_text_on_lnum(line_info, hl_group) abort "{{{2
-  let text = s:modify_text(a:line_info)
+function! s:set_text_on_lnum(pair_info, hl_group) abort "{{{2
+  let text = s:modify_text(a:pair_info)
   if text ==# '' | return | endif
 
   let chunks = [[text, a:hl_group]]
@@ -165,11 +165,11 @@ function! s:set_text_on_lnum(line_info, hl_group) abort "{{{2
         \ )
 endfunction
 
-function! s:modify_text(line_info) abort "{{{2
-  let lnum = a:line_info['lnum']
+function! s:modify_text(pair_info) abort "{{{2
+  let lnum = a:pair_info['lnum']
   while lnum > 0
     let text = getline(lnum)
-    let text = s:truncate_pat_open(text, a:line_info)
+    let text = s:truncate_pat_open(text, a:pair_info)
     let text = substitute(text, '^\s*', '', 'e')
     if text !~# '^\s*$' | break | endif
     let lnum -= 1
