@@ -166,7 +166,6 @@ function! s:set_text_on_lnum(line_info, hl_group) abort "{{{2
 endfunction
 
 function! s:modify_text(line_info) abort "{{{2
-  let pats = a:line_info['patterns']
   let lnum = a:line_info['lnum']
   while lnum > 0
     let text = getline(lnum)
