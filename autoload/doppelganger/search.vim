@@ -78,32 +78,6 @@ function! s:_search_leader_lnum(pat_leader, pat_follower) abort "{{{1
   return lnum_leader
 endfunction
 
-function! s:append_endOfLine_pattern(pat) abort "{{{1
-  let separators_at_end = ',;'
-
-  " Sample: to get correct pattern
-  " $
-  " \$
-  let pat_at_end = ''
-  if a:pat =~# '\\v'
-    let pat_at_end = a:pat =~# '\\\@<!$$'
-          \ ? ''
-          \ : '['. separators_at_end .']?$'
-  elseif a:pat =~# '\\V'
-    let pat_at_end = a:pat =~# '\\$$'
-          \ ? ''
-          \ : '\['. separators_at_end .']\?\$'
-  elseif a:pat =~# '\\M'
-    let pat_at_end = a:pat =~# '\\\@<!$$'
-          \ ? ''
-          \ : '\['. separators_at_end .']\?$'
-  elseif a:pat !~# '\\\@<!$$'
-    let pat_at_end = '['. separators_at_end .']\?$'
-  endif
-
-  return a:pat . pat_at_end
-endfunction
-
 function! s:set_pairs() abort "{{{1
   let pairs = s:get_config_as_filetype('pairs')
 
@@ -186,5 +160,31 @@ function! s:get_outmost_pair(lnum) abort "{{{1
   endfor
 
   return []
+endfunction
+
+function! s:append_endOfLine_pattern(pat) abort "{{{1
+  let separators_at_end = ',;'
+
+  " Sample: to get correct pattern
+  " $
+  " \$
+  let pat_at_end = ''
+  if a:pat =~# '\\v'
+    let pat_at_end = a:pat =~# '\\\@<!$$'
+          \ ? ''
+          \ : '['. separators_at_end .']?$'
+  elseif a:pat =~# '\\V'
+    let pat_at_end = a:pat =~# '\\$$'
+          \ ? ''
+          \ : '\['. separators_at_end .']\?\$'
+  elseif a:pat =~# '\\M'
+    let pat_at_end = a:pat =~# '\\\@<!$$'
+          \ ? ''
+          \ : '\['. separators_at_end .']\?$'
+  elseif a:pat !~# '\\\@<!$$'
+    let pat_at_end = '['. separators_at_end .']\?$'
+  endif
+
+  return a:pat . pat_at_end
 endfunction
 
