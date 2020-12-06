@@ -22,6 +22,18 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
     exe info['lnum']
   endif
 
+  if !has_key(info, 'patterns')
+    return {}
+
+  elseif flags =~# 'b'
+    let info['preceding'] = info['patterns'][0]
+    let info['following'] = info['patterns'][1:]
+    let info['reverse'] = 1
+  else
+    let info['preceding'] = info['patterns'][:-1]
+    let info['following'] = info['patterns'][-1]
+  endif
+
   return info
 endfunction
 
