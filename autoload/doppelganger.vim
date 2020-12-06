@@ -84,9 +84,9 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       continue
     endif
 
-    let leader_info = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
-    if get(leader_info, 'lnum') > 0
-      call s:set_text_on_lnum(leader_info,
+    let follower_info = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
+    if get(follower_info, 'lnum') > 0
+      call s:set_text_on_lnum(follower_info,
             \ g:doppelganger#highlight#_pair_reverse)
     else
       let info_open = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
