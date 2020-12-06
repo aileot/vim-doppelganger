@@ -89,9 +89,9 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       call s:set_text_on_lnum(follower_info,
             \ g:doppelganger#highlight#_pair_reverse)
     else
-      let info_open = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
-      if get(info_open, 'lnum') > 0
-        call s:set_text_on_lnum(info_open, g:doppelganger#highlight#_pair)
+      let open_info = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
+      if get(open_info, 'lnum') > 0
+        call s:set_text_on_lnum(open_info, g:doppelganger#highlight#_pair)
       endif
     endif
 
