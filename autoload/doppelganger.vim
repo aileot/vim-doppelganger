@@ -170,7 +170,7 @@ function! s:modify_text(line_info) abort "{{{2
   let lnum = a:line_info['lnum']
   while lnum > 0
     let text = getline(lnum)
-    let text = s:truncate_pat_open(text, pats)
+    let text = s:truncate_pat_open(text, a:line_info)
     let text = substitute(text, '^\s*', '', 'e')
     if text !~# '^\s*$' | break | endif
     let lnum -= 1
@@ -179,13 +179,20 @@ function! s:modify_text(line_info) abort "{{{2
   return text
 endfunction
 
-function! s:truncate_pat_open(text, patterns) abort "{{{2
+function! s:truncate_pat_open(text, pair_info) abort "{{{2
   if !g:doppelganger#conceal_the_other_end_pattern
     return a:text
   endif
 
-  " TODO: make it applicable multiple patterns
-  let pat_open = a:patterns[0]
+  try
+    " TODO: make it applicable multiple patterns
+    let pat_open = get(a:pair_info, 'reverse', 0) == 1
+          \ ? get(a:pair_info['following'], 0)
+          \ : get(a:pair_info['preceding'], 0)
+  catch
+    throw '[Doppelganger] invalid value: '. get(a:pair_info, 'patterns', '')
+  endtry
+
   " Truncate text at dispensable part:
   " Remove pat_open in head/tail on text.
   "   call s:foo( -> s:foo
