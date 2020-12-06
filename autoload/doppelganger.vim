@@ -84,16 +84,14 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       continue
     endif
 
-    let leader_info = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
-    if get(leader_info, 'lnum') > 0
-      call s:set_text_on_lnum(leader_info['lnum'],
+    let follower_info = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
+    if get(follower_info, 'lnum') > 0
+      call s:set_text_on_lnum(follower_info,
             \ g:doppelganger#highlight#_pair_reverse)
-      let s:pat_the_other = leader_info['patterns']
     else
-      let info_open = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
-      if get(info_open, 'lnum') > 0
-        let s:pat_the_other = info_open['patterns']
-        call s:set_text_on_lnum(info_open['lnum'], g:doppelganger#highlight#_pair)
+      let open_info = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
+      if get(open_info, 'lnum') > 0
+        call s:set_text_on_lnum(open_info, g:doppelganger#highlight#_pair)
       endif
     endif
 
@@ -152,10 +150,10 @@ function! s:is_folded(lnum) abort "{{{2
   return foldclosed(a:lnum) != -1
 endfunction
 
-function! s:set_text_on_lnum(lnum_open, hl_group) abort "{{{2
-  let text = getline(a:lnum_open)
+function! s:set_text_on_lnum(pair_info, hl_group) abort "{{{2
+  let text = s:modify_text(a:pair_info)
   if text ==# '' | return | endif
-  let text = s:modify_text(text, a:lnum_open)
+
   let chunks = [[text, a:hl_group]]
   let print_lnum = s:cur_lnum - 1
   call nvim_buf_set_virtual_text(
@@ -167,12 +165,11 @@ function! s:set_text_on_lnum(lnum_open, hl_group) abort "{{{2
         \ )
 endfunction
 
-function! s:modify_text(text, lnum) abort "{{{2
-  let lnum = a:lnum
-  let text = a:text
+function! s:modify_text(pair_info) abort "{{{2
+  let lnum = a:pair_info['lnum']
   while lnum > 0
     let text = getline(lnum)
-    let text = s:truncate_pat_open(text)
+    let text = s:truncate_pat_open(text, a:pair_info)
     let text = substitute(text, '^\s*', '', 'e')
     if text !~# '^\s*$' | break | endif
     let lnum -= 1
@@ -181,13 +178,20 @@ function! s:modify_text(text, lnum) abort "{{{2
   return text
 endfunction
 
-function! s:truncate_pat_open(text) abort "{{{2
+function! s:truncate_pat_open(text, pair_info) abort "{{{2
   if !g:doppelganger#conceal_the_other_end_pattern
     return a:text
   endif
 
-  " TODO: make it applicable multiple patterns
-  let pat_open = s:pat_the_other[0]
+  try
+    " TODO: make it applicable multiple patterns
+    let pat_open = get(a:pair_info, 'reverse', 0) == 1
+          \ ? get(a:pair_info['following'], 0)
+          \ : get(a:pair_info['preceding'], 0)
+  catch
+    throw '[Doppelganger] invalid value: '. get(a:pair_info, 'patterns', '')
+  endtry
+
   " Truncate text at dispensable part:
   " Remove pat_open in head/tail on text.
   "   call s:foo( -> s:foo
