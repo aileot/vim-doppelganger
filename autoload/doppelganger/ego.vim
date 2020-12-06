@@ -75,6 +75,7 @@ function! doppelganger#ego#enable(bang) abort "{{{1
   augroup doppelganger
     au!
     exe 'au' events '* call s:update_window(' a:bang ')'
+    au WinLeave * call doppelganger#clear()
   augroup END
 
   if s:get_config('update_on_CursorMoved')
