@@ -11,7 +11,6 @@ Describe :DoppelgangerUpdate
   Context in a cpp-like file
     Before each
       call setline(1, ['int main() {', '}'])
-      let g:doppelganger#text#conceal_corresponding_pattern = 0
       DoppelgangerUpdate
     End
 
@@ -32,15 +31,7 @@ Describe :DoppelgangerUpdate
       Assert Match(virtualtexts[0], expected_virtualtext)
     End
 
-    It conceals pattern to the other end of pairs
-      let g:doppelganger#text#conceal_corresponding_pattern = 1
-      DoppelgangerUpdate
-      let virtualtexts = GetVirtualTexts()[2]
-      let prefix = get(g:, 'doppelganger#text#prefix', '>')
-      let expected_virtualtext = '^'. prefix .'int main()\s*$'
-      Assert Match(virtualtexts[0], expected_virtualtext)
-    End
-  End
+ End
 
   Context with reverse search
     Before each

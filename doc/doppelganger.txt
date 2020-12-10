@@ -46,18 +46,13 @@ g:doppelganger#text#prefix			   *g:doppelganger#text#prefix*
 	(default: '◂ ')
 	Set in |String|.
 
-			    *g:doppelganger#text#conceal_corresponding_pattern*
-g:doppelganger#text#conceal_corresponding_pattern
-	(default: 1)
-	Set in |Boolean|.
-	If non 0, the other end of pair set in virtualtext will be concealed.
-	For example, the virtualtext for `}` will be just `int main`, not
-	`int main {` in the following text.
->
-	int main() {
-		return 0;
-	}
-<
+g:doppelganger#text#shim_to_join	     *g:doppelganger#text#shim_to_join*
+b:doppelganger_text_shim_to_join	     *b:doppelganger_text_shim_to_join*
+	(default: ' ﲖ ')
+	Set in |String|.
+	When contents within a pair is more than two lines, the characters
+	will be inserted into the joined lines in virtualtexts.
+
 g:doppelganger#text#max_column_width     *g:doppelganger#text#max_column_width*
 b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
 	(default: max([&tw, 79]))
@@ -245,8 +240,9 @@ COMPATIBILITY					    *doppelganger-compatibility*
 
 2020-12-10
 * Rename g:doppelganger#prefix to g:doppelganger#text#prefix.
-* Rename g:doppelganger#conceal_the_other_end_pattern to
-  g:doppelganger#text#conceal_corresponding_pattern.
+* Remove the feature to conceal pattern up to pair and
+  g:doppelganger#conceal_the_other_end_pattern which's meaningless now
+  that contents in pairs are shown instead.
 
 2020-12-05
 * Rename g:doppelganger#pairs to g:doppelganger#search#pairs.

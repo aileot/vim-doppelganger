@@ -1,14 +1,14 @@
 let s:get_config = function('doppelganger#util#get_config', ['text'])
 
-let s:text = {}
+let s:Text = {}
 function! doppelganger#text#new(pair_info) abort
-  let s:text = extend(s:text, a:pair_info)
-  let text_info = deepcopy(s:text)
+  let s:Text = extend(s:Text, a:pair_info)
+  let text_info = deepcopy(s:Text)
   return text_info
 endfunction
 
-function! s:text.Set() abort dict "{{{2
-  let text = self._Modify()
+function! s:Text.Set() abort dict
+  const text = self._Set()
   if text ==# '' | return | endif
 
   let chunks = [[text, self.hl_group]]
@@ -22,63 +22,58 @@ function! s:text.Set() abort dict "{{{2
         \ )
 endfunction
 
-function! s:text._Modify() abort dict "{{{2
-  let self.fillable_width = self._Detect_fillable_width()
-
-  let lnum = self.lnum
-  while lnum > 0
-    let self.text = getline(lnum)
-    let self.text = self._Truncate_as_corresponding_pattern()
-    let self.text = substitute(self.text, '^\s*', '', 'e')
-    if self.text !~# '^\s*$' | break | endif
-    let lnum -= 1
-  endwhile
-  let self.text = s:get_config('prefix') . self.text
+function! s:Text._Set() abort dict
+  let self.raw_text = self._Join_contents()
   let self.text = self._Truncate_as_fillable_width()
   return self.text
 endfunction
 
-function! s:text._Detect_fillable_width() abort dict
-  const lnum = self.curr_lnum
-  const max_column_width = s:get_config('max_column_width')
-  const line = getline(lnum)
-  const fillable_width = max_column_width - len(line)
+function! s:Text._Join_contents() abort dict
+  const prefix = s:get_config('prefix')
+  const shim = s:get_config('shim_to_join')
 
-  return fillable_width
+  let contents = self._Read_contents_in_pair()
+  let contents = self._Trancate_contents_to_join()
+
+  const text = prefix . join(contents, shim)
+  return text
 endfunction
 
-function! s:text._Truncate_as_corresponding_pattern() abort dict "{{{2
-  const text = self.text
-  if !g:doppelganger#text#conceal_corresponding_pattern
-    return text
+function! s:Text._Read_contents_in_pair() abort dict
+  let self.contents = []
+
+  if self.reverse
+    let self.contents = [getline(self.lnum)]
+    return self.contents
   endif
 
-  try
-    " TODO: make it applicable multiple patterns
-    let pat_open = get(self, 'reverse', 0) == 1
-          \ ? get(self.following, 0)
-          \ : get(self.preceding, 0)
-  catch
-    throw '[Doppelganger] invalid value: '. get(self, 'patterns', '')
-  endtry
+  const start = self.lnum
+  const end = self.curr_lnum - 1
+  let self.contents = getline(start, end)
 
-  " Truncate text at dispensable part:
-  " Remove pat_open in head/tail on text.
-  "   call s:foo( -> s:foo
-  "   function! s:bar(aaa, bbb) -> s:bar(aaa, bbb)
-  " Leave pat_open halfway on text.
-  "   call s:baz(ccc,ddd) -> call s:baz(ccc,ddd), leave it.
-  " The complex pat is especially for nested patterns like
-  "   {qux: {
-  "     eee : fff,
-  "   }}
-  " Truncate such texts into `{qux:`, not `qux: {`.
-  let pat = pat_open .'\(.*'. pat_open .'\)\@!\S*'
-  return substitute(text, pat .'\s*$\|^\s*'. pat, '', 'e')
+  return self.contents
 endfunction
 
-function! s:text._Truncate_as_fillable_width() abort dict
-  " TODO: Adapt to unicode
-  return self.text[: self.fillable_width]
+function! s:Text._Trancate_contents_to_join() abort dict
+  let contents = self.contents
+  let self.contents = map(contents, 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
+  return self.contents
+endfunction
+
+function! s:Text._Truncate_as_fillable_width() abort dict
+  const max_column_width = s:get_config('max_column_width')
+  const line = getline(self.curr_lnum)
+  const fillable_width = max_column_width - strdisplaywidth(line)
+
+  let len = 0
+  let text = ''
+  for char in split(self.raw_text, '\zs')
+    let len += strdisplaywidth(char)
+    if len >= fillable_width | break | endif
+    let text .= char
+  endfor
+
+  let self.text = text
+  return text
 endfunction
 
