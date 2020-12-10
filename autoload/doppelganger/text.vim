@@ -16,7 +16,7 @@ function! doppelganger#text#set(pair_info) abort "{{{2
 endfunction
 
 function! s:modify_text(pair_info) abort "{{{2
-  const fillable_width = s:get_fillable_width(a:pair_info)
+  let a:pair_info.fillable_width = s:get_fillable_width(a:pair_info)
 
   let lnum = a:pair_info.lnum
   while lnum > 0
@@ -28,8 +28,7 @@ function! s:modify_text(pair_info) abort "{{{2
   endwhile
   let a:pair_info.text = s:get_config('prefix') . a:pair_info.text
 
-  " TODO: Adapt to unicode
-  let a:pair_info.text = a:pair_info.text[: fillable_width]
+  let a:pair_info.text = s:truncate_text(a:pair_info)
   return a:pair_info.text
 endfunction
 
@@ -70,5 +69,10 @@ function! s:truncate_pat_open(pair_info) abort "{{{2
   " Truncate such texts into `{qux:`, not `qux: {`.
   let pat = pat_open .'\(.*'. pat_open .'\)\@!\S*'
   return substitute(text, pat .'\s*$\|^\s*'. pat, '', 'e')
+endfunction
+
+function! s:truncate_text(pair_info) abort
+  " TODO: Adapt to unicode
+  return a:pair_info.text[: a:pair_info.fillable_width]
 endfunction
 
