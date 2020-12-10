@@ -46,6 +46,13 @@ g:doppelganger#text#prefix			   *g:doppelganger#text#prefix*
 	(default: '◂ ')
 	Set in |String|.
 
+g:doppelganger#text#shim_to_join	     *g:doppelganger#text#shim_to_join*
+b:doppelganger_text_shim_to_join	     *b:doppelganger_text_shim_to_join*
+	(default: ' ﲖ ')
+	Set in |String|.
+	When contents within a pair is more than two lines, the characters
+	will be inserted into the joined lines in virtualtexts.
+
 g:doppelganger#text#max_column_width     *g:doppelganger#text#max_column_width*
 b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
 	(default: max([&tw, 79]))
