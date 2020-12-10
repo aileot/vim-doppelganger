@@ -86,14 +86,19 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
 
     let follower_info = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
     if get(follower_info, 'lnum') > 0
-      call extend(follower_info, {'curr_lnum': s:cur_lnum})
-      call doppelganger#text#set(follower_info,
-            \ g:doppelganger#highlight#_pair_reverse)
+      call extend(follower_info, {
+            \ 'curr_lnum': s:cur_lnum,
+            \ 'hl_group': g:doppelganger#highlight#_pair_reverse,
+            \ })
+      call doppelganger#text#set(follower_info)
     else
       let open_info = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
-      call extend(open_info, {'curr_lnum': s:cur_lnum})
+      call extend(open_info, {
+            \ 'curr_lnum': s:cur_lnum,
+            \ 'hl_group': g:doppelganger#highlight#_pair,
+            \ })
       if get(open_info, 'lnum') > 0
-        call doppelganger#text#set(open_info, g:doppelganger#highlight#_pair)
+        call doppelganger#text#set(open_info)
       endif
     endif
 

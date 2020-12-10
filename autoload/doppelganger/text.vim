@@ -1,10 +1,10 @@
 let s:get_config = function('doppelganger#util#get_config', ['text'])
 
-function! doppelganger#text#set(pair_info, hl_group) abort "{{{2
+function! doppelganger#text#set(pair_info) abort "{{{2
   let text = s:modify_text(a:pair_info)
   if text ==# '' | return | endif
 
-  let chunks = [[text, a:hl_group]]
+  let chunks = [[text, a:pair_info.hl_group]]
   let print_lnum = a:pair_info.curr_lnum - 1
   call nvim_buf_set_virtual_text(
         \ 0,
