@@ -16,7 +16,7 @@ function! doppelganger#text#set(pair_info) abort "{{{2
 endfunction
 
 function! s:modify_text(pair_info) abort "{{{2
-  let lnum = a:pair_info['lnum']
+  let lnum = a:pair_info.lnum
   while lnum > 0
     let text = getline(lnum)
     let text = s:truncate_pat_open(text, a:pair_info)
@@ -36,8 +36,8 @@ function! s:truncate_pat_open(text, pair_info) abort "{{{2
   try
     " TODO: make it applicable multiple patterns
     let pat_open = get(a:pair_info, 'reverse', 0) == 1
-          \ ? get(a:pair_info['following'], 0)
-          \ : get(a:pair_info['preceding'], 0)
+          \ ? get(a:pair_info.following, 0)
+          \ : get(a:pair_info.preceding, 0)
   catch
     throw '[Doppelganger] invalid value: '. get(a:pair_info, 'patterns', '')
   endtry
