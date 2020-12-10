@@ -56,7 +56,7 @@ function! doppelganger#update(upper, lower, ...) abort "{{{1
   "}}}
 
   call doppelganger#clear()
-  let min_range = a:0 > 0 ? a:1 : g:doppelganger#min_range_of_pairs
+  let min_range = get(a:, 1, 0)
   call s:deploy_doppelgangers(a:upper, a:lower, min_range)
 endfunction
 
