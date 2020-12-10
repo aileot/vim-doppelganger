@@ -32,6 +32,7 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
   else
     let info['preceding'] = info['patterns'][:-1]
     let info['following'] = info['patterns'][-1]
+    let info['reverse'] = 0
   endif
 
   return info
