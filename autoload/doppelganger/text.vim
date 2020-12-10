@@ -16,6 +16,8 @@ function! doppelganger#text#set(pair_info) abort "{{{2
 endfunction
 
 function! s:modify_text(pair_info) abort "{{{2
+  const fillable_width = s:get_fillable_width(a:pair_info)
+
   let lnum = a:pair_info.lnum
   while lnum > 0
     let a:pair_info.text = getline(lnum)
@@ -25,7 +27,19 @@ function! s:modify_text(pair_info) abort "{{{2
     let lnum -= 1
   endwhile
   let a:pair_info.text = s:get_config('prefix') . a:pair_info.text
+
+  " TODO: Adapt to unicode
+  let a:pair_info.text = a:pair_info.text[: fillable_width]
   return a:pair_info.text
+endfunction
+
+function! s:get_fillable_width(pair_info) abort
+  const lnum = a:pair_info.curr_lnum
+  const max_column_width = s:get_config('max_column_width')
+  const line = getline(lnum)
+  const fillable_width = max_column_width - len(line)
+
+  return fillable_width
 endfunction
 
 function! s:truncate_pat_open(pair_info) abort "{{{2
