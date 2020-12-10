@@ -64,6 +64,13 @@ b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
 	Set in |Number|.
 	|Doppelganger| truncates virtualtexts in the column width.
 
+	You can set a value up to the buffer's config as the following.
+>
+	let b:doppelganger_text_max_column_width = max([&tw, 79])
+<
+	Such scripts should written in a vimrc file under `ftplugin/` or with
+	|:autocmd| as your preference.
+
 g:doppelganger#search#pairs			  *g:doppelgangersearch##pairs*
 b:doppelganger_search_pairs			  *b:doppelganger_search_pairs*
 b:_doppelganger_search_pairs			 *b:_doppelganger_search_pairs*
