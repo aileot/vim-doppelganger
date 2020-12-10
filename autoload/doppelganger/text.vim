@@ -35,7 +35,12 @@ function! s:Text._Join_contents() abort dict
   let contents = self._Read_contents_in_pair()
   let contents = self._Trancate_contents_to_join()
 
-  const text = prefix . join(contents, shim)
+  let text = prefix . join(contents, shim)
+
+  const compress_whitespaces = s:get_config('compress_whitespaces')
+  if compress_whitespaces
+    let text = substitute(text, '\s\{2,}', ' ', 'g')
+  endif
   return text
 endfunction
 
