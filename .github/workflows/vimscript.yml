@@ -32,7 +32,7 @@ jobs:
         os:
           - macos-latest
           - windows-latest
-          - ubuntu-latest # Currently, out-of-date to build neovim.
+          # - ubuntu-latest # Currently, out-of-date to build neovim.
 
     runs-on: ${{ matrix.os }}
 
