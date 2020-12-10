@@ -1,13 +1,13 @@
 let s:get_config = function('doppelganger#util#get_config', ['text'])
 
-let s:text = {}
+let s:Text = {}
 function! doppelganger#text#new(pair_info) abort
-  let s:text = extend(s:text, a:pair_info)
-  let text_info = deepcopy(s:text)
+  let s:Text = extend(s:Text, a:pair_info)
+  let text_info = deepcopy(s:Text)
   return text_info
 endfunction
 
-function! s:text.Set() abort dict
+function! s:Text.Set() abort dict
   const text = self._Set()
   if text ==# '' | return | endif
 
@@ -22,7 +22,7 @@ function! s:text.Set() abort dict
         \ )
 endfunction
 
-function! s:text._Set() abort dict
+function! s:Text._Set() abort dict
   let self.fillable_width = self._Detect_fillable_width()
 
   let self.text = ''
@@ -31,7 +31,7 @@ function! s:text._Set() abort dict
   return self.text
 endfunction
 
-function! s:text._Detect_fillable_width() abort dict
+function! s:Text._Detect_fillable_width() abort dict
   const lnum = self.curr_lnum
   const max_column_width = s:get_config('max_column_width')
   const line = getline(lnum)
@@ -40,7 +40,7 @@ function! s:text._Detect_fillable_width() abort dict
   return fillable_width
 endfunction
 
-function! s:text._Join() abort dict
+function! s:Text._Join() abort dict
   const prefix = s:get_config('prefix')
   const shim = s:get_config('shim_to_join')
 
@@ -51,7 +51,7 @@ function! s:text._Join() abort dict
   return text
 endfunction
 
-function! s:text._Read_contents_in_pair() abort dict
+function! s:Text._Read_contents_in_pair() abort dict
   let self.contents = []
 
   if self.reverse
@@ -66,13 +66,13 @@ function! s:text._Read_contents_in_pair() abort dict
   return self.contents
 endfunction
 
-function! s:text._Trancate_contents_to_join() abort dict
+function! s:Text._Trancate_contents_to_join() abort dict
   let contents = self.contents
   let self.contents = map(contents, 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
   return self.contents
 endfunction
 
-function! s:text._Truncate_as_corresponding_pattern() abort "{{{2
+function! s:Text._Truncate_as_corresponding_pattern() abort "{{{2
   const text = self.text
   if !g:doppelganger#text#conceal_corresponding_pattern
     return text
@@ -102,7 +102,7 @@ function! s:text._Truncate_as_corresponding_pattern() abort "{{{2
   return substitute(text, pat .'\s*$\|^\s*'. pat, '', 'e')
 endfunction
 
-function! s:text._Truncate_as_fillable_width() abort dict
+function! s:Text._Truncate_as_fillable_width() abort dict
   " TODO: Adapt to unicode
   return self.text[: self.fillable_width]
 endfunction
