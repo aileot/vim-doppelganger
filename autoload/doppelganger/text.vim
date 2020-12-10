@@ -7,8 +7,8 @@ function! doppelganger#text#new(pair_info) abort
   return text_info
 endfunction
 
-function! s:text.Set() abort dict "{{{2
-  let text = self._Modify()
+function! s:text.Set() abort dict
+  const text = self._Set()
   if text ==# '' | return | endif
 
   let chunks = [[text, self.hl_group]]
@@ -22,18 +22,11 @@ function! s:text.Set() abort dict "{{{2
         \ )
 endfunction
 
-function! s:text._Modify() abort dict "{{{2
+function! s:text._Set() abort dict
   let self.fillable_width = self._Detect_fillable_width()
 
-  let lnum = self.lnum
-  while lnum > 0
-    let self.text = getline(lnum)
-    let self.text = self._Truncate_as_corresponding_pattern()
-    let self.text = substitute(self.text, '^\s*', '', 'e')
-    if self.text !~# '^\s*$' | break | endif
-    let lnum -= 1
-  endwhile
-  let self.text = s:get_config('prefix') . self.text
+  let self.text = ''
+  let self.text = self._Join()
   let self.text = self._Truncate_as_fillable_width()
   return self.text
 endfunction
@@ -47,7 +40,39 @@ function! s:text._Detect_fillable_width() abort dict
   return fillable_width
 endfunction
 
-function! s:text._Truncate_as_corresponding_pattern() abort dict "{{{2
+function! s:text._Join() abort dict
+  const prefix = s:get_config('prefix')
+  const shim = s:get_config('shim_to_join')
+
+  let contents = self._Read_contents_in_pair()
+  let contents = self._Trancate_contents_to_join()
+
+  const text = prefix . join(contents, shim)
+  return text
+endfunction
+
+function! s:text._Read_contents_in_pair() abort dict
+  let self.contents = []
+
+  if self.reverse
+    let self.contents = [getline(self.lnum)]
+    return self.contents
+  endif
+
+  const start = self.lnum
+  const end = self.curr_lnum
+  let self.contents = getline(start, end)
+
+  return self.contents
+endfunction
+
+function! s:text._Trancate_contents_to_join() abort dict
+  let contents = self.contents
+  let self.contents = map(contents, 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
+  return self.contents
+endfunction
+
+function! s:text._Truncate_as_corresponding_pattern() abort "{{{2
   const text = self.text
   if !g:doppelganger#text#conceal_corresponding_pattern
     return text
