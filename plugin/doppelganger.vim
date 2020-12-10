@@ -44,8 +44,8 @@ function! s:set_default(var, default) abort
   let {a:var} = get({prefix}, suffix, a:default)
 endfunction
 
-call s:set_default('g:doppelganger#prefix', '◂ ')
-call s:set_default('g:doppelganger#conceal_the_other_end_pattern', 1)
+call s:set_default('g:doppelganger#text#prefix', '◂ ')
+call s:set_default('g:doppelganger#text#conceal_corresponding_pattern', 1)
 call s:set_default('g:doppelganger#search#pairs', {
       \ '_': [
       \   ['{', '}'],

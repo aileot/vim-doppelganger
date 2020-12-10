@@ -42,12 +42,12 @@ USAGE							    *doppelganger-usage*
 ------------------------------------------------------------------------------
 VARIABLE						 *doppelganger-variable*
 
-g:doppelganger#prefix					 *g:doppelganger#prefix*
+g:doppelganger#text#prefix			   *g:doppelganger#text#prefix*
 	(default: '◂ ')
 	Set in |String|.
 
-				  *g:doppelganger#conceal_the_other_end_pattern*
-g:doppelganger#conceal_the_other_end_pattern
+			    *g:doppelganger#text#conceal_corresponding_pattern*
+g:doppelganger#text#conceal_corresponding_pattern
 	(default: 1)
 	Set in |Boolean|.
 	If non 0, the other end of pair set in virtualtext will be concealed.
@@ -229,6 +229,11 @@ DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
+
+2020-12-10
+* Rename g:doppelganger#prefix to g:doppelganger#text#prefix.
+* Rename g:doppelganger#conceal_the_other_end_pattern to
+  g:doppelganger#text#conceal_corresponding_pattern.
 
 2020-12-05
 * Rename g:doppelganger#pairs to g:doppelganger#search#pairs.
