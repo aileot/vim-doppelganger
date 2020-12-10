@@ -18,19 +18,20 @@ endfunction
 function! s:modify_text(pair_info) abort "{{{2
   let lnum = a:pair_info.lnum
   while lnum > 0
-    let text = getline(lnum)
-    let text = s:truncate_pat_open(text, a:pair_info)
-    let text = substitute(text, '^\s*', '', 'e')
-    if text !~# '^\s*$' | break | endif
+    let a:pair_info.text = getline(lnum)
+    let a:pair_info.text = s:truncate_pat_open(a:pair_info)
+    let a:pair_info.text = substitute(a:pair_info.text, '^\s*', '', 'e')
+    if a:pair_info.text !~# '^\s*$' | break | endif
     let lnum -= 1
   endwhile
-  let text = s:get_config('prefix') . text
-  return text
+  let a:pair_info.text = s:get_config('prefix') . a:pair_info.text
+  return a:pair_info.text
 endfunction
 
-function! s:truncate_pat_open(text, pair_info) abort "{{{2
+function! s:truncate_pat_open(pair_info) abort "{{{2
+  const text = a:pair_info.text
   if !g:doppelganger#text#conceal_corresponding_pattern
-    return a:text
+    return text
   endif
 
   try
@@ -54,6 +55,6 @@ function! s:truncate_pat_open(text, pair_info) abort "{{{2
   "   }}
   " Truncate such texts into `{qux:`, not `qux: {`.
   let pat = pat_open .'\(.*'. pat_open .'\)\@!\S*'
-  return substitute(a:text, pat .'\s*$\|^\s*'. pat, '', 'e')
+  return substitute(text, pat .'\s*$\|^\s*'. pat, '', 'e')
 endfunction
 
