@@ -117,15 +117,6 @@ b:doppelganger_hl_groups_to_skip	      *b:doppelganger_hl_groups_to_skip*
 	Each key should represent a filetype; '_' is a special key for the
 	rest of filetypes specified in the keys.
 
-g:doppelganger#min_range_of_pairs	     *g:doppelganger#min_range_of_pairs*
-	(default: 1)
-	Set in |Number|.
-	Minimum range of pairs to set virtualtext.
-	Set 0 to show virtualtext even when a pair is in the same line.
-	This variable is ignored in ego-feature.
-
-	See also |g:doppelganger#ego#min_range_of_pairs|.
-
 g:doppelganger#ego#disable_autostart	  *g:doppelganger#ego#disable_autostart*
 	(default: 0)
 	Set in |Number|.
@@ -160,8 +151,6 @@ g:doppelganger#ego#min_range_of_pairs    *g:doppelganger#ego#min_range_of_pairs*
 	Minimum range of pairs to set virtualtext.
 	Set 0 to show virtualtext even when a pair is in the same line.
 	This variable is only for ego-feature.
-
-	See also |g:doppelganger#min_range_of_pairs|.
 
 g:doppelganger#ego#max_offset			 *g:doppelganger#ego#max_offset*
 	(default: 3)
@@ -243,6 +232,8 @@ COMPATIBILITY					    *doppelganger-compatibility*
 * Remove the feature to conceal pattern up to pair and
   g:doppelganger#conceal_the_other_end_pattern which's meaningless now
   that contents in pairs are shown instead.
+* Remove doppelganger#min_range_of_pairs which was just confusing with
+  g:doppelganger#ego#min_range_of_pairs but has little need.
 
 2020-12-05
 * Rename g:doppelganger#pairs to g:doppelganger#search#pairs.

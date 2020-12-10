@@ -67,7 +67,6 @@ call s:set_default('g:doppelganger#hl_groups_to_skip', {
       \ 'json': [
       \   'jsonKeyword',
       \ ]})
-call s:set_default('g:doppelganger#min_range_of_pairs', 1)
 
 call s:set_default('g:doppelganger#ego#disable_autostart', 0)
 call s:set_default('g:doppelganger#ego#disable_on_buftypes', [
