@@ -1,0 +1,34 @@
+{
+  "repo": "kaile256/vim-doppelganger",
+  "name": "vim-doppelganger",
+  "prerequisite": {
+    "version": "neovim v0.3.2 or later",
+    "details": "`exists('*nvim_buf_set_virtual_text') == v:true`"
+  },
+  "config": {
+    "variables": {
+      "g:doppelganger#prefix": {
+        "default": "◂ "
+      },
+      "g:doppelganger#pairs": {
+        "default": "..."
+      },
+      "g:doppelganger#pairs_reverse": {
+        "default": "...",
+        "useCase": "Typically for `do-while loop`"
+      },
+      "g:doppelganger#ego#disable_autostart": {
+          "default": 0,
+          "description": "if 1, :DoppelgangerEgoEnable ego-feature which "
+      },
+      "b:doppelganger_foo_bar_baz": {
+        "explanation": "Set in the format to apply config buffer-locally",
+        "format": "Replace all the '#' with '_' in `g:doppelganger#foo#bar_baz`",
+        "details": "Some variables might have no b:foo format"
+      },
+      "others": "..."
+    }
+  }
+}
+
+// vim:cc=

@@ -1,6 +1,6 @@
 # vim-doppelganger
 
-Doppelganger follows the end of pairs.
+Doppelganger shows the corresponding line of pairs in vitualtexts.
 
 ## Requirements
 
