@@ -1,11 +1,18 @@
 let s:get_config = function('doppelganger#util#get_config', ['text'])
 
-function! doppelganger#text#set(pair_info) abort "{{{2
-  let text = s:modify_text(a:pair_info)
+let s:text = {}
+function! doppelganger#text#new(pair_info) abort
+  let s:text = extend(s:text, a:pair_info)
+  let text_info = deepcopy(s:text)
+  return text_info
+endfunction
+
+function! s:text.Set() abort dict "{{{2
+  let text = self._Modify()
   if text ==# '' | return | endif
 
-  let chunks = [[text, a:pair_info.hl_group]]
-  let print_lnum = a:pair_info.curr_lnum - 1
+  let chunks = [[text, self.hl_group]]
+  let print_lnum = self.curr_lnum - 1
   call nvim_buf_set_virtual_text(
         \ 0,
         \ g:__doppelganger_namespace,
@@ -15,25 +22,24 @@ function! doppelganger#text#set(pair_info) abort "{{{2
         \ )
 endfunction
 
-function! s:modify_text(pair_info) abort "{{{2
-  let a:pair_info.fillable_width = s:get_fillable_width(a:pair_info)
+function! s:text._Modify() abort dict "{{{2
+  let self.fillable_width = self._Detect_fillable_width()
 
-  let lnum = a:pair_info.lnum
+  let lnum = self.lnum
   while lnum > 0
-    let a:pair_info.text = getline(lnum)
-    let a:pair_info.text = s:truncate_pat_open(a:pair_info)
-    let a:pair_info.text = substitute(a:pair_info.text, '^\s*', '', 'e')
-    if a:pair_info.text !~# '^\s*$' | break | endif
+    let self.text = getline(lnum)
+    let self.text = self._Truncate_as_corresponding_pattern()
+    let self.text = substitute(self.text, '^\s*', '', 'e')
+    if self.text !~# '^\s*$' | break | endif
     let lnum -= 1
   endwhile
-  let a:pair_info.text = s:get_config('prefix') . a:pair_info.text
-
-  let a:pair_info.text = s:truncate_text(a:pair_info)
-  return a:pair_info.text
+  let self.text = s:get_config('prefix') . self.text
+  let self.text = self._Truncate_as_fillable_width()
+  return self.text
 endfunction
 
-function! s:get_fillable_width(pair_info) abort
-  const lnum = a:pair_info.curr_lnum
+function! s:text._Detect_fillable_width() abort dict
+  const lnum = self.curr_lnum
   const max_column_width = s:get_config('max_column_width')
   const line = getline(lnum)
   const fillable_width = max_column_width - len(line)
@@ -41,19 +47,19 @@ function! s:get_fillable_width(pair_info) abort
   return fillable_width
 endfunction
 
-function! s:truncate_pat_open(pair_info) abort "{{{2
-  const text = a:pair_info.text
+function! s:text._Truncate_as_corresponding_pattern() abort dict "{{{2
+  const text = self.text
   if !g:doppelganger#text#conceal_corresponding_pattern
     return text
   endif
 
   try
     " TODO: make it applicable multiple patterns
-    let pat_open = get(a:pair_info, 'reverse', 0) == 1
-          \ ? get(a:pair_info.following, 0)
-          \ : get(a:pair_info.preceding, 0)
+    let pat_open = get(self, 'reverse', 0) == 1
+          \ ? get(self.following, 0)
+          \ : get(self.preceding, 0)
   catch
-    throw '[Doppelganger] invalid value: '. get(a:pair_info, 'patterns', '')
+    throw '[Doppelganger] invalid value: '. get(self, 'patterns', '')
   endtry
 
   " Truncate text at dispensable part:
@@ -71,8 +77,8 @@ function! s:truncate_pat_open(pair_info) abort "{{{2
   return substitute(text, pat .'\s*$\|^\s*'. pat, '', 'e')
 endfunction
 
-function! s:truncate_text(pair_info) abort
+function! s:text._Truncate_as_fillable_width() abort dict
   " TODO: Adapt to unicode
-  return a:pair_info.text[: a:pair_info.fillable_width]
+  return self.text[: self.fillable_width]
 endfunction
 

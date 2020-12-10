@@ -88,13 +88,15 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
     if get(follower_info, 'lnum') > 0
       let follower_info.curr_lnum = s:cur_lnum
       let follower_info.hl_group = g:doppelganger#highlight#_pair_reverse
-      call doppelganger#text#set(follower_info)
+      let text = doppelganger#text#new(follower_info)
+      call text.Set()
     else
       let open_info = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
       let open_info.curr_lnum = s:cur_lnum
       let open_info.hl_group = g:doppelganger#highlight#_pair
       if get(open_info, 'lnum') > 0
-        call doppelganger#text#set(open_info)
+        let text = doppelganger#text#new(open_info)
+        call text.Set()
       endif
     endif
 
