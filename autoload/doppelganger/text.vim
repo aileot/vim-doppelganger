@@ -60,7 +60,7 @@ function! s:Text._Read_contents_in_pair() abort dict
   endif
 
   const start = self.lnum
-  const end = self.curr_lnum
+  const end = self.curr_lnum - 1
   let self.contents = getline(start, end)
 
   return self.contents
