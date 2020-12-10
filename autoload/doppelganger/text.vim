@@ -29,7 +29,7 @@ function! s:modify_text(pair_info) abort "{{{2
 endfunction
 
 function! s:truncate_pat_open(text, pair_info) abort "{{{2
-  if !g:doppelganger#text#conceal_the_other_end_pattern
+  if !g:doppelganger#text#conceal_corresponding_pattern
     return a:text
   endif
 
