@@ -60,36 +60,6 @@ function! s:Text._Trancate_contents_to_join() abort dict
   return self.contents
 endfunction
 
-function! s:Text._Truncate_as_corresponding_pattern() abort "{{{2
-  const text = self.text
-  if !g:doppelganger#text#conceal_corresponding_pattern
-    return text
-  endif
-
-  try
-    " TODO: make it applicable multiple patterns
-    let pat_open = get(self, 'reverse', 0) == 1
-          \ ? get(self.following, 0)
-          \ : get(self.preceding, 0)
-  catch
-    throw '[Doppelganger] invalid value: '. get(self, 'patterns', '')
-  endtry
-
-  " Truncate text at dispensable part:
-  " Remove pat_open in head/tail on text.
-  "   call s:foo( -> s:foo
-  "   function! s:bar(aaa, bbb) -> s:bar(aaa, bbb)
-  " Leave pat_open halfway on text.
-  "   call s:baz(ccc,ddd) -> call s:baz(ccc,ddd), leave it.
-  " The complex pat is especially for nested patterns like
-  "   {qux: {
-  "     eee : fff,
-  "   }}
-  " Truncate such texts into `{qux:`, not `qux: {`.
-  let pat = pat_open .'\(.*'. pat_open .'\)\@!\S*'
-  return substitute(text, pat .'\s*$\|^\s*'. pat, '', 'e')
-endfunction
-
 function! s:Text._Truncate_as_fillable_width() abort dict
   const max_column_width = s:get_config('max_column_width')
   const line = getline(self.curr_lnum)
