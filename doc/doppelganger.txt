@@ -58,6 +58,12 @@ g:doppelganger#text#conceal_corresponding_pattern
 		return 0;
 	}
 <
+g:doppelganger#text#max_column_width     *g:doppelganger#text#max_column_width*
+b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
+	(default: max([&tw, 79]))
+	Set in |Number|.
+	|Doppelganger| truncates virtualtexts in the column width.
+
 g:doppelganger#search#pairs			  *g:doppelgangersearch##pairs*
 b:doppelganger_search_pairs			  *b:doppelganger_search_pairs*
 b:_doppelganger_search_pairs			 *b:_doppelganger_search_pairs*

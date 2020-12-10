@@ -46,6 +46,7 @@ endfunction
 
 call s:set_default('g:doppelganger#text#prefix', '◂ ')
 call s:set_default('g:doppelganger#text#conceal_corresponding_pattern', 1)
+call s:set_default('g:doppelganger#text#max_column_width', max([&tw, 79]))
 call s:set_default('g:doppelganger#search#pairs', {
       \ '_': [
       \   ['{', '}'],
