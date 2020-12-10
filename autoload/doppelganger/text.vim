@@ -26,7 +26,7 @@ function! s:Text._Set() abort dict
   let self.fillable_width = self._Detect_fillable_width()
 
   let self.text = ''
-  let self.text = self._Join()
+  let self.text = self._Join_contents()
   let self.text = self._Truncate_as_fillable_width()
   return self.text
 endfunction
@@ -40,7 +40,7 @@ function! s:Text._Detect_fillable_width() abort dict
   return fillable_width
 endfunction
 
-function! s:Text._Join() abort dict
+function! s:Text._Join_contents() abort dict
   const prefix = s:get_config('prefix')
   const shim = s:get_config('shim_to_join')
 
