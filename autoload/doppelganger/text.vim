@@ -23,21 +23,9 @@ function! s:Text.Set() abort dict
 endfunction
 
 function! s:Text._Set() abort dict
-  let self.fillable_width = self._Detect_fillable_width()
-
-  let self.text = ''
-  let self.text = self._Join_contents()
+  let self.raw_text = self._Join_contents()
   let self.text = self._Truncate_as_fillable_width()
   return self.text
-endfunction
-
-function! s:Text._Detect_fillable_width() abort dict
-  const lnum = self.curr_lnum
-  const max_column_width = s:get_config('max_column_width')
-  const line = getline(lnum)
-  const fillable_width = max_column_width - len(line)
-
-  return fillable_width
 endfunction
 
 function! s:Text._Join_contents() abort dict
@@ -103,7 +91,19 @@ function! s:Text._Truncate_as_corresponding_pattern() abort "{{{2
 endfunction
 
 function! s:Text._Truncate_as_fillable_width() abort dict
-  " TODO: Adapt to unicode
-  return self.text[: self.fillable_width]
+  const max_column_width = s:get_config('max_column_width')
+  const line = getline(self.curr_lnum)
+  const fillable_width = max_column_width - strdisplaywidth(line)
+
+  let len = 0
+  let text = ''
+  for char in split(self.raw_text, '\zs')
+    let len += strdisplaywidth(char)
+    if len >= fillable_width | break | endif
+    let text .= char
+  endfor
+
+  let self.text = text
+  return text
 endfunction
 
