@@ -16,10 +16,10 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
     let info = s:get_open_info(a:lnum, min_range)
   endif
 
-  if flags =~# 'n' || get(info, 'lnum', 0) == 0
+  if flags =~# 'n' || get(info, 'curr_lnum', 0) == 0
     call winrestview(save_view)
   else
-    exe info['lnum']
+    exe info['curr_lnum']
   endif
 
   if !has_key(info, 'patterns')
@@ -53,7 +53,7 @@ function! s:get_leader_info(lnum, min_range) abort
       for f in followers
         let lnum = s:_search_leader_lnum(leader, f)
         return {
-              \ 'lnum': lnum,
+              \ 'corr_lnum': lnum,
               \ 'patterns': followers,
               \ }
       endfor
@@ -72,7 +72,7 @@ function! s:get_open_info(lnum, min_range) abort
 
   return the_pair != []
         \ ? {
-        \     'lnum':   s:get_lnum_open(the_pair, a:min_range),
+        \     'corr_lnum':   s:get_lnum_open(the_pair, a:min_range),
         \     'patterns':  the_pair,
         \   }
         \ : {}
