@@ -12,29 +12,35 @@ function! doppelganger#search#new(lnum) abort
   return Search
 endfunction
 
-function! s:Search.GetLnums() abort
+function! s:GetLnums() abort dict
   return [self.curr_lnum, self.corr_lnum]
 endfunction
+let s:Search.GetLnums = funcref('s:GetLnums')
 
-function! s:Search.GetIsReverse() abort
+function! s:GetIsReverse() abort dict
   return self.reverse
 endfunction
+let s:Search.GetIsReverse = funcref('s:GetIsReverse')
 
-function! s:Search.SetMinRange(num) abort
+function! s:SetMinRange(num) abort dict
   let self.min_range = a:num
 endfunction
-function! s:Search.SetMaxRange(num) abort
+let s:Search.SetMinRange = funcref('s:SetMinRange')
+function! s:SetMaxRange(num) abort dict
   let self.max_range = a:num
 endfunction
+let s:Search.SetMaxRange = funcref('s:SetMaxRange')
 
-function! s:Search.SetKeepCursor() abort
+function! s:SetKeepCursor() abort dict
   let self.keep_cursor = 1
 endfunction
-function! s:Search.UnsetKeepCursor() abort
+let s:Search.SetKeepCursor = funcref('s:SetKeepCursor')
+function! s:UnsetKeepCursor() abort dict
   let self.keep_cursor = 0
 endfunction
+let s:Search.UnsetKeepCursor = funcref('s:UnsetKeepCursor')
 
-function! s:Search.SearchPair() abort
+function! s:SearchPair() abort dict
   let save_view = winsaveview()
 
   call self.SearchPairDownwards()
@@ -45,8 +51,9 @@ function! s:Search.SearchPair() abort
   if self.corr_lnum > 1 && !self.keep_cursor | return | endif
   call winrestview(save_view)
 endfunction
+let s:Search.SearchPair = funcref('s:SearchPair')
 
-function! s:Search.SearchPairDownwards() abort
+function! s:SearchPairDownwards() abort dict
   " do { // current line
   "   ...
   " } while (cond); // corresponding line
@@ -66,8 +73,9 @@ function! s:Search.SearchPairDownwards() abort
 
   return
 endfunction
+let s:Search.SearchPairDownwards = funcref('s:SearchPairDownwards')
 
-function! s:Search.SearchPairUpwards() abort
+function! s:SearchPairUpwards() abort dict
   " if (cond) { // corresponding line
   "   ...
   " } // current line
@@ -76,8 +84,9 @@ function! s:Search.SearchPairUpwards() abort
   call self._search_outmost_pair()
   call self._search_lnum_upwards()
 endfunction
+let s:Search.SearchPairUpwards = funcref('s:SearchPairUpwards')
 
-function! s:Search._search_lnum_downwards() abort "{{{1
+function! s:_search_lnum_downwards() abort dict
   let pat_above = self.patterns[0]
   let pat_below = self.patterns[-1]
   let flags_unmove_downward_exc = 'nWz'
@@ -86,8 +95,9 @@ function! s:Search._search_lnum_downwards() abort "{{{1
         \ flags_unmove_downward_exc, Skip_comments)
   let self.corr_lnum = lnum_below
 endfunction
+let s:Search._search_lnum_downwards = funcref('s:_search_lnum_downwards')
 
-function! s:Search._set_candidates() abort "{{{1
+function! s:_set_candidates() abort dict
   if self.reverse
     let self.candidates = s:get_config_as_filetype('pairs_reverse')
     return
@@ -106,6 +116,7 @@ function! s:Search._set_candidates() abort "{{{1
     let b:_doppelganger_search_pairs = self.candidates
   endif
 endfunction
+let s:Search._set_candidates = funcref('s:_set_candidates')
 
 function! s:parse_matchwords() abort
   let pairs = split(b:match_words, '\\\@<!,')
@@ -139,7 +150,7 @@ function! s:sort_by_length_desc(pair1, pair2) abort
   return len(a:pair2[0]) - len(a:pair1[0])
 endfunction
 
-function! s:Search._search_lnum_upwards() abort
+function! s:_search_lnum_upwards() abort dict
   if len(self.patterns) < 2 | return | endif
 
   let pat_above = self.patterns[0]
@@ -162,8 +173,9 @@ function! s:Search._search_lnum_upwards() abort
     let self.corr_lnum = lnum_above
   endif
 endfunction
+let s:Search._search_lnum_upwards = funcref('s:_search_lnum_upwards')
 
-function! s:Search._search_outmost_pair() abort "{{{1
+function! s:_search_outmost_pair() abort dict
   let line = getline(self.curr_lnum)
   let self.patterns = []
 
@@ -178,8 +190,9 @@ function! s:Search._search_outmost_pair() abort "{{{1
     endif
   endfor
 endfunction
+let s:Search._search_outmost_pair = funcref('s:_search_outmost_pair')
 
-function! s:append_endOfLine_pattern(pat) abort "{{{1
+function! s:append_endOfLine_pattern(pat) abort
   let separators_at_end = ',;'
 
   " Sample: to get correct pattern
