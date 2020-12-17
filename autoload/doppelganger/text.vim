@@ -48,11 +48,11 @@ function! s:Text._Read_contents_in_pair() abort dict
   let self.contents = []
 
   if self.reverse
-    let self.contents = [getline(self.lnum)]
+    let self.contents = [getline(self.corr_lnum)]
     return self.contents
   endif
 
-  const start = self.lnum
+  const start = self.corr_lnum
   const end = self.curr_lnum - 1
   let self.contents = getline(start, end)
 

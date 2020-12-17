@@ -34,109 +34,77 @@ function! s:Search.UnsetKeepCursor() abort
   let self.keep_cursor = 0
 endfunction
 
-function! doppelganger#search#get_pair_info(lnum, ...) abort
-  let flags = get(a:, 1, '')
-  let min_range = get(a:, 2, 0)
-
+function! s:Search.SearchPair() abort
   let save_view = winsaveview()
 
-  " Jump to the line number
-  exe a:lnum
-
-  if flags =~# 'b'
-    let info = s:get_leader_info(a:lnum, min_range)
-  else
-    let info = s:get_open_info(a:lnum, min_range)
+  call self.SearchPairDownwards()
+  if self.corr_lnum < 1
+    call self.SearchPairUpwards()
   endif
 
-  if flags =~# 'n' || get(info, 'curr_lnum', 0) == 0
-    call winrestview(save_view)
-  else
-    exe info['curr_lnum']
-  endif
-
-  if !has_key(info, 'patterns')
-    return {}
-
-  elseif flags =~# 'b'
-    let info.preceding = info.patterns[0]
-    let info.following = info.patterns[1:]
-    let info.reverse = 1
-  else
-    let info.preceding = info.patterns[:-1]
-    let info.following = info.patterns[-1]
-    let info.reverse = 0
-  endif
-
-  return info
+  if self.corr_lnum > 1 && !self.keep_cursor | return | endif
+  call winrestview(save_view)
 endfunction
 
-function! s:get_leader_info(lnum, min_range) abort
-  " do { // leader
+function! s:Search.SearchPairDownwards() abort
+  " do { // current line
   "   ...
-  " } while (cond); // follower
+  " } while (cond); // corresponding line
 
-  let line = getline(a:lnum)
-  let pairs = s:set_pairs_reverse()
+  let self.reverse = 1
 
-  for p in pairs
-    let leader = p[0]
-    if line =~# leader
-      let followers = p[1:]
-      for f in followers
-        let lnum = s:_search_leader_lnum(leader, f)
-        return {
-              \ 'corr_lnum': lnum,
-              \ 'patterns': followers,
-              \ }
-      endfor
+  let line = getline(self.curr_lnum)
+  call self._set_candidates()
+
+  for c in self.candidates
+    let pat_above = c[0]
+    if line =~# pat_above
+      let self.patterns = c
+      call self._search_lnum_downwards()
     endif
   endfor
 
-  return {}
+  return
 endfunction
 
-function! s:get_open_info(lnum, min_range) abort
-  " if (cond) { // open
+function! s:Search.SearchPairUpwards() abort
+  " if (cond) { // corresponding line
   "   ...
-  " } // close
+  " } // current line
 
-  let the_pair = s:get_outmost_pair(a:lnum)
-
-  return the_pair != []
-        \ ? {
-        \     'corr_lnum':   s:get_lnum_open(the_pair, a:min_range),
-        \     'patterns':  the_pair,
-        \   }
-        \ : {}
+  let self.reverse = 0
+  call self._search_outmost_pair()
+  call self._search_lnum_upwards()
 endfunction
 
-function! s:set_pairs_reverse() abort "{{{1
-  let groups = s:get_config_as_filetype('pairs_reverse')
-  return groups
-endfunction
-
-function! s:_search_leader_lnum(pat_leader, pat_follower) abort "{{{1
+function! s:Search._search_lnum_downwards() abort "{{{1
+  let pat_above = self.patterns[0]
+  let pat_below = self.patterns[-1]
   let flags_unmove_downward_exc = 'nWz'
   let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
-  let lnum_leader = searchpair(a:pat_leader, '', a:pat_follower,
+  let lnum_below = searchpair(pat_above, '', pat_below,
         \ flags_unmove_downward_exc, Skip_comments)
-  return lnum_leader
+  let self.corr_lnum = lnum_below
 endfunction
 
-function! s:set_pairs() abort "{{{1
-  let pairs = s:get_config_as_filetype('pairs')
-
-  if exists('b:_doppelganger_search_pairs')
-    return pairs + b:_doppelganger_search_pairs
-
-  elseif exists('b:match_words')
-    let pairs += s:parse_matchwords()
-    let pairs = sort(pairs, 's:sort_by_length_desc')
-    let b:_doppelganger_search_pairs = pairs
+function! s:Search._set_candidates() abort "{{{1
+  if self.reverse
+    let self.candidates = s:get_config_as_filetype('pairs_reverse')
+    return
   endif
 
-  return pairs
+  let self.candidates = s:get_config_as_filetype('pairs')
+
+  if exists('b:_doppelganger_search_pairs')
+        \ && b:_doppelganger_search_pairs isnot# self.candidates
+    let self.candidates = b:_doppelganger_search_pairs
+    return
+
+  elseif exists('b:match_words')
+    call extend(self.candidates, s:parse_matchwords())
+    call sort(self.candidates, 's:sort_by_length_desc')
+    let b:_doppelganger_search_pairs = self.candidates
+  endif
 endfunction
 
 function! s:parse_matchwords() abort
@@ -171,41 +139,44 @@ function! s:sort_by_length_desc(pair1, pair2) abort
   return len(a:pair2[0]) - len(a:pair1[0])
 endfunction
 
-function! s:get_lnum_open(pair_dict, min_range) abort
-  let pat_open = a:pair_dict[0]
-  let pat_close = a:pair_dict[-1]
+function! s:Search._search_lnum_upwards() abort
+  if len(self.patterns) < 2 | return | endif
+
+  let pat_above = self.patterns[0]
+  let pat_below = self.patterns[-1]
   let flags_mobile_upward_inc = 'cbW'
-  let flags_unmove_upward_exc = 'nbWz'
+  let flags_mobile_upward_exc = 'bWz'
   let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
 
+  exe self.curr_lnum
+
+  " Set cursot onto the very outmost pair to call searchpair().
   norm! $
-  let lnum_close = search(pat_close, flags_mobile_upward_inc)
+  call search(pat_below, flags_mobile_upward_inc)
+
   " searchpair() fails to parse line-continuation with 'c'-flag
-  let lnum_open = searchpair(pat_open, '', pat_close,
-        \ flags_unmove_upward_exc, Skip_comments)
+  let lnum_above = searchpair(pat_above, '', pat_below,
+        \ flags_mobile_upward_exc, Skip_comments)
 
-  if lnum_open > lnum_close - a:min_range
-    " Continue the while loop anyway.
-    return 0
+  if lnum_above < self.curr_lnum - self.min_range
+    let self.corr_lnum = lnum_above
   endif
-
-  return lnum_open
 endfunction
 
-function! s:get_outmost_pair(lnum) abort "{{{1
-  let line = getline(a:lnum)
-  let pairs = s:set_pairs()
+function! s:Search._search_outmost_pair() abort "{{{1
+  let line = getline(self.curr_lnum)
+  let self.patterns = []
 
-  for p in pairs
-    let pat_close = p[-1]
-    let pat_close_at_endOfLine = s:append_endOfLine_pattern(pat_close)
-    let match = matchstr(line, pat_close_at_endOfLine)
+  call self._set_candidates()
+  for c in self.candidates
+    let pat_below = c[-1]
+    let pat_below_at_endOfLine = s:append_endOfLine_pattern(pat_below)
+    let match = matchstr(line, pat_below_at_endOfLine)
     if len(match)
-      return p
+      let self.patterns = c
+      return
     endif
   endfor
-
-  return []
 endfunction
 
 function! s:append_endOfLine_pattern(pat) abort "{{{1

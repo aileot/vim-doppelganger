@@ -84,20 +84,17 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       continue
     endif
 
-    let follower_info = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
-    if get(follower_info, 'lnum') > 0
-      let follower_info.curr_lnum = s:cur_lnum
-      let follower_info.hl_group = g:doppelganger#highlight#_pair_reverse
-      let Text = doppelganger#text#new(follower_info)
+    let Search = doppelganger#search#new(s:cur_lnum)
+    call Search.SetMinRange(a:min_range)
+    call Search.SetKeepCursor()
+    call Search.SearchPair()
+    let [_, corr_lnum] = Search.GetLnums()
+    if corr_lnum > 0
+      let Search.hl_group = Search.GetIsReverse()
+            \ ? g:doppelganger#highlight#_pair_reverse
+            \ : g:doppelganger#highlight#_pair
+      let Text = doppelganger#text#new(Search)
       call Text.SetVirtualText()
-    else
-      let open_info = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
-      let open_info.curr_lnum = s:cur_lnum
-      let open_info.hl_group = g:doppelganger#highlight#_pair
-      if get(open_info, 'lnum') > 0
-        let Text = doppelganger#text#new(open_info)
-        call Text.SetVirtualText()
-      endif
     endif
 
     let s:cur_lnum -= 1
