@@ -4,7 +4,34 @@ let s:get_config_as_filetype =
 let s:Search = {}
 function! doppelganger#search#new(lnum) abort
   let Search = deepcopy(s:Search)
+  let Search.curr_lnum = a:lnum
+  let Search.corr_lnum = 0
+  let Search.min_range = 0
+  let Search.max_range = 0
+  let Search.keep_cursor = 0
   return Search
+endfunction
+
+function! s:Search.GetLnums() abort
+  return [self.curr_lnum, self.corr_lnum]
+endfunction
+
+function! s:Search.GetIsReverse() abort
+  return self.reverse
+endfunction
+
+function! s:Search.SetMinRange(num) abort
+  let self.min_range = a:num
+endfunction
+function! s:Search.SetMaxRange(num) abort
+  let self.max_range = a:num
+endfunction
+
+function! s:Search.SetKeepCursor() abort
+  let self.keep_cursor = 1
+endfunction
+function! s:Search.UnsetKeepCursor() abort
+  let self.keep_cursor = 0
 endfunction
 
 function! doppelganger#search#get_pair_info(lnum, ...) abort
