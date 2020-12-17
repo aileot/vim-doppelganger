@@ -84,9 +84,12 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
       continue
     endif
 
-    let Search = doppelganger#search#new(s:cur_lnum)
-    call Search.SetMinRange(a:min_range)
-    call Search.SetKeepCursor()
+    let Search = doppelganger#search#new({
+          \ 'deepcopy': 0,
+          \ 'curr_lnum': s:cur_lnum,
+          \ 'min_range': a:min_range,
+          \ 'keep_cursor': 1,
+          \ })
     call Search.SearchPair()
     let [_, corr_lnum] = Search.GetLnums()
     if corr_lnum > 0

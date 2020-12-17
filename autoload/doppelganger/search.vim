@@ -2,13 +2,27 @@ let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', ['search'])
 
 let s:Search = {}
-function! doppelganger#search#new(lnum) abort
-  let Search = deepcopy(s:Search)
-  let Search.curr_lnum = a:lnum
+function! doppelganger#search#new(arg) abort
+  if type(a:arg) == type({})
+    " Dict is esp. for internal usage.
+    " deepcopy() is a bottleneck.
+    let Search = get(a:arg, 'deepcopy', 1) ? deepcopy(s:Search) : s:Search
+    let Search.curr_lnum = get(a:arg, 'curr_lnum', 0)
+    let Search.min_range = get(a:arg, 'min_range', 0)
+    let Search.max_range = get(a:arg, 'max_range', 0)
+    let Search.keep_cursor = get(a:arg, 'keep_cursor', 0)
+  elseif type(a:arg) == type(1)
+    let Search = deepcopy(s:Search)
+    let Search.curr_lnum = a:arg
+    let Search.min_range = 0
+    let Search.max_range = 0
+    let Search.keep_cursor = 0
+  else
+    echoerr 'Invalid argument:' string(a:000)
+  endif
+
   let Search.corr_lnum = 0
-  let Search.min_range = 0
-  let Search.max_range = 0
-  let Search.keep_cursor = 0
+
   return Search
 endfunction
 
