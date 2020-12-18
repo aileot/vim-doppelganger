@@ -176,7 +176,7 @@ function! s:swap_atoms(_, pat) abort
     let pat_atom = '\\'. cnt
     let save_match = matchstr(pat[0], pat_to_save)
     let pat[0] = substitute(pat[0], pat_to_save, pat_atom, 'e')
-    let pat[len(pat) - 1] = substitute(pat[-1], pat_atom, save_match, 'e')
+    let pat[-1] = substitute(pat[-1], pat_atom, save_match, 'e')
   endwhile
   return pat
 endfunction
