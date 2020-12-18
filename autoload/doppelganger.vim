@@ -77,12 +77,6 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
   let stop_lnum = s:get_top_lnum(a:upper)
   while s:cur_lnum >= stop_lnum
     let s:cur_lnum = s:update_curpos(stop_lnum)
-    if doppelganger#highlight#_is_hl_group_to_skip()
-      " Note: It's too slow without this guard up to hl_group though this check
-      " is too rough for a line which contains both codes and the hl_group.
-      let s:cur_lnum -= 1
-      continue
-    endif
 
     let Search = doppelganger#search#new({
           \ 'deepcopy': 0,
@@ -91,6 +85,12 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
           \ 'keep_cursor': 1,
           \ })
     call Search.SearchPair()
+
+    if Search.GetIsLineToSkip()
+      let s:cur_lnum -= 1
+      continue
+    endif
+
     let [_, corr_lnum] = Search.GetLnums()
     if corr_lnum > 0
       let Search.hl_group = Search.GetIsReverse()

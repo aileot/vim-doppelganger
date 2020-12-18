@@ -116,8 +116,10 @@ b:doppelganger_search_pairs_reverse	  *b:doppelganger_search_pairs_reverse*
 	|b:doppelganger_search_pairs_reverse| won't be generated unless you
 	set it manually.
 
-g:doppelganger#hl_groups_to_skip	      *g:doppelganger#hl_groups_to_skip*
-b:doppelganger_hl_groups_to_skip	      *b:doppelganger_hl_groups_to_skip*
+				      *g:doppelganger#search#hl_groups_to_skip*
+				      *b:doppelganger_search_hl_groups_to_skip*
+g:doppelganger#search#hl_groups_to_skip
+b:doppelganger_search_hl_groups_to_skip
 	(default: {
 		\ "_": ['Comment', 'String'],
 		\ "json": ['jsonKeyword'],
@@ -235,6 +237,12 @@ DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
+
+2020-12-18
+* Rename g:doppelganger#hl_groups_to_skip to
+  g:doppelganger#search#hl_groups_to_skip.
+* Rename b:doppelganger_hl_groups_to_skip to
+  b:doppelganger_search_hl_groups_to_skip.
 
 2020-12-10
 * Rename g:doppelganger#prefix to g:doppelganger#text#prefix.

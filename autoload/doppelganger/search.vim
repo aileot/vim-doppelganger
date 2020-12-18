@@ -26,6 +26,11 @@ function! doppelganger#search#new(arg) abort
   return Search
 endfunction
 
+function! s:GetIsLineToSkip() abort dict
+  return self.is_line_to_skip
+endfunction
+let s:Search.GetIsLineToSkip = funcref('s:GetIsLineToSkip')
+
 function! s:GetLnums() abort dict
   return [self.curr_lnum, self.corr_lnum]
 endfunction
@@ -54,8 +59,25 @@ function! s:UnsetKeepCursor() abort dict
 endfunction
 let s:Search.UnsetKeepCursor = funcref('s:UnsetKeepCursor')
 
+function! s:_is_hl_group_to_skip() abort
+  let hl_groups = s:get_config_as_filetype('hl_groups_to_skip')
+  return synIDattr(synID(line('.'), col('.'), 0), 'name')
+        \ =~? join(hl_groups, '\|')
+endfunction
+
 function! s:SearchPair() abort dict
   let save_view = winsaveview()
+
+  let self.is_line_to_skip = 0
+  exe self.curr_lnum
+  norm! $
+  if s:_is_hl_group_to_skip()
+    " Note: It's too slow without this guard up to hl_group though this check
+    " is too rough for a line which contains both codes and the hl_group.
+    let self.is_line_to_skip = 1
+    call winrestview(save_view)
+    return
+  endif
 
   call self.SearchPairDownwards()
   if self.corr_lnum < 1
@@ -104,9 +126,8 @@ function! s:_search_lnum_downwards() abort dict
   let pat_above = self.patterns[0]
   let pat_below = self.patterns[-1]
   let flags_unmove_downward_exc = 'nWz'
-  let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
   let lnum_below = searchpair(pat_above, '', pat_below,
-        \ flags_unmove_downward_exc, Skip_comments)
+        \ flags_unmove_downward_exc, 's:_is_hl_group_to_skip()')
   let self.corr_lnum = lnum_below
 endfunction
 let s:Search._search_lnum_downwards = funcref('s:_search_lnum_downwards')
@@ -171,20 +192,18 @@ function! s:_search_lnum_upwards() abort dict
   let pat_below = self.patterns[-1]
   let flags_mobile_upward_inc = 'cbW'
   let flags_mobile_upward_exc = 'bWz'
-  let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
-
-  exe self.curr_lnum
 
   " Set cursot onto the very outmost pair to call searchpair().
-  norm! $
   call search(pat_below, flags_mobile_upward_inc)
 
   " searchpair() fails to parse line-continuation with 'c'-flag
   let lnum_above = searchpair(pat_above, '', pat_below,
-        \ flags_mobile_upward_exc, Skip_comments)
+        \ flags_mobile_upward_exc, 's:_is_hl_group_to_skip()')
 
   if lnum_above < self.curr_lnum - self.min_range
     let self.corr_lnum = lnum_above
+  else
+    let self.is_line_to_skip = 1
   endif
 endfunction
 let s:Search._search_lnum_upwards = funcref('s:_search_lnum_upwards')
