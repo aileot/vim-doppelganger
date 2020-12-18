@@ -104,6 +104,7 @@ function! s:SearchPairDownwards() abort dict
     if line =~# pat_above
       let self.patterns = c
       call self._search_lnum_downwards()
+      return
     endif
   endfor
 
