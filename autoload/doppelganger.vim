@@ -32,6 +32,13 @@ set cpo&vim
 let g:__doppelganger_namespace = nvim_create_namespace('doppelganger')
 let s:is_visible = 0
 
+let s:hl_group = 'DoppelgangerVirtualText'
+let s:hl_pair = s:hl_group .'Pair'
+let s:hl_pair_reverse = s:hl_group .'PairReverse'
+exe 'hi def link' s:hl_group 'NonText'
+exe 'hi def link' s:hl_pair s:hl_group
+exe 'hi def link' s:hl_pair_reverse s:hl_group
+
 " Helper Functions {{{1
 let s:get_config = function('doppelganger#util#get_config', [''])
 let s:get_config_as_filetype =
@@ -94,8 +101,8 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
     let [_, corr_lnum] = Search.GetLnums()
     if corr_lnum > 0
       let Search.hl_group = Search.GetIsReverse()
-            \ ? g:doppelganger#highlight#_pair_reverse
-            \ : g:doppelganger#highlight#_pair
+            \ ? s:hl_pair_reverse
+            \ : s:hl_pair
       let Text = doppelganger#text#new(Search)
       call Text.SetVirtualText()
     endif
