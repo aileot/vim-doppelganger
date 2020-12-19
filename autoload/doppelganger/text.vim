@@ -1,10 +1,19 @@
 let s:get_config = function('doppelganger#util#get_config', ['text'])
 
 let s:Text = {}
-function! doppelganger#text#new(pair_info) abort
-  let s:Text = extend(s:Text, a:pair_info)
-  let text_info = deepcopy(s:Text)
-  return text_info
+function! doppelganger#text#new(curr_lnum, ...) abort
+  let Text = deepcopy(s:Text)
+
+  if a:0 > 0
+    let Text.corr_lnum = a:1
+  else
+    let Search = doppelganger#search#new(a:curr_lnum)
+    call Search.SearchPair()
+    let [_, corr_lnum] = Search.GetLnums()
+  endif
+
+  let Text.curr_lnum = a:curr_lnum
+  return Text
 endfunction
 
 function! s:Text.SetVirtualText() abort dict

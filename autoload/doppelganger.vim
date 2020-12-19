@@ -100,10 +100,11 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
 
     let [_, corr_lnum] = Search.GetLnums()
     if corr_lnum > 0
-      let Search.hl_group = Search.GetIsReverse()
+      let Text = doppelganger#text#new(s:cur_lnum, corr_lnum)
+      let Text.reverse = Search.GetIsReverse()
+      let Text.hl_group = Text.reverse
             \ ? s:hl_pair_reverse
             \ : s:hl_pair
-      let Text = doppelganger#text#new(Search)
       call Text.SetVirtualText()
     endif
 
