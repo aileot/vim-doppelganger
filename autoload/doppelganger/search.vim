@@ -80,11 +80,12 @@ function! s:SearchPair() abort dict
   endif
 
   call self.SearchPairDownwards()
-  if self.corr_lnum < 1
+  let corr_lnum = self.corr_lnum
+  if corr_lnum < 1
     call self.SearchPairUpwards()
   endif
 
-  if self.corr_lnum > 1 && !self.keep_cursor | return | endif
+  if corr_lnum > 1 && !self.keep_cursor | return | endif
   call winrestview(save_view)
 endfunction
 let s:Search.SearchPair = funcref('s:SearchPair')
@@ -124,8 +125,9 @@ endfunction
 let s:Search.SearchPairUpwards = funcref('s:SearchPairUpwards')
 
 function! s:_search_lnum_downwards() abort dict
-  let pat_above = self.patterns[0]
-  let pat_below = self.patterns[-1]
+  let pats = self.patterns
+  let pat_above = pats[0]
+  let pat_below = pats[-1]
   let flags_unmove_downward_exc = 'nWz'
   let lnum_below = searchpair(pat_above, '', pat_below,
         \ flags_unmove_downward_exc, 's:_is_hl_group_to_skip()')
@@ -139,17 +141,19 @@ function! s:_set_candidates() abort dict
     return
   endif
 
-  let self.candidates = s:get_config_as_filetype('pairs')
+  let candidates = self.candidates
+  let candidates = s:get_config_as_filetype('pairs')
 
   if exists('b:_doppelganger_search_pairs')
-        \ && b:_doppelganger_search_pairs isnot# self.candidates
+        \ && b:_doppelganger_search_pairs isnot# candidates
     let self.candidates = b:_doppelganger_search_pairs
     return
 
   elseif exists('b:match_words')
-    call extend(self.candidates, s:parse_matchwords())
-    call sort(self.candidates, 's:sort_by_length_desc')
-    let b:_doppelganger_search_pairs = self.candidates
+    call extend(candidates, s:parse_matchwords())
+    call sort(candidates, 's:sort_by_length_desc')
+    let b:_doppelganger_search_pairs = candidates
+    let self.candidates = candidates
   endif
 endfunction
 let s:Search._set_candidates = funcref('s:_set_candidates')
@@ -187,10 +191,11 @@ function! s:sort_by_length_desc(pair1, pair2) abort
 endfunction
 
 function! s:_search_lnum_upwards() abort dict
-  if len(self.patterns) < 2 | return | endif
+  let pats = self.patterns
+  if len(pats) < 2 | return | endif
 
-  let pat_above = self.patterns[0]
-  let pat_below = self.patterns[-1]
+  let pat_above = pats[0]
+  let pat_below = pats[-1]
   let flags_mobile_upward_inc = 'cbW'
   let flags_mobile_upward_exc = 'bWz'
 
