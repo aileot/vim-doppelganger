@@ -7,7 +7,7 @@ function! doppelganger#text#new(pair_info) abort
   return text_info
 endfunction
 
-function! s:Text.Set() abort dict
+function! s:Text.SetVirtualtext() abort dict
   const text = self._Set()
   if text ==# '' | return | endif
 
