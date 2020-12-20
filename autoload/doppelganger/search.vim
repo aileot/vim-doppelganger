@@ -1,7 +1,18 @@
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', ['search'])
 
-let s:Search = {}
+let s:Search = {
+      \ 'curr_lnum': 0,
+      \ 'corr_lnum': 0,
+      \ 'min_range': 0,
+      \ 'max_range': 0,
+      \ 'keep_cursor': 0,
+      \ 'reverse': 0,
+      \ 'is_lnum_to_skip': 0,
+      \ 'candidates': [],
+      \ 'patterns': [],
+      \ }
+
 function! doppelganger#search#new(arg) abort
   if type(a:arg) == type({})
     " Dict is esp. for internal usage.
@@ -14,9 +25,6 @@ function! doppelganger#search#new(arg) abort
   elseif type(a:arg) == type(1)
     let Search = deepcopy(s:Search)
     let Search.curr_lnum = a:arg
-    let Search.min_range = 0
-    let Search.max_range = 0
-    let Search.keep_cursor = 0
   else
     echoerr 'Invalid argument:' string(a:000)
   endif
