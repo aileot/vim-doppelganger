@@ -8,7 +8,7 @@ function! doppelganger#text#new(pair_info) abort
 endfunction
 
 function! s:Text.SetVirtualtext() abort dict
-  const text = self._Set()
+  const text = self.set()
   if text ==# '' | return | endif
 
   let chunks = [[text, self.hl_group]]
@@ -22,18 +22,19 @@ function! s:Text.SetVirtualtext() abort dict
         \ )
 endfunction
 
-function! s:Text._Set() abort dict
-  let self.raw_text = self._Join_contents()
-  let self.text = self._Truncate_as_fillable_width()
+function! s:Text__set() abort dict
+  let self.raw_text = self.join_contents()
+  let self.text = self.truncate_as_fillable_width()
   return self.text
 endfunction
+let s:Text.set = funcref('s:Text__set')
 
-function! s:Text._Join_contents() abort dict
+function! s:Text__join_contents() abort dict
   const prefix = s:get_config('prefix')
   const shim = s:get_config('shim_to_join')
 
-  let contents = self._Read_contents_in_pair()
-  let contents = self._Trancate_contents_to_join()
+  let contents = self.read_contents_in_pair()
+  let contents = self.trancate_contents_to_join()
 
   let text = prefix . join(contents, shim)
 
@@ -43,8 +44,9 @@ function! s:Text._Join_contents() abort dict
   endif
   return text
 endfunction
+let s:Text.join_contents = funcref('s:Text__join_contents')
 
-function! s:Text._Read_contents_in_pair() abort dict
+function! s:Text__read_contents_in_pair() abort dict
   let self.contents = []
 
   if self.reverse
@@ -58,14 +60,16 @@ function! s:Text._Read_contents_in_pair() abort dict
 
   return self.contents
 endfunction
+let s:Text.read_contents_in_pair = funcref('s:Text__read_contents_in_pair')
 
-function! s:Text._Trancate_contents_to_join() abort dict
+function! s:Text__trancate_contents_to_join() abort dict
   let contents = self.contents
   let self.contents = map(contents, 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
   return self.contents
 endfunction
+let s:Text.trancate_contents_to_join = funcref('s:Text__trancate_contents_to_join')
 
-function! s:Text._Truncate_as_fillable_width() abort dict
+function! s:Text__truncate_as_fillable_width() abort dict
   const max_column_width = s:get_config('max_column_width')
   const line = getline(self.curr_lnum)
   const fillable_width = max_column_width - strdisplaywidth(line)
@@ -81,4 +85,4 @@ function! s:Text._Truncate_as_fillable_width() abort dict
   let self.text = text
   return text
 endfunction
-
+let s:Text.truncate_as_fillable_width = funcref('s:Text__truncate_as_fillable_width')
