@@ -46,6 +46,7 @@ endfunction
 
 call s:set_default('g:doppelganger#text#prefix', '◂ ')
 call s:set_default('g:doppelganger#text#shim_to_join', ' ﲖ ')
+call s:set_default('g:doppelganger#text#ellipsis', ' …')
 call s:set_default('g:doppelganger#text#compress_whitespaces', 1)
 call s:set_default('g:doppelganger#text#max_column_width', max([&tw, 79]))
 call s:set_default('g:doppelganger#search#pairs', {

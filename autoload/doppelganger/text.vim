@@ -74,11 +74,17 @@ function! s:Text__truncate_as_fillable_width() abort dict
   const line = getline(self.curr_lnum)
   const fillable_width = max_column_width - strdisplaywidth(line)
 
-  let len = 0
+  const ellipsis = g:doppelganger#text#ellipsis
+  const len_ellipsis = strdisplaywidth(ellipsis)
+
   let text = ''
+  let len = len_ellipsis
   for char in split(self.raw_text, '\zs')
     let len += strdisplaywidth(char)
-    if len >= fillable_width | break | endif
+    if len >= fillable_width
+      let text .= ellipsis
+      break
+    endif
     let text .= char
   endfor
 
