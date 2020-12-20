@@ -34,7 +34,7 @@ function! s:Text__join_contents() abort dict
   const shim = s:get_config('shim_to_join')
 
   let contents = self.read_contents_in_pair()
-  let contents = self.trancate_contents_to_join()
+  let contents = self.truncate_contents_to_join()
 
   let text = prefix . join(contents, shim)
 
@@ -62,12 +62,12 @@ function! s:Text__read_contents_in_pair() abort dict
 endfunction
 let s:Text.read_contents_in_pair = funcref('s:Text__read_contents_in_pair')
 
-function! s:Text__trancate_contents_to_join() abort dict
+function! s:Text__truncate_contents_to_join() abort dict
   let contents = self.contents
   let self.contents = map(contents, 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
   return self.contents
 endfunction
-let s:Text.trancate_contents_to_join = funcref('s:Text__trancate_contents_to_join')
+let s:Text.truncate_contents_to_join = funcref('s:Text__truncate_contents_to_join')
 
 function! s:Text__truncate_as_fillable_width() abort dict
   const max_column_width = s:get_config('max_column_width')
