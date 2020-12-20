@@ -56,7 +56,7 @@ b:doppelganger_text_shim_to_join	     *b:doppelganger_text_shim_to_join*
 g:doppelganger#text#ellipsis			 *g:doppelganger#text#ellipsis*
 	(default: ' …')
 	Set in |String|.
-	Substitute trimmed texts.
+	Replace omitted text with the value.
 	See also |g:dooppelganger#text#max_column_width|.
 
 				     *g:doppelganger#text#compress_whitespaces*
