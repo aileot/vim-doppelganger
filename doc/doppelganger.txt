@@ -79,8 +79,12 @@ g:doppelganger#search#pairs			  *g:doppelgangersearch##pairs*
 b:doppelganger_search_pairs			  *b:doppelganger_search_pairs*
 b:_doppelganger_search_pairs			 *b:_doppelganger_search_pairs*
 	(default: {
-		\ '_': [['{', '}'], ['(', ')'], ['\[', ']']],
+		\ '_': [
+		\	['{', '}[,;]\?'],
+		\	['(', ')[,;'\?],
+		\	['\[', '\][,;'\?]],
 		\ })
+
 	Set in |Dict|.
 	|Doppelganger| will search pairs to set visualtexts as these variables.
 
