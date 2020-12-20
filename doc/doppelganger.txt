@@ -53,6 +53,12 @@ b:doppelganger_text_shim_to_join	     *b:doppelganger_text_shim_to_join*
 	When contents within a pair is more than two lines, the characters
 	will be inserted into the joined lines in virtualtexts.
 
+g:doppelganger#text#ellipsis			 *g:doppelganger#text#ellipsis*
+	(default: ' …')
+	Set in |String|.
+	Replace omitted text with the value.
+	See also |g:dooppelganger#text#max_column_width|.
+
 				     *g:doppelganger#text#compress_whitespaces*
 				     *b:doppelganger_text_compress_whitespaces*
 g:doppelganger#text#compress_whitespaces
@@ -67,6 +73,8 @@ b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
 	(default: max([&tw, 79]))
 	Set in |Number|.
 	|Doppelganger| truncates virtualtexts in the column width.
+	The trimmed texts will be replaced with a text defined in
+	|g:doppelganger#text#ellipsis|.
 
 	You can set a value up to the buffer's config as the following.
 >
