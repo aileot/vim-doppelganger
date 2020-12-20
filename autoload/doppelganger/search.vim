@@ -165,39 +165,13 @@ function! s:get_outmost_pair(lnum) abort "{{{1
 
   for p in pairs
     let pat_close = p[-1]
-    let pat_close_at_endOfLine = s:append_endOfLine_pattern(pat_close)
-    let match = matchstr(line, pat_close_at_endOfLine)
+    " Tips: appending <NL> matches as if '$' is, with any magics like '\v'.
+    let match = matchstr(line ."\n", pat_close ."\n")
     if len(match)
       return p
     endif
   endfor
 
   return []
-endfunction
-
-function! s:append_endOfLine_pattern(pat) abort "{{{1
-  let separators_at_end = ',;'
-
-  " Sample: to get correct pattern
-  " $
-  " \$
-  let pat_at_end = ''
-  if a:pat =~# '\\v'
-    let pat_at_end = a:pat =~# '\\\@<!$$'
-          \ ? ''
-          \ : '['. separators_at_end .']?$'
-  elseif a:pat =~# '\\V'
-    let pat_at_end = a:pat =~# '\\$$'
-          \ ? ''
-          \ : '\['. separators_at_end .']\?\$'
-  elseif a:pat =~# '\\M'
-    let pat_at_end = a:pat =~# '\\\@<!$$'
-          \ ? ''
-          \ : '\['. separators_at_end .']\?$'
-  elseif a:pat !~# '\\\@<!$$'
-    let pat_at_end = '['. separators_at_end .']\?$'
-  endif
-
-  return a:pat . pat_at_end
 endfunction
 

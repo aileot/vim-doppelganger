@@ -50,10 +50,10 @@ call s:set_default('g:doppelganger#text#compress_whitespaces', 1)
 call s:set_default('g:doppelganger#text#max_column_width', max([&tw, 79]))
 call s:set_default('g:doppelganger#search#pairs', {
       \ '_': [
-      \   ['{', '}'],
-      \   ['(', ')'],
-      \   ['\[', ']'],
-      \ ],
+      \   ['{', '}[,;]\?'],
+      \   ['(', ')[,;]\?'],
+      \   ['\[', '\][,;]\?'],
+      \   ],
       \ })
 call s:set_default('g:doppelganger#search#pairs_reverse', {
       \ '_': [
