@@ -81,8 +81,9 @@ b:_doppelganger_search_pairs			 *b:_doppelganger_search_pairs*
 	(default: {
 		\ '_': [
 		\	['{', '}[,;]\?'],
-		\	['(', ')[,;'\?],
-		\	['\[', '\][,;'\?]],
+		\	['(', ')[,;]\?]',
+		\	['\[', '\][,;]\?']
+		\	],
 		\ })
 
 	Set in |Dict|.
