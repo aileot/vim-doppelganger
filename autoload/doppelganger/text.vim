@@ -2,9 +2,8 @@ let s:get_config = function('doppelganger#util#get_config', ['text'])
 
 let s:Text = {}
 function! doppelganger#text#new(pair_info) abort
-  let s:Text = extend(s:Text, a:pair_info)
-  let text_info = deepcopy(s:Text)
-  return text_info
+  let Text = extend(deepcopy(s:Text), a:pair_info)
+  return Text
 endfunction
 
 function! s:Text__SetVirtualtext() abort dict
