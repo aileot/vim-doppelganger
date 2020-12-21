@@ -7,7 +7,7 @@ function! doppelganger#text#new(pair_info) abort
   return text_info
 endfunction
 
-function! s:Text.SetVirtualtext() abort dict
+function! s:Text__SetVirtualtext() abort dict
   const text = self.set()
   if text ==# '' | return | endif
 
@@ -21,6 +21,7 @@ function! s:Text.SetVirtualtext() abort dict
         \ {}
         \ )
 endfunction
+let s:Text.SetVirtualtext = funcref('s:Text__SetVirtualtext')
 
 function! s:Text__set() abort dict
   let self.raw_text = self.join_contents()
