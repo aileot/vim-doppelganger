@@ -19,20 +19,20 @@ function! doppelganger#search#get_pair_info(lnum, ...) abort
   if flags =~# 'n' || get(info, 'lnum', 0) == 0
     call winrestview(save_view)
   else
-    exe info['lnum']
+    exe info.lnum
   endif
 
   if !has_key(info, 'patterns')
     return {}
 
   elseif flags =~# 'b'
-    let info['preceding'] = info['patterns'][0]
-    let info['following'] = info['patterns'][1:]
-    let info['reverse'] = 1
+    let info.preceding = info.patterns[0]
+    let info.following = info.patterns[1:]
+    let info.reverse = 1
   else
-    let info['preceding'] = info['patterns'][:-1]
-    let info['following'] = info['patterns'][-1]
-    let info['reverse'] = 0
+    let info.preceding = info.patterns[:-1]
+    let info.following = info.patterns[-1]
+    let info.reverse = 0
   endif
 
   return info
