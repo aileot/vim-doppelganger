@@ -68,12 +68,12 @@ function! s:get_open_info(lnum, min_range) abort
   "   ...
   " } // close
 
-  let the_pair = s:get_outmost_pair(a:lnum)
+  let pair = s:get_outmost_pair(a:lnum)
 
-  return the_pair != []
+  return pair != []
         \ ? {
-        \     'lnum':   s:get_lnum_open(the_pair, a:min_range),
-        \     'patterns':  the_pair,
+        \     'lnum':   s:get_lnum_open(pair, a:min_range),
+        \     'patterns':  pair,
         \   }
         \ : {}
 endfunction
