@@ -2,7 +2,9 @@ let s:get_config = function('doppelganger#util#get_config', ['text'])
 
 let s:Text = {}
 function! doppelganger#text#new(pair_info) abort
-  let Text = extend(deepcopy(s:Text), a:pair_info)
+  let Text = deepcopy(s:Text)
+  " TODO: make `Text` independent from pair_info.
+  let Text = extend(Text, a:pair_info)
   return Text
 endfunction
 
