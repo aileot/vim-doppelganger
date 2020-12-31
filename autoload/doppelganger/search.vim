@@ -24,16 +24,9 @@ function! doppelganger#search#get_pair_info(curr_lnum, ...) abort
 
   if !has_key(info, 'patterns')
     return {}
-
-  elseif flags =~# 'b'
-    let info.preceding = info.patterns[0]
-    let info.following = info.patterns[1:]
-    let info.reverse = 1
-  else
-    let info.preceding = info.patterns[:-1]
-    let info.following = info.patterns[-1]
-    let info.reverse = 0
   endif
+
+  let info.reverse = flags =~# 'b' ? 1 : 0
 
   return info
 endfunction
