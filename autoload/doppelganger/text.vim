@@ -25,51 +25,16 @@ endfunction
 let s:Text.SetVirtualtext = funcref('s:Text__SetVirtualtext')
 
 function! s:Text__set() abort dict
-  let self.raw_text = self.join_contents()
+  let Contents = s:Contents.new({
+        \ 'curr_lnum': self.curr_lnum,
+        \ 'corr_lnum': self.lnum,
+        \ 'is_reverse': self.reverse,
+        \ })
+  let self.raw_text = Contents.Read()
   let self.text = self.truncate_as_fillable_width()
   return self.text
 endfunction
 let s:Text.set = funcref('s:Text__set')
-
-function! s:Text__join_contents() abort dict
-  const prefix = s:get_config('prefix')
-  const shim = s:get_config('shim_to_join')
-
-  let contents = self.read_contents_in_pair()
-  let contents = self.truncate_contents_to_join()
-
-  let text = prefix . join(contents, shim)
-
-  const compress_whitespaces = s:get_config('compress_whitespaces')
-  if compress_whitespaces
-    let text = substitute(text, '\s\{2,}', ' ', 'g')
-  endif
-  return text
-endfunction
-let s:Text.join_contents = funcref('s:Text__join_contents')
-
-function! s:Text__read_contents_in_pair() abort dict
-  let self.contents = []
-
-  if self.reverse
-    let self.contents = [getline(self.lnum)]
-    return self.contents
-  endif
-
-  const start = self.lnum
-  const end = self.curr_lnum - 1
-  let self.contents = getline(start, end)
-
-  return self.contents
-endfunction
-let s:Text.read_contents_in_pair = funcref('s:Text__read_contents_in_pair')
-
-function! s:Text__truncate_contents_to_join() abort dict
-  let contents = self.contents
-  let self.contents = map(contents, 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
-  return self.contents
-endfunction
-let s:Text.truncate_contents_to_join = funcref('s:Text__truncate_contents_to_join')
 
 function! s:Text__truncate_as_fillable_width() abort dict
   const max_column_width = s:get_config('max_column_width')
@@ -90,7 +55,61 @@ function! s:Text__truncate_as_fillable_width() abort dict
     let text .= char
   endfor
 
-  let self.text = text
   return text
 endfunction
 let s:Text.truncate_as_fillable_width = funcref('s:Text__truncate_as_fillable_width')
+
+
+let s:Contents = {}
+
+function! s:Contents.new(dict) abort dict
+  let Contents = deepcopy(s:Contents)
+  let Contents.curr_lnum = a:dict.curr_lnum
+  let Contents.corr_lnum = a:dict.corr_lnum
+  let Contents.is_reverse = a:dict.is_reverse
+  return Contents
+endfunction
+
+function! s:Contents__Read() abort dict
+  call self.read_in_pair()
+  call self.join()
+  return self.text
+endfunction
+let s:Contents.Read = funcref('s:Contents__Read')
+
+function! s:Contents__read_in_pair() abort dict
+  let curr_lnum = self.curr_lnum
+  let corr_lnum = self.corr_lnum
+
+  if self.is_reverse
+    let self.raw_contents = [getline(corr_lnum)]
+    return
+  endif
+
+  const start = corr_lnum
+  const end = curr_lnum - 1
+  let self.raw_contents = getline(start, end)
+endfunction
+let s:Contents.read_in_pair = funcref('s:Contents__read_in_pair')
+
+function! s:Contents__truncate_to_join() abort dict
+  let self.contents = map(deepcopy(self.raw_contents),
+        \ 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
+endfunction
+let s:Contents.truncate_to_join = funcref('s:Contents__truncate_to_join')
+
+function! s:Contents__join() abort dict
+  const prefix = s:get_config('prefix')
+  const shim = s:get_config('shim_to_join')
+
+  call self.truncate_to_join()
+  let text = prefix . join(self.contents, shim)
+
+  const compress_whitespaces = s:get_config('compress_whitespaces')
+  if compress_whitespaces
+    let text = substitute(text, '\s\{2,}', ' ', 'g')
+  endif
+
+  let self.text = text
+endfunction
+let s:Contents.join = funcref('s:Contents__join')
