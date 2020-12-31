@@ -72,6 +72,7 @@ endfunction
 
 function! s:Contents__Read() abort dict
   call self.read_in_pair()
+  call self.trim_whitespaces()
   call self.join()
   return self.text
 endfunction
@@ -92,24 +93,23 @@ function! s:Contents__read_in_pair() abort dict
 endfunction
 let s:Contents.read_in_pair = funcref('s:Contents__read_in_pair')
 
-function! s:Contents__truncate_to_join() abort dict
-  let self.contents = map(deepcopy(self.raw_contents),
+function! s:Contents__trim_whitespaces() abort dict
+  let contents = map(deepcopy(self.raw_contents),
         \ 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
+
+  const compress_whitespaces = s:get_config('compress_whitespaces')
+  if compress_whitespaces
+    call map(contents, 'substitute(v:val, ''\s\{2,}'', " ", "g")')
+  endif
+
+  let self.contents = contents
 endfunction
-let s:Contents.truncate_to_join = funcref('s:Contents__truncate_to_join')
+let s:Contents.trim_whitespaces = funcref('s:Contents__trim_whitespaces')
 
 function! s:Contents__join() abort dict
   const prefix = s:get_config('prefix')
   const shim = s:get_config('shim_to_join')
-
-  call self.truncate_to_join()
   let text = prefix . join(self.contents, shim)
-
-  const compress_whitespaces = s:get_config('compress_whitespaces')
-  if compress_whitespaces
-    let text = substitute(text, '\s\{2,}', ' ', 'g')
-  endif
-
   let self.text = text
 endfunction
 let s:Contents.join = funcref('s:Contents__join')
