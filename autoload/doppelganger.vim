@@ -73,34 +73,34 @@ function! s:deploy_doppelgangers(upper, lower, min_range) abort "{{{1
   let save_view = winsaveview()
 
   " Search upward from a line under the bottom of window (by an offset).
-  let s:cur_lnum = s:get_bottom_lnum(a:lower)
+  let s:curr_lnum = s:get_bottom_lnum(a:lower)
   let stop_lnum = s:get_top_lnum(a:upper)
-  while s:cur_lnum >= stop_lnum
-    let s:cur_lnum = s:update_curpos(stop_lnum)
+  while s:curr_lnum >= stop_lnum
+    let s:curr_lnum = s:update_curpos(stop_lnum)
     if doppelganger#highlight#_is_hl_group_to_skip()
       " Note: It's too slow without this guard up to hl_group though this check
       " is too rough for a line which contains both codes and the hl_group.
-      let s:cur_lnum -= 1
+      let s:curr_lnum -= 1
       continue
     endif
 
-    let follower_info = doppelganger#search#get_pair_info(s:cur_lnum, 'b', a:min_range)
-    if get(follower_info, 'lnum') > 0
-      let follower_info.curr_lnum = s:cur_lnum
+    let follower_info = doppelganger#search#get_pair_info(s:curr_lnum, 'b', a:min_range)
+    if get(follower_info, 'corr_lnum') > 0
+      let follower_info.curr_lnum = s:curr_lnum
       let follower_info.hl_group = g:doppelganger#highlight#_pair_reverse
       let Text = doppelganger#text#new(follower_info)
       call Text.SetVirtualtext()
     else
-      let open_info = doppelganger#search#get_pair_info(s:cur_lnum, '', a:min_range)
-      let open_info.curr_lnum = s:cur_lnum
+      let open_info = doppelganger#search#get_pair_info(s:curr_lnum, '', a:min_range)
+      let open_info.curr_lnum = s:curr_lnum
       let open_info.hl_group = g:doppelganger#highlight#_pair
-      if get(open_info, 'lnum') > 0
+      if get(open_info, 'corr_lnum') > 0
         let Text = doppelganger#text#new(open_info)
         call Text.SetVirtualtext()
       endif
     endif
 
-    let s:cur_lnum -= 1
+    let s:curr_lnum -= 1
   endwhile
   call winrestview(save_view)
 endfunction
@@ -132,7 +132,7 @@ function! s:get_top_lnum(lnum) abort "{{{2
 endfunction
 
 function! s:update_curpos(stop_lnum) abort "{{{2
-  let lnum = s:cur_lnum
+  let lnum = s:curr_lnum
   if !s:is_folded(lnum)
     exe lnum
     return lnum

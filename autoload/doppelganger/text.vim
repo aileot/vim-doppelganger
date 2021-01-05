@@ -27,7 +27,7 @@ let s:Text.SetVirtualtext = funcref('s:Text__SetVirtualtext')
 function! s:Text__set() abort dict
   let Contents = s:Contents.new({
         \ 'curr_lnum': self.curr_lnum,
-        \ 'corr_lnum': self.lnum,
+        \ 'corr_lnum': self.corr_lnum,
         \ 'is_reverse': self.reverse,
         \ })
   let self.raw_text = Contents.Read()

@@ -1,25 +1,25 @@
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', ['search'])
 
-function! doppelganger#search#get_pair_info(lnum, ...) abort
+function! doppelganger#search#get_pair_info(curr_lnum, ...) abort
   let flags = get(a:, 1, '')
   let min_range = get(a:, 2, 0)
 
   let save_view = winsaveview()
 
   " Jump to the line number
-  exe a:lnum
+  exe a:curr_lnum
 
   if flags =~# 'b'
-    let info = s:get_leader_info(a:lnum, min_range)
+    let info = s:get_leader_info(a:curr_lnum, min_range)
   else
-    let info = s:get_open_info(a:lnum, min_range)
+    let info = s:get_open_info(a:curr_lnum, min_range)
   endif
 
   if flags =~# 'n' || get(info, 'lnum', 0) == 0
     call winrestview(save_view)
   else
-    exe info.lnum
+    exe info.curr_lnum
   endif
 
   if !has_key(info, 'patterns')
@@ -51,9 +51,9 @@ function! s:get_leader_info(lnum, min_range) abort
     if line =~# leader
       let followers = p[1:]
       for f in followers
-        let lnum = s:_search_leader_lnum(leader, f)
+        let corr_lnum = s:_search_leader_lnum(leader, f)
         return {
-              \ 'lnum': lnum,
+              \ 'corr_lnum': corr_lnum,
               \ 'patterns': followers,
               \ }
       endfor
@@ -63,16 +63,16 @@ function! s:get_leader_info(lnum, min_range) abort
   return {}
 endfunction
 
-function! s:get_open_info(lnum, min_range) abort
+function! s:get_open_info(curr_lnum, min_range) abort
   " if (cond) { // open
   "   ...
   " } // close
 
-  let pair = s:get_outmost_pair(a:lnum)
+  let pair = s:get_outmost_pair(a:curr_lnum)
 
   return pair != []
         \ ? {
-        \     'lnum':   s:get_lnum_open(pair, a:min_range),
+        \     'corr_lnum':   s:get_lnum_open(pair, a:min_range),
         \     'patterns':  pair,
         \   }
         \ : {}
@@ -159,8 +159,8 @@ function! s:get_lnum_open(pair_dict, min_range) abort
   return lnum_open
 endfunction
 
-function! s:get_outmost_pair(lnum) abort "{{{1
-  let line = getline(a:lnum)
+function! s:get_outmost_pair(curr_lnum) abort "{{{1
+  let line = getline(a:curr_lnum)
   let pairs = s:set_pairs()
 
   for p in pairs
