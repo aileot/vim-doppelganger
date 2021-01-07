@@ -31,6 +31,7 @@ set cpo&vim
 
 let s:has_ego = 0
 
+let s:Cache = doppelganger#cache#new('ego')
 let s:get_config = function('doppelganger#util#get_config', ['ego'])
 let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
 let s:bot = {-> min([line('w$'), line('.') + g:doppelganger#ego#max_offset])}
@@ -74,8 +75,19 @@ function! doppelganger#ego#enable(bang) abort "{{{1
   let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
     au!
-    exe 'au' events '* call s:update_window(' a:bang ')'
+
     au WinLeave * call doppelganger#clear()
+
+    " Define au-commands in different lines to each events because cache which
+    " should be updated could be different between each events.
+    au BufWinLeave * call s:Cache.DropOutdated([
+          \   {'region': 'Haunt'},
+          \ ])
+    au TextChanged * call s:Cache.DropOutdated([
+          \   {'region': 'Haunt'},
+          \ ])
+
+    exe 'au' events '* call s:update_window(' a:bang ')'
   augroup END
 
   if s:get_config('update_on_CursorMoved')
