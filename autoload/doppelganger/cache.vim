@@ -1,18 +1,3 @@
-function! s:humanreadable_type(num) abort
-  const TYPE = {
-        \ 0 : 'Number',
-        \ 1 : 'String',
-        \ 2 : 'Function',
-        \ 3 : 'List',
-        \ 4 : 'Dict',
-        \ 5 : 'Float',
-        \ 6 : 'Boolean',
-        \ 7 : 'Null',
-        \ }
-  return TYPE[a:num]
-endfunction
-
-
 let s:Cache = {}
 
 function! s:Cache__Detach() abort dict
