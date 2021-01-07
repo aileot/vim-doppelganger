@@ -34,17 +34,17 @@ function! s:Haunt__GetHaunted() abort dict
   const min_range = self.min_range_to_search
 
   " Search upward from a line under the bottom of window (by an offset).
-  let s:curr_lnum = s:get_bottom_lnum(below)
+  let self.curr_lnum = s:get_bottom_lnum(below)
   let stop_lnum = s:get_top_lnum(above)
-  while s:curr_lnum >= stop_lnum
-    let s:curr_lnum = s:update_curpos(stop_lnum)
+  while self.curr_lnum >= stop_lnum
+    let self.curr_lnum = self.update_curpos(stop_lnum)
 
-    call s:Cache.Attach(s:curr_lnum)
+    call s:Cache.Attach(self.curr_lnum)
     let chunks = s:Cache.Restore('chunks')
 
     if chunks isnot# v:null
-      call s:set_virtualtext(s:curr_lnum, chunks)
-      let s:curr_lnum -= 1
+      call s:set_virtualtext(self.curr_lnum, chunks)
+      let self.curr_lnum -= 1
       continue
     endif
 
@@ -56,17 +56,17 @@ function! s:Haunt__GetHaunted() abort dict
       call s:Cache.Update({
             \ 'chunks': chunks,
             \ })
-      let s:curr_lnum -= 1
+      let self.curr_lnum -= 1
       continue
     endif
 
-    let Search = doppelganger#search#new(s:curr_lnum)
+    let Search = doppelganger#search#new(self.curr_lnum)
     call Search.SetIgnoredRange(min_range)
     call Search.SearchPair()
     let [curr_lnum, corr_lnum] = Search.GetPairLnums()
 
     if corr_lnum < 1
-      let s:curr_lnum -= 1
+      let self.curr_lnum -= 1
       continue
     endif
 
@@ -74,11 +74,11 @@ function! s:Haunt__GetHaunted() abort dict
     let Text = doppelganger#format#new(info)
     let chunks = Text.ComposeChunks()
 
-    call s:set_virtualtext(s:curr_lnum, chunks)
+    call s:set_virtualtext(self.curr_lnum, chunks)
     call s:Cache.Update({
           \ 'chunks': chunks,
           \ })
-    let s:curr_lnum -= 1
+    let self.curr_lnum -= 1
   endwhile
   call winrestview(save_view)
 endfunction
@@ -110,8 +110,8 @@ function! s:get_top_lnum(lnum) abort "{{{2
   return ret
 endfunction
 
-function! s:update_curpos(stop_lnum) abort "{{{2
-  let lnum = s:curr_lnum
+function! s:Haunt__update_curpos(stop_lnum) abort dict "{{{2
+  let lnum = self.curr_lnum
   if !s:is_folded(lnum)
     exe lnum
     return lnum
@@ -129,6 +129,7 @@ function! s:update_curpos(stop_lnum) abort "{{{2
   exe save_next
   return save_next
 endfunction
+let s:Haunt.update_curpos = funcref('s:Haunt__update_curpos')
 
 function! s:is_folded(lnum) abort "{{{2
   return foldclosed(a:lnum) != -1
