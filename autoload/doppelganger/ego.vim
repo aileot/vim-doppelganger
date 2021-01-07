@@ -33,27 +33,24 @@ let s:has_ego = 0
 
 let s:Cache = doppelganger#cache#new('ego')
 let s:get_config = function('doppelganger#util#get_config', ['ego'])
-let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
-let s:bot = {-> min([line('w$'), line('.') + g:doppelganger#ego#max_offset])}
 
 function! s:should_disabled() abort "{{{1
-  let should_disabled = 0
-
-  let buftypes_disabled = join(g:doppelganger#ego#disable_on_buftypes, '\|')
-  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-
-  let should_disabled = should_disabled
-        \ || &bt =~# buftypes_disabled
-  let should_disabled = should_disabled
-        \ || &ft =~# filetypes_disabled
+  const should_disabled = v:false
+        \ || index(g:doppelganger#ego#disable_on_buftypes, &bt) >= 0
+        \ || index(g:doppelganger#ego#disable_on_filetypes, &ft) >= 0
   return should_disabled
+endfunction
+
+function! s:ego_update() abort
+  const offset = g:doppelganger#ego#max_offset
+  const top = max([line('w0'), line('.') - offset])
+  const bottom = min([line('w$'), line('.') + offset])
+  call doppelganger#update(top, bottom, g:doppelganger#ego#min_range_of_pairs)
 endfunction
 
 function! s:update_window(bang) abort "{{{1
   if !a:bang && s:should_disabled() | return | endif
-
-  call doppelganger#update(s:top(), s:bot(),
-        \ g:doppelganger#ego#min_range_of_pairs)
+  call s:ego_update()
 endfunction
 
 function! doppelganger#ego#is_enabled() abort "{{{1
@@ -88,11 +85,13 @@ function! doppelganger#ego#enable(bang) abort "{{{1
           \ ])
 
     exe 'au' events '* call s:update_window(' a:bang ')'
-  augroup END
 
-  if s:get_config('update_on_CursorMoved')
-    call s:update_on_CursorMoved(a:bang)
-  endif
+    if s:get_config('update_on_CursorMoved')
+      let s:last_lnum = line('.')
+      exe 'au CursorMoved * call s:update_for_CursorMoved(' a:bang ')'
+    endif
+
+  augroup END
   let s:has_ego = 1
 endfunction
 
@@ -112,18 +111,8 @@ function! s:windo_update(bang) abort "{{{1
   call win_gotoid(save_winID)
 endfunction
 
-function! s:update_on_CursorMoved(bang) abort "{{{1
-  let s:last_lnum = line('.')
-  augroup doppelganger
-    exe 'au CursorMoved * call s:update_for_CursorMoved(' a:bang ')'
-  augroup END
-endfunction
-
 function! s:update_for_CursorMoved(bang) abort "{{{2
-  if !a:bang
-    let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-    if &ft =~# filetypes_disabled | return | endif
-  endif
+  if s:should_disabled() && !a:bang | return | endif
   if line('.') == s:last_lnum | return | endif
   call s:update_window(a:bang)
   let s:last_lnum = line('.')
