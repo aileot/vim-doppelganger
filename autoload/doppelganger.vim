@@ -57,7 +57,8 @@ function! doppelganger#update(upper, lower, ...) abort "{{{1
 
   call doppelganger#clear()
   let min_range = get(a:, 1, 0)
-  let Haunt = doppelganger#haunt#new(a:upper, a:lower, min_range)
+  let Haunt = doppelganger#haunt#new(a:upper, a:lower)
+  call Haunt.SetMinRange(min_range)
   call Haunt.GetHaunted()
 endfunction
 

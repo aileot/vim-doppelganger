@@ -1,12 +1,17 @@
 let s:Cache = doppelganger#cache#new('Haunt')
 let s:Haunt = {}
 
-function! doppelganger#haunt#new(above, below, min_range) abort "{{{1
+function! doppelganger#haunt#new(above, below) abort "{{{1
   let Haunt = deepcopy(s:Haunt)
   let Haunt.range_to_haunt = [a:above, a:below]
-  let Haunt.min_range_to_search = a:min_range
   return Haunt
 endfunction
+
+function! s:Haunt__SetMinRange(num) abort dict
+  let self.min_range_to_search = a:num
+endfunction
+let s:Haunt.SetMinRange = funcref('s:Haunt__SetMinRange')
+
 
 function! s:Haunt__GetHaunted() abort dict
   let save_view = winsaveview()
