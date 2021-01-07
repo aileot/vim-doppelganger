@@ -117,10 +117,7 @@ function! s:update_on_CursorMoved(bang) abort "{{{1
 endfunction
 
 function! s:update_for_CursorMoved(bang) abort "{{{2
-  if !a:bang
-    let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-    if &ft =~# filetypes_disabled | return | endif
-  endif
+  if s:should_disabled() && !a:bang | return | endif
   if line('.') == s:last_lnum | return | endif
   call s:update_window(a:bang)
   let s:last_lnum = line('.')
