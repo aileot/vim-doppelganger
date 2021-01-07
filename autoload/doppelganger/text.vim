@@ -8,12 +8,24 @@ function! doppelganger#text#new(pair_info) abort
   return Text
 endfunction
 
-function! s:Text__SetVirtualtext() abort dict
-  const text = self.set()
-  if text ==# '' | return | endif
+function! s:Text__get_chunks() abort dict
+  " It's used esp. for cached instances.
+  return get(self, 'chunks', v:null)
+endfunction
+let s:Text.get_chunks = funcref('s:Text__get_chunks')
 
-  let chunks = [[text, self.hl_group]]
-  let print_lnum = self.curr_lnum - 1
+function! s:Text__SetVirtualtext() abort dict
+  let chunks = self.get_chunks()
+
+  if chunks is# v:null
+    const text = self.set()
+    if text ==# '' | return | endif
+
+    let chunks = [[text, self.hl_group]]
+    let self.chunks = chunks
+  endif
+
+  const print_lnum = self.curr_lnum - 1
   call nvim_buf_set_virtual_text(
         \ 0,
         \ g:__doppelganger_namespace,
