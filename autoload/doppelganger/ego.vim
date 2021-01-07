@@ -35,15 +35,9 @@ let s:Cache = doppelganger#cache#new('ego')
 let s:get_config = function('doppelganger#util#get_config', ['ego'])
 
 function! s:should_disabled() abort "{{{1
-  let should_disabled = 0
-
-  let buftypes_disabled = join(g:doppelganger#ego#disable_on_buftypes, '\|')
-  let filetypes_disabled = join(g:doppelganger#ego#disable_on_filetypes, '\|')
-
-  let should_disabled = should_disabled
-        \ || &bt =~# buftypes_disabled
-  let should_disabled = should_disabled
-        \ || &ft =~# filetypes_disabled
+  const should_disabled = v:false
+        \ || index(g:doppelganger#ego#disable_on_buftypes, &bt) >= 0
+        \ || index(g:doppelganger#ego#disable_on_filetypes, &ft) >= 0
   return should_disabled
 endfunction
 
