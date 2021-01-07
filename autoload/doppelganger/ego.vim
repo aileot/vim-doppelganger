@@ -33,8 +33,6 @@ let s:has_ego = 0
 
 let s:Cache = doppelganger#cache#new('ego')
 let s:get_config = function('doppelganger#util#get_config', ['ego'])
-let s:top = {-> max([line('w0'), line('.') - g:doppelganger#ego#max_offset])}
-let s:bot = {-> min([line('w$'), line('.') + g:doppelganger#ego#max_offset])}
 
 function! s:should_disabled() abort "{{{1
   let should_disabled = 0
@@ -49,11 +47,16 @@ function! s:should_disabled() abort "{{{1
   return should_disabled
 endfunction
 
+function! s:ego_update() abort
+  const offset = g:doppelganger#ego#max_offset
+  const top = max([line('w0'), line('.') - offset])
+  const bottom = min([line('w$'), line('.') + offset])
+  call doppelganger#update(top, bottom, g:doppelganger#ego#min_range_of_pairs)
+endfunction
+
 function! s:update_window(bang) abort "{{{1
   if !a:bang && s:should_disabled() | return | endif
-
-  call doppelganger#update(s:top(), s:bot(),
-        \ g:doppelganger#ego#min_range_of_pairs)
+  call s:ego_update()
 endfunction
 
 function! doppelganger#ego#is_enabled() abort "{{{1
