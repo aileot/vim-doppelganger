@@ -4,10 +4,10 @@ Doppelganger shows the corresponding lines of each pairs by vitualtexts.
 
 ## Requirements
 
-Doppelganger requires Neovim 0.3.2+;
+Doppelganger requires Neovim 0.4.0 or above;
 Vim has no compatibility with this plugin.
 
-Check if `exists('*nvim_buf_set_virtual_text')` returns `1`.
+Check if `has('nvim-0.4.0')` returns `1`.
 
 ## Installation
 
