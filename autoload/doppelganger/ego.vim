@@ -85,11 +85,13 @@ function! doppelganger#ego#enable(bang) abort "{{{1
           \ ])
 
     exe 'au' events '* call s:update_window(' a:bang ')'
-  augroup END
 
-  if s:get_config('update_on_CursorMoved')
-    call s:update_on_CursorMoved(a:bang)
-  endif
+    if s:get_config('update_on_CursorMoved')
+      let s:last_lnum = line('.')
+      exe 'au CursorMoved * call s:update_for_CursorMoved(' a:bang ')'
+    endif
+
+  augroup END
   let s:has_ego = 1
 endfunction
 
@@ -107,13 +109,6 @@ function! s:windo_update(bang) abort "{{{1
   windo call s:update_window(a:bang)
 
   call win_gotoid(save_winID)
-endfunction
-
-function! s:update_on_CursorMoved(bang) abort "{{{1
-  let s:last_lnum = line('.')
-  augroup doppelganger
-    exe 'au CursorMoved * call s:update_for_CursorMoved(' a:bang ')'
-  augroup END
 endfunction
 
 function! s:update_for_CursorMoved(bang) abort "{{{2
