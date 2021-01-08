@@ -42,7 +42,7 @@ function! doppelganger#clear() abort "{{{1
   let s:is_visible = 0
 endfunction
 
-function! doppelganger#update(upper, lower, ...) abort "{{{1
+function! doppelganger#update(above, below, ...) abort "{{{1
   " Guards {{{
   " Guard if virtualtext is unavailable.
   if !exists('*nvim_buf_set_virtual_text')
@@ -57,17 +57,17 @@ function! doppelganger#update(upper, lower, ...) abort "{{{1
 
   call doppelganger#clear()
   let min_range = get(a:, 1, 0)
-  let Haunt = doppelganger#haunt#new(a:upper, a:lower)
+  let Haunt = doppelganger#haunt#new(a:above, a:below)
   call Haunt.SetMinRange(min_range)
   call Haunt.GetHaunted()
 endfunction
 
-function! doppelganger#toggle(upper, lower) abort "{{{1
+function! doppelganger#toggle(upper, below) abort "{{{1
   if s:is_visible
     call doppelganger#clear()
     return
   endif
-  call doppelganger#update(a:upper, a:lower)
+  call doppelganger#update(a:upper, a:below)
   let s:is_visible = 1
 endfunction
 
