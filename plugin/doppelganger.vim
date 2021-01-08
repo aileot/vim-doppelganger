@@ -104,7 +104,7 @@ call s:set_default('g:doppelganger#ego#update_on_CursorMoved', 1)
 
 call s:set_default('g:doppelganger#mapping#fold_suffixes', 'voraxcmORAXCM')
 
-command! -bar DoppelgangerClear :call doppelganger#clear()
+command! -bar -range=% DoppelgangerClear :call doppelganger#clear(<line1>, <line2>)
 command! -bar -range=% DoppelgangerUpdate
       \ :call doppelganger#update(<line1>, <line2>)
 command! -bar -range=% DoppelgangerToggle
