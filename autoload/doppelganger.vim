@@ -37,8 +37,17 @@ let s:get_config = function('doppelganger#util#get_config', [''])
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', [''])
 
-function! doppelganger#clear() abort "{{{1
-  call nvim_buf_clear_namespace(0, g:__doppelganger_namespace, 1, -1)
+function! doppelganger#clear(...) abort "{{{1
+  if a:0 == 1
+    const above = a:1
+    const below = above
+  else
+    const above = get(a:, 1, 1)
+    const below = get(a:, 2, -1)
+  end
+
+  call nvim_buf_clear_namespace(0, g:__doppelganger_namespace,
+        \ above - 1, below)
   let s:is_visible = 0
 endfunction
 
