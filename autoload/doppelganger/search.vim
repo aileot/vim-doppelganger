@@ -1,35 +1,70 @@
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', ['search'])
 
-function! doppelganger#search#get_pair_info(curr_lnum, ...) abort
-  let flags = get(a:, 1, '')
-  let min_range = get(a:, 2, 0)
+let s:Search = {}
 
-  let save_view = winsaveview()
+function! doppelganger#search#new(curr_lnum) abort
+  let Search = deepcopy(s:Search)
+  let Search.curr_lnum = a:curr_lnum
+  let Search.corr_lnum = 0
+  return Search
+endfunction
 
+function! s:Search__SetIgnoredRange(num) abort dict
+  let self.min_range = a:num
+endfunction
+let s:Search.SetIgnoredRange = funcref('s:Search__SetIgnoredRange')
+
+function! s:Search__DisableCursorMotion() abort dict
+  let self.keep_cursor = 1
+endfunction
+let s:Search.DisableCursorMotion = funcref('s:Search__DisableCursorMotion')
+
+function! s:Search__EnableCursorMotion() abort
+  let self.keep_cursor = 0
+endfunction
+let s:Search.EnableCursorMotion = funcref('s:Search__EnableCursorMotion')
+
+
+function! s:Search__GetPairLnums() abort dict
+  return [self.curr_lnum, self.corr_lnum]
+endfunction
+let s:Search.GetPairLnums = funcref('s:Search__GetPairLnums')
+
+function! s:Search__IsReverse() abort dict
+  return self.is_reverse
+endfunction
+let s:Search.IsReverse = funcref('s:Search__IsReverse')
+
+function! s:Search__SearchPair() abort dict
+  const save_view = winsaveview()
+  const min_range = self.min_range
+  const curr_lnum = self.curr_lnum
   " Jump to the line number
-  exe a:curr_lnum
+  exe curr_lnum
 
-  if flags =~# 'b'
-    let info = s:get_leader_info(a:curr_lnum, min_range)
-  else
-    let info = s:get_open_info(a:curr_lnum, min_range)
+  let info = s:get_leader_info(curr_lnum, min_range)
+  let self.is_reverse = 1
+  if get(info, 'corr_lnum', 0) is# 0
+    let info = s:get_open_info(curr_lnum, min_range)
+    let self.is_reverse = 0
   endif
 
-  if flags =~# 'n' || get(info, 'lnum', 0) == 0
+  let self.corr_lnum = get(info, 'corr_lnum', 0)
+  if self.corr_lnum < 1 || self.keep_cursor
     call winrestview(save_view)
   else
-    exe info.curr_lnum
+    exe self.corr_lnum
   endif
 
   if !has_key(info, 'patterns')
     return {}
   endif
 
-  let info.reverse = flags =~# 'b' ? 1 : 0
-
   return info
 endfunction
+let s:Search.SearchPair = funcref('s:Search__SearchPair')
+
 
 function! s:get_leader_info(lnum, min_range) abort
   " do { // leader
