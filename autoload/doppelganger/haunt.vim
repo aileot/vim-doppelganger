@@ -42,7 +42,6 @@ function! s:Haunt__GetHaunted() abort dict
 
     let Search = doppelganger#search#new(s:curr_lnum)
     call Search.SetIgnoredRange(min_range)
-    call Search.DisableCursorMotion()
     call Search.SearchPair()
     let [curr_lnum, corr_lnum] = Search.GetPairLnums()
 

@@ -15,17 +15,6 @@ function! s:Search__SetIgnoredRange(num) abort dict
 endfunction
 let s:Search.SetIgnoredRange = funcref('s:Search__SetIgnoredRange')
 
-function! s:Search__DisableCursorMotion() abort dict
-  let self.keep_cursor = 1
-endfunction
-let s:Search.DisableCursorMotion = funcref('s:Search__DisableCursorMotion')
-
-function! s:Search__EnableCursorMotion() abort
-  let self.keep_cursor = 0
-endfunction
-let s:Search.EnableCursorMotion = funcref('s:Search__EnableCursorMotion')
-
-
 function! s:Search__GetPairLnums() abort dict
   return [self.curr_lnum, self.corr_lnum]
 endfunction
@@ -37,7 +26,6 @@ endfunction
 let s:Search.IsReverse = funcref('s:Search__IsReverse')
 
 function! s:Search__SearchPair() abort dict
-  const save_view = winsaveview()
   const min_range = self.min_range
   const curr_lnum = self.curr_lnum
   " Jump to the line number
@@ -51,11 +39,6 @@ function! s:Search__SearchPair() abort dict
   endif
 
   let self.corr_lnum = get(info, 'corr_lnum', 0)
-  if self.corr_lnum < 1 || self.keep_cursor
-    call winrestview(save_view)
-  else
-    exe self.corr_lnum
-  endif
 
   if !has_key(info, 'patterns')
     return {}
