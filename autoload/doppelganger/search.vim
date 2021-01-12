@@ -162,7 +162,7 @@ function! s:get_lnum_open(pair_dict, ignored_range) abort
   let lnum_open = searchpair(pat_open, '', pat_close,
         \ flags_unmove_upward_exc, Skip_comments)
 
-  if lnum_open > lnum_close - a:ignored_range
+  if lnum_close < lnum_open + a:ignored_range
     " Continue the while loop anyway.
     return 0
   endif
