@@ -40,27 +40,27 @@ function! s:Haunt__GetHaunted() abort dict
       continue
     endif
 
-    let follower_info = deepcopy(doppelganger#search#get_pair_info(s:curr_lnum, 'b', min_range))
-    if get(follower_info, 'reverse', 0)
-      let follower_info.curr_lnum = s:curr_lnum
-      let follower_info.hl_group = g:doppelganger#highlight#_pair_reverse
-      let Text = doppelganger#text#new(follower_info)
-      call Text.SetVirtualtext()
-      call s:Cache.Update({
-            \ 'Text': deepcopy(Text),
-            \ })
-    else
-      let open_info = deepcopy(doppelganger#search#get_pair_info(s:curr_lnum, '', min_range))
-      let open_info.curr_lnum = s:curr_lnum
-      let open_info.hl_group = g:doppelganger#highlight#_pair
-      if get(open_info, 'corr_lnum') > 0
-        let Text = doppelganger#text#new(open_info)
-        call Text.SetVirtualtext()
-        call s:Cache.Update({
-              \ 'Text': deepcopy(Text),
-              \ })
-      endif
+    let Search = doppelganger#search#new(s:curr_lnum)
+    call Search.SetIgnoredRange(min_range)
+    call Search.SearchPair()
+    let [curr_lnum, corr_lnum] = Search.GetPairLnums()
+
+    if corr_lnum < 1
+      let s:curr_lnum -= 1
+      continue
     endif
+
+    let hl_group = Search.IsReverse()
+          \ ? g:doppelganger#highlight#_pair_reverse
+          \ : g:doppelganger#highlight#_pair
+
+    let info = Search " TODO: Without this copying, ...#text#new() should just get corr_lnum
+    let Text = doppelganger#text#new(info)
+    call Text.SetHlGroup(hl_group)
+    call Text.SetVirtualtext()
+    call s:Cache.Update({
+          \ 'Text': deepcopy(Text),
+          \ })
 
     let s:curr_lnum -= 1
   endwhile

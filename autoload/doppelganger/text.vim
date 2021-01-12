@@ -14,6 +14,11 @@ function! s:Text__get_chunks() abort dict
 endfunction
 let s:Text.get_chunks = funcref('s:Text__get_chunks')
 
+function! s:Text__SetHlGroup(hl_group) abort dict
+  let self.hl_group = a:hl_group
+endfunction
+let s:Text.SetHlGroup = funcref('s:Text__SetHlGroup')
+
 function! s:Text__SetVirtualtext() abort dict
   let chunks = self.get_chunks()
 
@@ -40,7 +45,7 @@ function! s:Text__set() abort dict
   let Contents = s:Contents.new({
         \ 'curr_lnum': self.curr_lnum,
         \ 'corr_lnum': self.corr_lnum,
-        \ 'is_reverse': self.reverse,
+        \ 'is_reverse': self.is_reverse,
         \ })
   let self.raw_text = Contents.Read()
   let self.text = self.truncate_as_fillable_width()

@@ -1,37 +1,55 @@
 let s:get_config_as_filetype =
       \ function('doppelganger#util#get_config_as_filetype', ['search'])
 
-function! doppelganger#search#get_pair_info(curr_lnum, ...) abort
-  let flags = get(a:, 1, '')
-  let min_range = get(a:, 2, 0)
+let s:Search = {}
 
-  let save_view = winsaveview()
+function! doppelganger#search#new(curr_lnum) abort
+  let Search = deepcopy(s:Search)
+  let Search.curr_lnum = a:curr_lnum
+  let Search.corr_lnum = 0
+  return Search
+endfunction
 
+function! s:Search__SetIgnoredRange(num) abort dict
+  let self.ignored_range = a:num
+endfunction
+let s:Search.SetIgnoredRange = funcref('s:Search__SetIgnoredRange')
+
+function! s:Search__GetPairLnums() abort dict
+  return [self.curr_lnum, self.corr_lnum]
+endfunction
+let s:Search.GetPairLnums = funcref('s:Search__GetPairLnums')
+
+function! s:Search__IsReverse() abort dict
+  return self.is_reverse
+endfunction
+let s:Search.IsReverse = funcref('s:Search__IsReverse')
+
+function! s:Search__SearchPair() abort dict
+  const ignored_range = self.ignored_range
+  const curr_lnum = self.curr_lnum
   " Jump to the line number
-  exe a:curr_lnum
+  exe curr_lnum
 
-  if flags =~# 'b'
-    let info = s:get_leader_info(a:curr_lnum, min_range)
-  else
-    let info = s:get_open_info(a:curr_lnum, min_range)
+  let info = s:get_leader_info(curr_lnum, ignored_range)
+  let self.is_reverse = 1
+  if get(info, 'corr_lnum', 0) is# 0
+    let info = s:get_open_info(curr_lnum, ignored_range)
+    let self.is_reverse = 0
   endif
 
-  if flags =~# 'n' || get(info, 'lnum', 0) == 0
-    call winrestview(save_view)
-  else
-    exe info.curr_lnum
-  endif
+  let self.corr_lnum = get(info, 'corr_lnum', 0)
 
   if !has_key(info, 'patterns')
     return {}
   endif
 
-  let info.reverse = flags =~# 'b' ? 1 : 0
-
   return info
 endfunction
+let s:Search.SearchPair = funcref('s:Search__SearchPair')
 
-function! s:get_leader_info(lnum, min_range) abort
+
+function! s:get_leader_info(lnum, ignored_range) abort
   " do { // leader
   "   ...
   " } while (cond); // follower
@@ -56,7 +74,7 @@ function! s:get_leader_info(lnum, min_range) abort
   return {}
 endfunction
 
-function! s:get_open_info(curr_lnum, min_range) abort
+function! s:get_open_info(curr_lnum, ignored_range) abort
   " if (cond) { // open
   "   ...
   " } // close
@@ -65,7 +83,7 @@ function! s:get_open_info(curr_lnum, min_range) abort
 
   return pair != []
         \ ? {
-        \     'corr_lnum':   s:get_lnum_open(pair, a:min_range),
+        \     'corr_lnum':   s:get_lnum_open(pair, a:ignored_range),
         \     'patterns':  pair,
         \   }
         \ : {}
@@ -131,7 +149,7 @@ function! s:sort_by_length_desc(pair1, pair2) abort
   return len(a:pair2[0]) - len(a:pair1[0])
 endfunction
 
-function! s:get_lnum_open(pair_dict, min_range) abort
+function! s:get_lnum_open(pair_dict, ignored_range) abort
   let pat_open = a:pair_dict[0]
   let pat_close = a:pair_dict[-1]
   let flags_mobile_upward_inc = 'cbW'
@@ -144,7 +162,7 @@ function! s:get_lnum_open(pair_dict, min_range) abort
   let lnum_open = searchpair(pat_open, '', pat_close,
         \ flags_unmove_upward_exc, Skip_comments)
 
-  if lnum_open > lnum_close - a:min_range
+  if lnum_close < lnum_open + a:ignored_range
     " Continue the while loop anyway.
     return 0
   endif
