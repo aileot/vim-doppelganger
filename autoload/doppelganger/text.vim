@@ -19,27 +19,13 @@ function! s:Text__SetHlGroup(hl_group) abort dict
 endfunction
 let s:Text.SetHlGroup = funcref('s:Text__SetHlGroup')
 
-function! s:Text__SetVirtualtext() abort dict
-  let chunks = self.get_chunks()
-
-  if chunks is# v:null
-    const text = self.set()
-    if text ==# '' | return | endif
-
-    let chunks = [[text, self.hl_group]]
-    let self.chunks = chunks
-  endif
-
-  const print_lnum = self.curr_lnum - 1
-  call nvim_buf_set_virtual_text(
-        \ 0,
-        \ g:__doppelganger_namespace,
-        \ print_lnum,
-        \ chunks,
-        \ {}
-        \ )
+function! s:Text__ComposeChunks() abort dict
+  const text = self.set()
+  if text ==# '' | return | endif
+  let chunks = [[text, self.hl_group]]
+  return chunks
 endfunction
-let s:Text.SetVirtualtext = funcref('s:Text__SetVirtualtext')
+let s:Text.ComposeChunks = funcref('s:Text__ComposeChunks')
 
 function! s:Text__set() abort dict
   let Contents = s:Contents.new({
