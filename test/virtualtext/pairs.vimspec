@@ -6,6 +6,7 @@ Describe :DoppelgangerUpdate
 
   Before each
     DoppelgangerClear
+    let g:doppelganger#text#prefix = '>'
   End
 
   Context in a cpp-like file
@@ -26,7 +27,7 @@ Describe :DoppelgangerUpdate
 
     It shows the line that contains the other end of pair which ends current line
       let virtualtexts = GetVirtualTexts()[2]
-      let prefix = get(g:, 'doppelganger#text#prefix', '>')
+      let prefix = g:doppelganger#text#prefix
       let expected_virtualtext = '^'. prefix .'int main() {$'
       Assert Match(virtualtexts[0], expected_virtualtext)
     End
@@ -40,7 +41,7 @@ Describe :DoppelgangerUpdate
     End
     It shows while-statement in a virtual text
       let virtualtexts = GetVirtualTexts()[1] " after `do {`
-      let prefix = get(g:, 'doppelganger#text#prefix', '>')
+      let prefix = g:doppelganger#text#prefix
       let expected_virtualtext = prefix .'} while (foo);'
       Assert Equals(virtualtexts[0], expected_virtualtext)
     End
