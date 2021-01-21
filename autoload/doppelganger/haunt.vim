@@ -12,6 +12,15 @@ function! s:Haunt__SetMinRange(num) abort dict
 endfunction
 let s:Haunt.SetMinRange = funcref('s:Haunt__SetMinRange')
 
+function! s:set_virtualtext(lnum, chunks) abort
+  call nvim_buf_set_virtual_text(
+        \ 0,
+        \ g:__doppelganger_namespace,
+        \ a:lnum - 1,
+        \ a:chunks,
+        \ {}
+        \ )
+endfunction
 
 function! s:Haunt__GetHaunted() abort dict
   let save_view = winsaveview()
@@ -32,10 +41,10 @@ function! s:Haunt__GetHaunted() abort dict
     endif
 
     call s:Cache.Attach(s:curr_lnum)
-    let Text = s:Cache.Restore('Text')
+    let chunks = s:Cache.Restore('chunks')
 
-    if Text isnot# v:null
-      call Text.SetVirtualtext()
+    if chunks isnot# v:null
+      call s:set_virtualtext(s:curr_lnum, chunks)
       let s:curr_lnum -= 1
       continue
     endif
@@ -57,11 +66,12 @@ function! s:Haunt__GetHaunted() abort dict
     let info = Search " TODO: Without this copying, ...#text#new() should just get corr_lnum
     let Text = doppelganger#text#new(info)
     call Text.SetHlGroup(hl_group)
-    call Text.SetVirtualtext()
-    call s:Cache.Update({
-          \ 'Text': deepcopy(Text),
-          \ })
+    let chunks = Text.ComposeChunks()
 
+    call s:set_virtualtext(s:curr_lnum, chunks)
+    call s:Cache.Update({
+          \ 'chunks': chunks,
+          \ })
     let s:curr_lnum -= 1
   endwhile
   call winrestview(save_view)
