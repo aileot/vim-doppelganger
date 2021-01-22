@@ -36,9 +36,9 @@ function! doppelganger#command#do(line1, line2, ...) abort
   if args =~# '\<ego/disable\>'
     call doppelganger#ego#disable()
   elseif args =~# '\<ego/enable\>'
-    call doppelganger#ego#enable(0)
+    call doppelganger#ego#enable()
   elseif args =~# '\<ego\>'
-    call doppelganger#ego#toggle(0)
+    call doppelganger#ego#toggle()
   elseif args =~# '\<update\>'
     call doppelganger#update(a:line1, a:line2)
   elseif args =~# '\<clear\>'

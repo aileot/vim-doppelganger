@@ -109,7 +109,7 @@ command! -bar -range=% -nargs=? -complete=customlist,doppelganger#command#comple
       \ :call doppelganger#command#do(<line1>, <line2>, <f-args>)
 
 if !g:doppelganger#ego#disable_autostart
-  call doppelganger#ego#enable(0)
+  call doppelganger#ego#enable()
 endif
 
 if g:doppelganger#mapping#fold_suffixes !=# ''
