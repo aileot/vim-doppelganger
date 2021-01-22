@@ -8,12 +8,6 @@ function! doppelganger#text#new(pair_info) abort
   return Text
 endfunction
 
-function! s:Text__get_chunks() abort dict
-  " It's used esp. for cached instances.
-  return get(self, 'chunks', v:null)
-endfunction
-let s:Text.get_chunks = funcref('s:Text__get_chunks')
-
 function! s:Text__SetHlGroup(hl_group) abort dict
   let self.hl_group = a:hl_group
 endfunction
