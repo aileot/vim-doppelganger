@@ -43,8 +43,14 @@ USAGE							    *doppelganger-usage*
 VARIABLE						 *doppelganger-variable*
 
 g:doppelganger#text#prefix			   *g:doppelganger#text#prefix*
-	(default: '◂ ')
+	(default: '◂ <absolute>: ')
 	Set in |String|.
+	You can use some special keywords: `<absolute>`, `<relative>` and `<size>`.
+
+g:doppelganger#text#suffix			   *g:doppelganger#text#suffix*
+	(default: ' [<relative>]')
+	Set in |String|.
+	See |g:doppelganger#text#prefix| for more detail.
 
 g:doppelganger#text#shim_to_join	     *g:doppelganger#text#shim_to_join*
 b:doppelganger_text_shim_to_join	     *b:doppelganger_text_shim_to_join*
