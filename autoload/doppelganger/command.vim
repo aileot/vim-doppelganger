@@ -30,15 +30,15 @@ function! doppelganger#command#complete(A, L, P) abort
   return candidates
 endfunction
 
-function! doppelganger#command#do(line1, line2, bang, ...) abort
+function! doppelganger#command#do(line1, line2, ...) abort
   const args = get(a:, 1, '')
 
   if args =~# '\<ego/disable\>'
     call doppelganger#ego#disable()
   elseif args =~# '\<ego/enable\>'
-    call doppelganger#ego#enable(a:bang)
+    call doppelganger#ego#enable(0)
   elseif args =~# '\<ego\>'
-    call doppelganger#ego#toggle(a:bang)
+    call doppelganger#ego#toggle(0)
   elseif args =~# '\<update\>'
     call doppelganger#update(a:line1, a:line2)
   elseif args =~# '\<clear\>'
