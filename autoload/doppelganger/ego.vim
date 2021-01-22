@@ -83,7 +83,7 @@ function! doppelganger#ego#enable() abort "{{{1
           \   {'region': 'Haunt'},
           \ ])
 
-    au BufWinEnter    * call s:update_window()
+    au WinEnter    * call s:update_window()
     au TextChanged * call s:update_window()
 
     if s:get_config('update_on_CursorMoved')
