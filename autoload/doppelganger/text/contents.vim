@@ -2,11 +2,9 @@ let s:get_config = function('doppelganger#util#get_config', ['text'])
 
 let s:Contents = {}
 
-function! doppelganger#text#contents#new(dict) abort
+function! doppelganger#text#contents#new(lnum, ...) abort
   let Contents = deepcopy(s:Contents)
-  let Contents.curr_lnum = a:dict.curr_lnum
-  let Contents.corr_lnum = a:dict.corr_lnum
-  let Contents.is_reverse = a:dict.is_reverse
+  let Contents.range = a:0 ? [ a:lnum, a:1 ] : [ a:lnum ]
   return Contents
 endfunction
 
@@ -19,17 +17,16 @@ endfunction
 let s:Contents.Read = funcref('s:Contents__Read')
 
 function! s:Contents__read_in_pair() abort dict
-  let curr_lnum = self.curr_lnum
-  let corr_lnum = self.corr_lnum
-
-  if self.is_reverse
-    let self.raw_contents = [getline(corr_lnum)]
+  const range = self.range
+  if len(range) < 2
+    const below = range[0]
+    let self.raw_contents = [ getline(below) ]
     return
   endif
 
-  const start = corr_lnum
-  const end = curr_lnum
-  let self.raw_contents = getline(start, end)
+  const above = range[0]
+  const below = range[1]
+  let self.raw_contents = getline(above, below)
 endfunction
 let s:Contents.read_in_pair = funcref('s:Contents__read_in_pair')
 

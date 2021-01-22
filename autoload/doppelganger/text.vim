@@ -28,11 +28,9 @@ endfunction
 let s:Text.ComposeChunks = funcref('s:Text__ComposeChunks')
 
 function! s:Text__set() abort dict
-  let Contents = doppelganger#text#contents#new({
-        \ 'curr_lnum': self.curr_lnum,
-        \ 'corr_lnum': self.corr_lnum,
-        \ 'is_reverse': self.is_reverse,
-        \ })
+  let Contents = self.is_reverse
+        \ ? doppelganger#text#contents#new(self.corr_lnum)
+        \ : doppelganger#text#contents#new(self.corr_lnum, self.curr_lnum)
   let self.raw_text = Contents.Read()
   let self.text = self.truncate_as_fillable_width()
   return self.text
