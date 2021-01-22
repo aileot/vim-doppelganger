@@ -48,8 +48,8 @@ function! s:ego_update() abort
   call doppelganger#update(top, bottom, g:doppelganger#ego#min_range_of_pairs)
 endfunction
 
-function! s:update_window(bang) abort "{{{1
-  if !a:bang && s:should_disabled() | return | endif
+function! s:update_window() abort "{{{1
+  if s:should_disabled() | return | endif
   call s:ego_update()
 endfunction
 
@@ -67,8 +67,8 @@ function! doppelganger#ego#disable() abort "{{{1
   let s:has_ego = 0
 endfunction
 
-function! doppelganger#ego#enable(bang) abort "{{{1
-  call s:windo_update(a:bang)
+function! doppelganger#ego#enable() abort "{{{1
+  call s:windo_update()
   let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
     au!
@@ -84,37 +84,37 @@ function! doppelganger#ego#enable(bang) abort "{{{1
           \   {'region': 'Haunt'},
           \ ])
 
-    exe 'au' events '* call s:update_window(' a:bang ')'
+    exe 'au' events '* call s:update_window()'
 
     if s:get_config('update_on_CursorMoved')
       let s:last_lnum = line('.')
-      exe 'au CursorMoved * call s:update_for_CursorMoved(' a:bang ')'
+      au CursorMoved * call s:update_for_CursorMoved()
     endif
 
   augroup END
   let s:has_ego = 1
 endfunction
 
-function! doppelganger#ego#toggle(bang) abort "{{{1
+function! doppelganger#ego#toggle() abort "{{{1
   if s:has_ego
     call doppelganger#ego#disable()
     return
   endif
-  call doppelganger#ego#enable(a:bang)
+  call doppelganger#ego#enable()
 endfunction
 
-function! s:windo_update(bang) abort "{{{1
+function! s:windo_update() abort "{{{1
   let save_winID = win_getid()
 
-  windo call s:update_window(a:bang)
+  windo call s:update_window()
 
   call win_gotoid(save_winID)
 endfunction
 
-function! s:update_for_CursorMoved(bang) abort "{{{2
-  if s:should_disabled() && !a:bang | return | endif
+function! s:update_for_CursorMoved() abort "{{{2
+  if s:should_disabled() | return | endif
   if line('.') == s:last_lnum | return | endif
-  call s:update_window(a:bang)
+  call s:update_window()
   let s:last_lnum = line('.')
 endfunction
 

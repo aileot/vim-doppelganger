@@ -1,11 +1,11 @@
 Describe :DoppelgangerUpdate
   Before all
-    DoppelgangerEgoDisable
+    Doppelganger ego/disable
     new
   End
 
   Before each
-    DoppelgangerClear
+    Doppelganger clear
     let g:doppelganger#text#prefix = '>'
     let g:doppelganger#text#suffix = ''
   End
@@ -13,11 +13,11 @@ Describe :DoppelgangerUpdate
   Context in a cpp-like file
     Before each
       call setline(1, ['int main() {', '}'])
-      DoppelgangerUpdate
+      Doppelganger update
     End
 
     After each
-      DoppelgangerClear
+      Doppelganger clear
     End
 
     It shows a virtualtext at least at this test
@@ -38,7 +38,7 @@ Describe :DoppelgangerUpdate
   Context with reverse search
     Before each
       call setline(1, ['do {', '} while (foo);'])
-      DoppelgangerUpdate
+      Doppelganger update
     End
     It shows while-statement in a virtual text
       let virtualtexts = GetVirtualTexts()[1] " after `do {`
@@ -85,7 +85,7 @@ Describe :DoppelgangerUpdate
     End
 
     After each
-      DoppelgangerUpdate
+      Doppelganger update
       let virtualtexts = GetVirtualTexts()
       Assert len(virtualtexts) > 0
     End

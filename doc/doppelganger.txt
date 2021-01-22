@@ -214,23 +214,16 @@ g:doppelganger#mapping#fold_suffixes	  *g:doppelganger#mapping#fold_suffixes*
 ------------------------------------------------------------------------------
 COMMAND							  *doppelganger-command*
 
-:DoppelgangerClear					    *:DoppelgangerClear*
-	Clear all virtualtext set by |vim-doppelganger|.
+:[range]Doppelganger [{args}]					*:Doppelganger*
+	Possible arguments are one of "update", "clear", "ego/enable",
+	"ego/disable" and "ego".
 
-:[range]DoppelgangerUpdate				   *:DoppelgangerUpdate*
+	With no argument, it invokes "clear" if any virtual texts are set by
+	|vim-doppelganger|; if no virtual texts are set by doppelganger, it
+	invokes "update".
 
-:[range]DoppelgangerToggle				   *:DoppelgangerToggle*
-
-:DoppelgangerEgoDisable				       *:DoppelgangerEgoDisable*
-
-:DoppelgangerEgoEnable[!]				*:DoppelgangerEgoEnable*
-	Update virtualtext on events in |g:doppelganger#ego#update_events| and
-	so on.  The filetype buffers will be ignored in
-	|g:doppelganger#ego#disable_on_filetypes|.
-	With "!", it ignores |g:doppelganger#ego#disable_on_filetypes|.
-
-:DoppelgangerEgoToggle[!]				*:DoppelgangerEgoToggle*
-	See |:DoppelgangerEgoEnable|.
+	When the argument is only "ego", it invokes proper one of "ego/enable"
+	and "ego/disable".
 
 ------------------------------------------------------------------------------
 HIGHLIGHT						*doppelganger-highlight*
@@ -254,6 +247,11 @@ DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
+
+2021-01-22
+* Remove old commands, :DoppelgangerUpdate, :DoppelgangerClear,
+  :DoppelgangerToggle, :DoppelgangerEgoEnable :DoppelgangerEgoDisable and
+  :DoppelgangerEgoToggle. and just define a command, :Doppelganger.
 
 2020-12-10
 * Rename g:doppelganger#prefix to g:doppelganger#text#prefix.
