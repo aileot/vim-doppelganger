@@ -33,10 +33,7 @@ This is recommended in lazy load:
 repo = 'kaile256/vim-doppelganger'
 on_event = 'BufWinEnter'
 #on_cmd = [
-# 'DoppelgangerUpdate',
-# 'DoppelgangerToggle',
-# 'DoppelgangerEgoEnable',
-# 'DoppelgangerEgoToggle',
+# 'Doppelganger',
 #]
 ```
 
