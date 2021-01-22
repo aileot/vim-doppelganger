@@ -7,6 +7,7 @@ Describe :DoppelgangerUpdate
   Before each
     DoppelgangerClear
     let g:doppelganger#text#prefix = '>'
+    let g:doppelganger#text#suffix = ''
   End
 
   Context in a cpp-like file
