@@ -33,18 +33,24 @@ function! s:Haunt__GetHaunted() abort dict
   let stop_lnum = s:get_top_lnum(above)
   while s:curr_lnum >= stop_lnum
     let s:curr_lnum = s:update_curpos(stop_lnum)
-    if doppelganger#highlight#_is_hl_group_to_skip()
-      " Note: It's too slow without this guard up to hl_group though this check
-      " is too rough for a line which contains both codes and the hl_group.
-      let s:curr_lnum -= 1
-      continue
-    endif
 
     call s:Cache.Attach(s:curr_lnum)
     let chunks = s:Cache.Restore('chunks')
 
     if chunks isnot# v:null
       call s:set_virtualtext(s:curr_lnum, chunks)
+      let s:curr_lnum -= 1
+      continue
+    endif
+
+    let chunks = []
+
+    if doppelganger#highlight#_is_hl_group_to_skip()
+      " Note: It's too slow without this guard up to hl_group though this check
+      " is too rough for a line which contains both codes and the hl_group.
+      call s:Cache.Update({
+            \ 'chunks': chunks,
+            \ })
       let s:curr_lnum -= 1
       continue
     endif
