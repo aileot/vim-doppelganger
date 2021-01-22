@@ -58,7 +58,7 @@ function! doppelganger#ego#is_enabled() abort "{{{1
 endfunction
 
 function! doppelganger#ego#disable() abort "{{{1
-  augroup doppelganger
+  augroup doppelganger/ego
     au!
   augroup END
   let save_winID = win_getid()
@@ -68,7 +68,7 @@ function! doppelganger#ego#disable() abort "{{{1
 endfunction
 
 function! doppelganger#ego#enable() abort "{{{1
-  augroup doppelganger
+  augroup doppelganger/ego
     au!
 
     au WinLeave * call doppelganger#clear()
