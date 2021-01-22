@@ -185,15 +185,6 @@ g:doppelganger#ego#max_offset			 *g:doppelganger#ego#max_offset*
 	Set in |Number|.
 	|doppelganger| will try to set virtualtext in the offset around cursor.
 
-g:doppelganger#ego#update_events	      *g:doppelganger#ego#update_events*
-	(default: ['BufWinEnter', 'TextChanged'])
-	Set in |List|.
-	It's recommended to update by |autocmd|s via this variable.
-
-	Note:
-	It's deprecated to set |CursorMoved| in this variable.
-	See also |g:doppelganger#ego#update_on_CursorMoved|.
-
 				      *g:doppelganger#ego#update_on_CursorMoved*
 g:doppelganger#ego#update_on_CursorMoved
 	(default: 1)
@@ -252,6 +243,7 @@ COMPATIBILITY					    *doppelganger-compatibility*
 * Remove old commands, :DoppelgangerUpdate, :DoppelgangerClear,
   :DoppelgangerToggle, :DoppelgangerEgoEnable :DoppelgangerEgoDisable and
   :DoppelgangerEgoToggle. and just define a command, :Doppelganger.
+* Remove g:doppelganger#ego#update_events.
 
 2020-12-10
 * Rename g:doppelganger#prefix to g:doppelganger#text#prefix.

@@ -69,7 +69,6 @@ endfunction
 
 function! doppelganger#ego#enable() abort "{{{1
   call s:windo_update()
-  let events = join(s:get_config('update_events'), ',')
   augroup doppelganger
     au!
 
@@ -84,7 +83,8 @@ function! doppelganger#ego#enable() abort "{{{1
           \   {'region': 'Haunt'},
           \ ])
 
-    exe 'au' events '* call s:update_window()'
+    au BufWinEnter    * call s:update_window()
+    au TextChanged * call s:update_window()
 
     if s:get_config('update_on_CursorMoved')
       let s:last_lnum = line('.')
