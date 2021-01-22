@@ -58,7 +58,7 @@ function! doppelganger#ego#is_enabled() abort "{{{1
 endfunction
 
 function! doppelganger#ego#disable() abort "{{{1
-  augroup doppelganger
+  augroup doppelganger/ego
     au!
   augroup END
   let save_winID = win_getid()
@@ -68,9 +68,7 @@ function! doppelganger#ego#disable() abort "{{{1
 endfunction
 
 function! doppelganger#ego#enable() abort "{{{1
-  call s:windo_update()
-  let events = join(s:get_config('update_events'), ',')
-  augroup doppelganger
+  augroup doppelganger/ego
     au!
 
     au WinLeave * call doppelganger#clear()
@@ -84,7 +82,8 @@ function! doppelganger#ego#enable() abort "{{{1
           \   {'region': 'Haunt'},
           \ ])
 
-    exe 'au' events '* call s:update_window()'
+    au WinEnter    * call s:update_window()
+    au TextChanged * call s:update_window()
 
     if s:get_config('update_on_CursorMoved')
       let s:last_lnum = line('.')
@@ -101,14 +100,6 @@ function! doppelganger#ego#toggle() abort "{{{1
     return
   endif
   call doppelganger#ego#enable()
-endfunction
-
-function! s:windo_update() abort "{{{1
-  let save_winID = win_getid()
-
-  windo call s:update_window()
-
-  call win_gotoid(save_winID)
 endfunction
 
 function! s:update_for_CursorMoved() abort "{{{2

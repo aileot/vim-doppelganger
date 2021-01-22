@@ -96,10 +96,6 @@ call s:set_default('g:doppelganger#ego#disable_on_filetypes', [
 
 call s:set_default('g:doppelganger#ego#min_range_of_pairs', 4)
 call s:set_default('g:doppelganger#ego#max_offset', 3)
-call s:set_default('g:doppelganger#ego#update_events', [
-      \ 'BufWinEnter',
-      \ 'TextChanged',
-      \ ])
 call s:set_default('g:doppelganger#ego#update_on_CursorMoved', 1)
 
 call s:set_default('g:doppelganger#mapping#fold_suffixes', 'voraxcmORAXCM')
