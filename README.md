@@ -31,7 +31,7 @@ This is recommended in lazy load:
 ```toml
 [[plugin]]
 repo = 'kaile256/vim-doppelganger'
-on_event = 'BufWinEnter'
+on_event = 'BufRead'
 #on_cmd = [
 # 'Doppelganger',
 #]
