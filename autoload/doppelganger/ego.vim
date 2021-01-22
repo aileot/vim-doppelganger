@@ -68,7 +68,6 @@ function! doppelganger#ego#disable() abort "{{{1
 endfunction
 
 function! doppelganger#ego#enable() abort "{{{1
-  call s:windo_update()
   augroup doppelganger
     au!
 
@@ -101,14 +100,6 @@ function! doppelganger#ego#toggle() abort "{{{1
     return
   endif
   call doppelganger#ego#enable()
-endfunction
-
-function! s:windo_update() abort "{{{1
-  let save_winID = win_getid()
-
-  windo call s:update_window()
-
-  call win_gotoid(save_winID)
 endfunction
 
 function! s:update_for_CursorMoved() abort "{{{2
