@@ -45,6 +45,7 @@ function! s:set_default(var, default) abort
 endfunction
 
 call s:set_default('g:doppelganger#text#prefix', '◂ ')
+call s:set_default('g:doppelganger#text#suffix', '')
 call s:set_default('g:doppelganger#text#shim_to_join', ' ﲖ ')
 call s:set_default('g:doppelganger#text#ellipsis', ' …')
 call s:set_default('g:doppelganger#text#compress_whitespaces', 1)

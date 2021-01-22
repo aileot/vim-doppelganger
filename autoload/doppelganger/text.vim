@@ -39,25 +39,52 @@ function! s:Text__set() abort dict
 endfunction
 let s:Text.set = funcref('s:Text__set')
 
+function! s:Text__replace_keywords(text) abort dict
+  const abs = self.corr_lnum
+  const rel = abs(self.curr_lnum - self.corr_lnum)
+  const size = rel + 1
+
+  let text = a:text
+  let text = substitute(text, '<absolute>', abs, 'g')
+  let text = substitute(text, '<relative>', rel, 'g')
+  let text = substitute(text, '<size>', size, 'g')
+  return text
+endfunction
+let s:Text.replace_keywords = funcref('s:Text__replace_keywords')
+
 function! s:Text__truncate_as_fillable_width() abort dict
-  const max_column_width = s:get_config('max_column_width')
+  let prefix = s:get_config('prefix')
+  let prefix = self.replace_keywords(prefix)
+  let suffix = s:get_config('suffix')
+  let suffix = self.replace_keywords(suffix)
+
   const line = getline(self.curr_lnum)
-  const fillable_width = max_column_width - strdisplaywidth(line)
+  " Add 1 for a space inserted before any virtual text starts.
+  const len_reserved = strdisplaywidth(line . prefix . suffix) + 1
+  const max_column_width = s:get_config('max_column_width')
+  let fillable_width = max_column_width - len_reserved
 
   const ellipsis = g:doppelganger#text#ellipsis
   const len_ellipsis = strdisplaywidth(ellipsis)
 
   let text = ''
-  let len = len_ellipsis
+  let rest_width = fillable_width
   for char in split(self.raw_text, '\zs')
-    let len += strdisplaywidth(char)
-    if len >= fillable_width
+    let fillable_width -= strdisplaywidth(char)
+    if fillable_width < len_ellipsis
+      let rest_width -= len_ellipsis
       let text .= ellipsis
       break
     endif
+    let rest_width = fillable_width
     let text .= char
   endfor
 
+  if suffix isnot# '' && rest_width > 0
+    let text .= repeat(' ', rest_width)
+  endif
+
+  let text = prefix . text . suffix
   return text
 endfunction
 let s:Text.truncate_as_fillable_width = funcref('s:Text__truncate_as_fillable_width')
@@ -110,9 +137,7 @@ endfunction
 let s:Contents.trim_whitespaces = funcref('s:Contents__trim_whitespaces')
 
 function! s:Contents__join() abort dict
-  const prefix = s:get_config('prefix')
   const shim = s:get_config('shim_to_join')
-  let text = prefix . join(self.contents, shim)
-  let self.text = text
+  let self.text = join(self.contents, shim)
 endfunction
 let s:Contents.join = funcref('s:Contents__join')
