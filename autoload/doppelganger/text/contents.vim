@@ -28,7 +28,7 @@ function! s:Contents__read_in_pair() abort dict
   endif
 
   const start = corr_lnum
-  const end = curr_lnum - 1
+  const end = curr_lnum
   let self.raw_contents = getline(start, end)
 endfunction
 let s:Contents.read_in_pair = funcref('s:Contents__read_in_pair')
