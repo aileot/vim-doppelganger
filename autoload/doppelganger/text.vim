@@ -61,7 +61,7 @@ function! s:Text__truncate_as_fillable_width() abort dict
   const line = getline(self.curr_lnum)
   " Add 1 for a space inserted before any virtual text starts.
   const len_reserved = strdisplaywidth(line . prefix . suffix) + 1
-  const max_column_width = s:get_config('max_column_width')
+  const max_column_width = eval(s:get_config('max_column_width'))
   let fillable_width = max_column_width - len_reserved
 
   const ellipsis = g:doppelganger#text#ellipsis
