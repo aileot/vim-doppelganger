@@ -70,13 +70,8 @@ function! s:Haunt__GetHaunted() abort dict
       continue
     endif
 
-    let hl_group = Search.IsReverse()
-          \ ? g:doppelganger#highlight#_pair_reverse
-          \ : g:doppelganger#highlight#_pair
-
     let info = Search " TODO: Without this copying, ...#text#new() should just get corr_lnum
     let Text = doppelganger#text#new(info)
-    call Text.SetHlGroup(hl_group)
     let chunks = Text.ComposeChunks()
 
     call s:set_virtualtext(s:curr_lnum, chunks)

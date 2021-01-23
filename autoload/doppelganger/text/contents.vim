@@ -9,10 +9,12 @@ function! doppelganger#text#contents#new(lnum, ...) abort
 endfunction
 
 function! s:Contents__Read() abort dict
-  call self.read_in_pair()
-  call self.trim_whitespaces()
-  call self.join()
-  return self.text
+  const raw_contents = self.read_in_pair()
+  if type(raw_contents) isnot# type([])
+    return []
+  endif
+  const contents = self.trim_whitespaces(raw_contents)
+  return contents
 endfunction
 let s:Contents.Read = funcref('s:Contents__Read')
 
@@ -26,12 +28,14 @@ function! s:Contents__read_in_pair() abort dict
 
   const above = range[0]
   const below = range[1]
-  let self.raw_contents = getline(above, below)
+
+  const raw_contents = getline(above, below)
+  return raw_contents
 endfunction
 let s:Contents.read_in_pair = funcref('s:Contents__read_in_pair')
 
-function! s:Contents__trim_whitespaces() abort dict
-  let contents = map(deepcopy(self.raw_contents),
+function! s:Contents__trim_whitespaces(raw_contents) abort dict
+  let contents = map(deepcopy(a:raw_contents),
         \ 'substitute(v:val, ''^\s*\|\s*$'', "", "")')
 
   const compress_whitespaces = s:get_config('compress_whitespaces')
@@ -39,13 +43,7 @@ function! s:Contents__trim_whitespaces() abort dict
     call map(contents, 'substitute(v:val, ''\s\{2,}'', " ", "g")')
   endif
 
-  let self.contents = contents
+  return contents
 endfunction
 let s:Contents.trim_whitespaces = funcref('s:Contents__trim_whitespaces')
-
-function! s:Contents__join() abort dict
-  const shim = s:get_config('shim_to_join')
-  let self.text = join(self.contents, shim)
-endfunction
-let s:Contents.join = funcref('s:Contents__join')
 
