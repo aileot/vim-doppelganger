@@ -76,8 +76,9 @@ b:doppelganger_text_compress_whitespaces
 
 g:doppelganger#text#max_column_width     *g:doppelganger#text#max_column_width*
 b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
-	(default: max([&tw, 79]))
-	Set in |Number|.
+	(default: 'max([&cc - 1, &tw, 79])')
+	Set in |Number| or in an evaluable string which returns a |Number|.
+
 	|Doppelganger| truncates virtualtexts in the column width.
 	The trimmed texts will be replaced with a text defined in
 	|g:doppelganger#text#ellipsis|.
