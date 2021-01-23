@@ -80,12 +80,12 @@ b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
 	Set in |Number| or in an evaluable string which returns a |Number|.
 
 	|Doppelganger| truncates virtualtexts in the column width.
-	The trimmed texts will be replaced with a text defined in
+	The trimmed part of texts will be replaced with a text defined in
 	|g:doppelganger#text#ellipsis|.
 
-	You can set a value up to the buffer's config as the following.
+	You can also define by another logic to a buffer as the following:
 >
-	let b:doppelganger_text_max_column_width = max([&tw, 79])
+	let b:doppelganger_text_max_column_width = &tw
 <
 	Such scripts should written in a vimrc file under `ftplugin/` or with
 	|:autocmd| as your preference.
