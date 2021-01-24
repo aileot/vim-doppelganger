@@ -13,13 +13,18 @@ endfunction
 let s:Haunt.SetMinRange = funcref('s:Haunt__SetMinRange')
 
 function! s:set_virtualtext(lnum, chunks) abort
-  call nvim_buf_set_virtual_text(
-        \ 0,
-        \ g:__doppelganger_namespace,
-        \ a:lnum - 1,
-        \ a:chunks,
-        \ {}
-        \ )
+  try
+    call nvim_buf_set_virtual_text(
+          \ 0,
+          \ g:__doppelganger_namespace,
+          \ a:lnum - 1,
+          \ a:chunks,
+          \ {}
+          \ )
+  catch /E5555/
+    const description = 'You set chunks in wrong format to nvim_buf_set_virtual_text()'
+    call doppelganger#debug#set_errormsg('virtualtext', description, a:chunks)
+  endtry
 endfunction
 
 function! s:Haunt__GetHaunted() abort dict
