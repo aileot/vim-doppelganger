@@ -45,16 +45,15 @@ function! s:Text__compose_chunks(contents) abort dict
     for char in split(line, '\zs')
       let len_pending = strdisplaywidth(char)
       if len_pending > len_rest - len_ellipsis
-        let len_rest -= len_ellipsis
         let chunks += [[ pending_text, hl_text ]] + c_ellipsis
-        let is_last_chunk = v:true
+        let len_rest = -1
         break
       endif
       let len_rest -= len_pending
       let pending_text .= char
     endfor
 
-    if is_last_chunk | break | endif
+    if len_rest < 0 | break | endif
     " TODO: manage len_rest at shim.
     let chunks += [[ pending_text, hl_text ]] + c_shim
     let len_rest -= len_shim
