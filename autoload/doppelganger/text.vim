@@ -39,6 +39,7 @@ function! s:Text__compose_chunks(contents) abort dict
   const hl_text = hl_contents[0]
 
   let is_last_chunk = v:false
+  let rest_lines = len(a:contents)
   for line in a:contents
     let pending_text = ''
 
@@ -54,8 +55,11 @@ function! s:Text__compose_chunks(contents) abort dict
     endfor
 
     if len_rest < 0 | break | endif
-    " TODO: manage len_rest at shim.
-    let chunks += [[ pending_text, hl_text ]] + c_shim
+    let chunks += [[ pending_text, hl_text ]]
+
+    let rest_lines -= 1
+    if rest_lines < 1 | break | endif
+    let chunks += c_shim
     let len_rest -= len_shim
   endfor
 
