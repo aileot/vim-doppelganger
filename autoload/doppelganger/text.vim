@@ -49,8 +49,8 @@ function! s:Text__compose_chunks(contents) abort dict
         let len_rest = -1
         break
       endif
-      let len_rest -= len_pending
       let pending_text .= char
+      let len_rest -= len_pending
     endfor
 
     if len_rest < 0 | break | endif
