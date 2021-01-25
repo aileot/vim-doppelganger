@@ -44,7 +44,7 @@ function! s:Components__make_up(is_reverse) abort dict
 
   let c_prefix   = s:get_config('prefix')[idx]
   let c_suffix   = s:get_config('suffix')[idx]
-  let c_shim     = s:get_config('shim_to_join')[idx]
+  let c_shim     = s:get_config('shim')[idx]
   let c_ellipsis = s:get_config('ellipsis')[idx]
 
   let c_prefix   = self.complete_component(c_prefix)

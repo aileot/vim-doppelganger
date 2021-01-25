@@ -52,8 +52,8 @@ g:doppelganger#text#suffix			   *g:doppelganger#text#suffix*
 	Set in |String|.
 	See |g:doppelganger#text#prefix| for more detail.
 
-g:doppelganger#text#shim_to_join	     *g:doppelganger#text#shim_to_join*
-b:doppelganger_text_shim_to_join	     *b:doppelganger_text_shim_to_join*
+g:doppelganger#text#shim			     *g:doppelganger#text#shim*
+b:doppelganger_text_shim	     		     *b:doppelganger_text_shim*
 	(default: ' ﲖ ')
 	Set in |String|.
 	When contents within a pair is more than two lines, the characters
@@ -243,6 +243,10 @@ DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
+
+2021-01-25
+* Remove g:doppelganger#text#shim_to_join and b:doppelganger_text_shim_to_join
+  use g:doppelganger#text#shim and b:doppelganger_text_shim instead.
 
 2021-01-22
 * Remove old commands, :DoppelgangerUpdate, :DoppelgangerClear,

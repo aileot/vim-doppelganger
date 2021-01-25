@@ -52,7 +52,7 @@ call s:set_default('g:doppelganger#text#suffix',       [
       \ [[' [<relative>]', 'DoppelgangerVirtualtextSuffix']],
       \ [[' [<relative>]', 'DoppelgangerVirtualtextReverseSuffix']],
       \ ])
-call s:set_default('g:doppelganger#text#shim_to_join', [
+call s:set_default('g:doppelganger#text#shim', [
       \ [[' ﲖ ', 'DoppelgangerVirtualtextShim']],
       \ [[' ﲖ ', 'DoppelgangerVirtualtextReverseShim']],
       \ ])
