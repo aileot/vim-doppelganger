@@ -68,6 +68,10 @@ endfunction
 let s:Cache.update = funcref('s:Cache__update')
 
 function! s:Cache__Update(dict) abort dict
+  if g:doppelganger#cache#disable
+    return
+  endif
+
   const default = {
         \ 'lnum': self.lnum,
         \ 'region': self.region,
@@ -111,6 +115,10 @@ endfunction
 let s:Cache.restore = funcref('s:Cache__restore')
 
 function! s:Cache__Restore(name) abort dict
+  if g:doppelganger#cache#disable
+    return v:null
+  endif
+
   let query = {
         \ 'region': self.region,
         \ 'lnum': self.lnum,
