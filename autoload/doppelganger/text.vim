@@ -20,9 +20,11 @@ endfunction
 let s:Text.read_contents = funcref('s:Text__read_contents')
 
 function! s:Text__compose_chunks(contents) abort dict
+  let curr_lnum = self.curr_lnum
+  let corr_lnum = self.corr_lnum
   let Components = doppelganger#text#components#new(
-        \ self.curr_lnum,
-        \ self.corr_lnum,
+        \ curr_lnum,
+        \ corr_lnum,
         \ )
 
   let [c_prefix, c_shim, c_ellipsis, c_suffix] = Components.make_up(self.is_reverse)
@@ -39,7 +41,7 @@ function! s:Text__compose_chunks(contents) abort dict
   const hl_text = hl_contents[0]
 
   let is_last_chunk = v:false
-  let rest_lines = len(a:contents)
+  let rest_lines = abs(curr_lnum - corr_lnum)
   for line in a:contents
     let pending_text = ''
 
