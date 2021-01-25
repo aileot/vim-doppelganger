@@ -101,6 +101,8 @@ call s:set_default('g:doppelganger#ego#update_on_CursorMoved', 1)
 
 call s:set_default('g:doppelganger#mapping#fold_suffixes', 'voraxcmORAXCM')
 
+call s:set_default('g:doppelganger#cache#disable', v:false)
+
 command! -bar -range=% -nargs=? -complete=customlist,doppelganger#command#complete
       \ Doppelganger
       \ :call doppelganger#command#do(<line1>, <line2>, <f-args>)

@@ -203,6 +203,10 @@ g:doppelganger#mapping#fold_suffixes	  *g:doppelganger#mapping#fold_suffixes*
 	Mapping will not be applied when the target key has been already
 	mapped.
 
+g:doppelganger#cache#disable			 *g:doppelganger#cache#disable*
+	(default: |v:false|)
+	If true, disable cache.
+
 ------------------------------------------------------------------------------
 COMMAND							  *doppelganger-command*
 
