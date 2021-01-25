@@ -26,8 +26,19 @@ function! s:Contents__read_in_pair() abort dict
     return
   endif
 
+  const depth = s:get_config('contents_depth')
+  if depth is# v:null
+    return []
+  endif
+
   const above = range[0]
-  const below = range[1]
+  const below = depth > 0
+        \ ? above + depth - 1
+        \ : range[1] + depth
+
+  if below < above
+    return []
+  endif
 
   const raw_contents = getline(above, below)
   return raw_contents

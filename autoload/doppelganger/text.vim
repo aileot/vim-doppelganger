@@ -79,7 +79,6 @@ let s:Text.compose_chunks = funcref('s:Text__compose_chunks')
 
 function! s:Text__ComposeChunks() abort dict
   const contents = self.read_contents()
-  if len(contents) < 1 | return | endif
   const chunks = self.compose_chunks(contents)
   return chunks
 endfunction

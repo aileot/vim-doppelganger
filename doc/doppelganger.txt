@@ -42,6 +42,17 @@ USAGE							    *doppelganger-usage*
 ------------------------------------------------------------------------------
 VARIABLE						 *doppelganger-variable*
 
+g:doppelganger#text#contents_depth	   *g:doppelganger#text#contents_depth*
+	(default: 10)
+	Set in |Number| or |v:null|.
+	Max depth to be shown in virtual texts.
+
+	If negative, a depth will be calculated from corresponding line.
+
+	Set to |v:null| if you just want absolute or relative numbers of
+	corresponding line in prefix in the format as you set in
+	|g:doppelganger#text#prefix|.
+
 g:doppelganger#text#prefix			   *g:doppelganger#text#prefix*
 	(default: '◂ <absolute>: ')
 	Set in |String|.

@@ -44,6 +44,8 @@ function! s:set_default(var, default) abort
   let {a:var} = get({prefix}, suffix, a:default)
 endfunction
 
+call s:set_default('g:doppelganger#text#contents_depth', 10)
+
 call s:set_default('g:doppelganger#text#prefix',       [
       \ [['◂ <absolute>: ', 'DoppelgangerVirtualtextPrefix']],
       \ [['◂ <absolute>: ', 'DoppelgangerVirtualtextReversePrefix']],
