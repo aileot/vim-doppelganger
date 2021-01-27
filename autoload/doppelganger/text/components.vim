@@ -64,9 +64,9 @@ let s:Components.make_up = funcref('s:Components__make_up')
 
 function! s:Components__get_fillable_width() abort dict
   const line = getline(self.curr_lnum)
-  " Add 1 for a space inserted before any virtual text starts.
   const len_prefix = self.displaywidth(self.c_prefix)
   const len_suffix = self.displaywidth(self.c_suffix)
+  " Add 1 for a space inserted before any virtual text starts.
   const len_reserved = strdisplaywidth(line . len_prefix . len_suffix) + 1
 
   const max_column_width = eval(s:get_config('max_column_width'))
