@@ -6,17 +6,19 @@ call themis#option('exclude', ['test/_testdata/'])
 let s:helper = themis#helper('assert')
 call themis#helper('command').with(s:helper)
 
-function! GetVirtualTexts() abort
+function! GetVirtualTextsAsPlainTexts() abort
   " Return a Dict in the format, {lnum : virt_text}
 
   let virt_texts = {}
 
-  const namespace = nvim_get_namespaces().doppelganger
-  const marks = nvim_buf_get_extmarks(0, namespace, 0, -1, {'details': 1})
-  for m in marks
+  const ns = nvim_get_namespaces().doppelganger
+  const extmarks = nvim_buf_get_extmarks(0, ns, 0, -1, {'details': 1})
+  for m in extmarks
+    let info = m[3]
+    let chunks = get(info, 'virt_text', [])
+    let texts = map(deepcopy(chunks), 'len(v:val) == 2 ? v:val[0] : ""')
     let lnum = m[1] + 1
-    let info = m[3].virt_text
-    call extend(virt_texts, {lnum : map(info, 'v:val[0]')})
+    call extend(virt_texts, {lnum : join(texts, '')})
   endfor
 
   return virt_texts

@@ -22,12 +22,12 @@ Describe :DoppelgangerUpdate
 
     It shows a virtualtext at least at this test
       let assert = themis#helper('assert')
-      let virtualtexts = GetVirtualTexts()[2]
+      let virtualtexts = GetVirtualTextsAsPlainTexts()[2]
       Assert assert.not_empty(virtualtexts)
     End
 
     It shows the line that contains the other end of pair which ends current line
-      let virtualtexts = GetVirtualTexts()[2]
+      let virtualtexts = GetVirtualTextsAsPlainTexts()[2]
       let prefix = g:doppelganger#text#prefix
       let expected_virtualtext = '^'. prefix .'int main() {$'
       Assert Match(virtualtexts[0], expected_virtualtext)
@@ -86,7 +86,7 @@ Describe :DoppelgangerUpdate
 
     After each
       Doppelganger update
-      let virtualtexts = GetVirtualTexts()
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
       Assert len(virtualtexts) > 0
     End
   End
