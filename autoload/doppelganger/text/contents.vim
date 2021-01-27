@@ -22,8 +22,8 @@ function! s:Contents__read_in_pair() abort dict
   const range = self.range
   if len(range) < 2
     const below = range[0]
-    let self.raw_contents = [ getline(below) ]
-    return
+    const raw_contents = [ getline(below) ]
+    return raw_contents
   endif
 
   const depth = s:get_config('contents_depth')
