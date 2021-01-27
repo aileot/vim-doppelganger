@@ -1,0 +1,68 @@
+Describe Components
+  Before each
+    new
+    only!
+    let g:doppelganger#cache#disable = v:true
+    let g:doppelganger#text#max_column_width = 80
+
+    let g:doppelganger#text#prefix   = []
+    let g:doppelganger#text#shim     = []
+    let g:doppelganger#text#ellipsis = []
+    let g:doppelganger#text#suffix   = []
+    let g:doppelganger#text#contents_depth = 1
+
+    let lines = [
+          \ 'int main {',
+          \ '}'
+          \ ]
+    1 pu! = lines
+
+    let Components = doppelganger#text#components#new(2, 1)
+    const is_reverse = v:false
+  End
+
+  Context .make_up()
+    Context returns expected, completed components
+
+      It as four empty components
+        const expected = [[], [], [], []]
+        let g:doppelganger#text#prefix   = []
+        let g:doppelganger#text#shim     = []
+        let g:doppelganger#text#ellipsis = []
+        let g:doppelganger#text#suffix   = []
+        const actual = Components.make_up(is_reverse)
+        Assert Equals(actual, expected)
+      End
+
+      It which is composed of chunks filled with simple chars with no hl_groups
+        const expected = [[['>', '']], [['+', '']], [['.', '']], [['$', '']]]
+        let g:doppelganger#text#prefix   = [['>']]
+        let g:doppelganger#text#shim     = [['+']]
+        let g:doppelganger#text#ellipsis = [['.']]
+        let g:doppelganger#text#suffix   = [['$']]
+        const actual = Components.make_up(is_reverse)
+        Assert Equals(actual, expected)
+      End
+
+    End
+  End
+
+  Context .displaywidth()
+    It returns 1
+      let c = [['+']]
+      Assert Equals(Components.displaywidth(c), 1)
+    End
+
+    It returns 1 for a unicode
+      let c = [['ﲖ']]
+      Assert Equals(Components.displaywidth(c), 1)
+    End
+
+    It returns 2 for an ambiguous width char
+      let c = [['あ']]
+      Assert Equals(Components.displaywidth(c), 2)
+    End
+
+  End
+
+End
