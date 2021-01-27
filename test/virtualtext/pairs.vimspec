@@ -1,13 +1,16 @@
 Describe :DoppelgangerUpdate
   Before all
     Doppelganger ego/disable
-    new
   End
 
   Before each
+    new
+    only!
+
     Doppelganger clear
-    let g:doppelganger#text#prefix = '>'
-    let g:doppelganger#text#suffix = ''
+    let g:doppelganger#format#prefix = []
+    let g:doppelganger#format#suffix = []
+    let g:doppelganger#format#contents_depth = 1
   End
 
   Context in a cpp-like file

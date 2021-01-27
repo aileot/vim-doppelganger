@@ -1,11 +1,48 @@
-Describe virtualtext
-  It requires Neovim, not Vim
-    Assert Equals(has('nvim'), 1)
-    Assert Match($THEMIS_VIM, 'nvim')
+Describe Prerequisite:
+
+  Context nvim_buf_set_virtual_text()
+    It requires Neovim, not Vim
+      Assert Equals(has('nvim'), 1)
+      Assert Match($THEMIS_VIM, 'nvim')
+    End
+
+    It requires a function to set virtualtext
+      Assert Equals(exists('*nvim_buf_set_virtual_text'), 1)
+    End
   End
 
-  It requires a function to set virtualtext
-    Assert Equals(exists('*nvim_buf_set_virtual_text'), 1)
+  Context GetVirtualTextsAsPlainTexts()
+    Before each
+      new
+      only!
+    End
+
+    Context with simplest doppelganger's setting
+      Before each
+        let g:doppelganger#format#prefix = []
+        let g:doppelganger#format#suffix = []
+        let g:doppelganger#format#contents_depth = 1
+      End
+
+      Context in cpp file
+        Before each
+          setlocal ft=cpp
+          call setline(1, ['int main() {', '}'])
+          Doppelganger update
+        End
+
+        After each
+          Doppelganger clear
+        End
+
+        It returns correctly
+          let virtualtexts = GetVirtualTextsAsPlainTexts()
+          let actual = virtualtexts[2]
+          let expected = 'int main() {'
+          Assert Same(actual, expected)
+        End
+      End
+    End
   End
 End
 
