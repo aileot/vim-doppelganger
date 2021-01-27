@@ -11,7 +11,7 @@ function! doppelganger#text#new(pair_info) abort
 endfunction
 
 function! s:Text__read_contents() abort dict
-  let Contents = self.is_reverse
+  const Contents = self.is_reverse
         \ ? doppelganger#text#contents#new(self.corr_lnum)
         \ : doppelganger#text#contents#new(self.corr_lnum, self.curr_lnum)
   const contents = Contents.Read()
@@ -20,14 +20,14 @@ endfunction
 let s:Text.read_contents = funcref('s:Text__read_contents')
 
 function! s:Text__compose_chunks(contents) abort dict
-  let curr_lnum = self.curr_lnum
-  let corr_lnum = self.corr_lnum
+  const curr_lnum = self.curr_lnum
+  const corr_lnum = self.corr_lnum
   let Components = doppelganger#text#components#new(
         \ curr_lnum,
         \ corr_lnum,
         \ )
 
-  let [c_prefix, c_shim, c_ellipsis, c_suffix] = Components.make_up(self.is_reverse)
+  const [c_prefix, c_shim, c_ellipsis, c_suffix] = Components.make_up(self.is_reverse)
 
   let chunks = empty(c_prefix) ? [] : c_prefix
 
