@@ -29,10 +29,6 @@ function! s:Text__compose_chunks(contents) abort dict
 
   const [c_prefix, c_shim, c_ellipsis, c_suffix] = Components.make_up(self.is_reverse)
 
-  let chunks = empty(c_prefix) ? [] : c_prefix
-
-  let len_rest = Components.get_fillable_width()
-
   const len_shim     = Components.displaywidth(c_shim)
   const len_ellipsis = Components.displaywidth(c_ellipsis)
 
@@ -40,8 +36,10 @@ function! s:Text__compose_chunks(contents) abort dict
   const hl_contents = s:get_config('hl_contents')[idx]
   const hl_text = hl_contents[0]
 
-  let is_last_chunk = v:false
+  let chunks = empty(c_prefix) ? [] : c_prefix
+  let len_rest = Components.get_fillable_width()
   let rest_lines = abs(curr_lnum - corr_lnum)
+
   for line in a:contents
     let pending_text = ''
 
