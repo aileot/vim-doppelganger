@@ -15,8 +15,15 @@ function! s:Components__replace_keywords(text) abort dict
 endfunction
 let s:Components.replace_keywords = funcref('s:Components__replace_keywords')
 
-function! s:Component__complete_component(component) abort dict
-  let component = deepcopy(a:component)
+function! s:Component__complete_component(name, idx) abort dict
+  const template = deepcopy(s:get_config(a:name))
+  const len = len(template)
+  if len == 0
+    return []
+  endif
+
+  let component = len == 1 ? template[0] : template[a:idx]
+
   try
     call map(component, '[ self.replace_keywords(v:val[0]), v:val[1] ]')
   catch /E684/
@@ -42,15 +49,10 @@ function! s:Components__make_up(is_reverse) abort dict
 
   let self.hl_contents = s:get_config('hl_contents')[idx]
 
-  let c_prefix   = s:get_config('prefix')[idx]
-  let c_suffix   = s:get_config('suffix')[idx]
-  let c_shim     = s:get_config('shim')[idx]
-  let c_ellipsis = s:get_config('ellipsis')[idx]
-
-  let c_prefix   = self.complete_component(c_prefix)
-  let c_shim     = self.complete_component(c_shim)
-  let c_ellipsis = self.complete_component(c_ellipsis)
-  let c_suffix   = self.complete_component(c_suffix)
+  let c_prefix   = self.complete_component('prefix',   idx)
+  let c_shim     = self.complete_component('shim',     idx)
+  let c_ellipsis = self.complete_component('ellipsis', idx)
+  let c_suffix   = self.complete_component('suffix',   idx)
 
   let self.c_prefix = c_prefix
   let self.c_suffix = c_suffix
