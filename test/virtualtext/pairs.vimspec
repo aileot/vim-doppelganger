@@ -1,4 +1,4 @@
-Describe :DoppelgangerUpdate
+Describe `:Doppelganger update`
   Before all
     Doppelganger ego/disable
   End
