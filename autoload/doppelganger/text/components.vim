@@ -94,21 +94,26 @@ function! s:Components__ComposeChunks(contents) abort dict
   let rest_lines = abs(curr_lnum - corr_lnum)
 
   for line in a:contents
-    let pending_text = ''
-
-    for char in split(line, '\zs')
-      let len_pending = strdisplaywidth(char)
-      if len_pending > len_rest - len_ellipsis
-        let chunks += [[ pending_text, hl_text ]] + c_ellipsis
-        let len_rest = -1
-        break
-      endif
-      let pending_text .= char
+    let len_pending = strdisplaywidth(line)
+    if len_pending <= len_rest - len_ellipsis
+      let chunks += [[ line, hl_text ]]
       let len_rest -= len_pending
-    endfor
+    else
+      let pending_text = ''
+      for char in split(line, '\zs')
+        let len_pending = strdisplaywidth(char)
+        if len_pending > len_rest - len_ellipsis
+          let chunks += [[ pending_text, hl_text ]] + c_ellipsis
+          let len_rest = -1
+          break
+        endif
+        let pending_text .= char
+        let len_rest -= len_pending
+      endfor
 
-    if len_rest < 0 | break | endif
-    let chunks += [[ pending_text, hl_text ]]
+      if len_rest < 0 | break | endif
+      let chunks += [[ pending_text, hl_text ]]
+    endif
 
     let rest_lines -= 1
     if rest_lines < 1 | break | endif
