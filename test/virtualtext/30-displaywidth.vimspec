@@ -11,11 +11,11 @@ Describe Components
     let g:doppelganger#text#suffix   = []
     let g:doppelganger#text#contents_depth = 1
 
-    let lines = [
+    let default_context = [
           \ 'int main {',
           \ '}'
           \ ]
-    1 pu! = lines
+    1 pu! = default_context
 
     let Components = doppelganger#text#components#new(2, 1)
     const is_reverse = v:false
