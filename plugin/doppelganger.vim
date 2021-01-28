@@ -47,12 +47,12 @@ endfunction
 call s:set_default('g:doppelganger#text#contents_depth', 10)
 
 call s:set_default('g:doppelganger#text#prefix',       [
-      \ [['◂ <absolute>: ', 'DoppelgangerVirtualtextPrefix']],
-      \ [['◂ <absolute>: ', 'DoppelgangerVirtualtextReversePrefix']],
+      \ [['◂ {absolute}: ', 'DoppelgangerVirtualtextPrefix']],
+      \ [['◂ {absolute}: ', 'DoppelgangerVirtualtextReversePrefix']],
       \ ])
 call s:set_default('g:doppelganger#text#suffix',       [
-      \ [[' [<relative>]', 'DoppelgangerVirtualtextSuffix']],
-      \ [[' [<relative>]', 'DoppelgangerVirtualtextReverseSuffix']],
+      \ [[' [{relative}]', 'DoppelgangerVirtualtextSuffix']],
+      \ [[' [{relative}]', 'DoppelgangerVirtualtextReverseSuffix']],
       \ ])
 call s:set_default('g:doppelganger#text#shim', [
       \ [[' ﲖ ', 'DoppelgangerVirtualtextShim']],

@@ -8,9 +8,9 @@ function! s:Components__replace_keywords(text) abort dict
   const size = rel + 1
 
   let text = a:text
-  let text = substitute(text, '<absolute>', abs,  'g')
-  let text = substitute(text, '<relative>', rel,  'g')
-  let text = substitute(text, '<size>',     size, 'g')
+  let text = substitute(text, '{absolute}', abs,  'g')
+  let text = substitute(text, '{relative}', rel,  'g')
+  let text = substitute(text, '{size}',     size, 'g')
   return text
 endfunction
 let s:Components.replace_keywords = funcref('s:Components__replace_keywords')
