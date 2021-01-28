@@ -54,8 +54,10 @@ function! s:Components__make_up() abort dict
   let c_ellipsis = self.complete_component('ellipsis', idx)
   let c_suffix   = self.complete_component('suffix',   idx)
 
-  let self.c_prefix = c_prefix
-  let self.c_suffix = c_suffix
+  let self.c_prefix   = c_prefix
+  let self.c_shim     = c_shim
+  let self.c_ellipsis = c_ellipsis
+  let self.c_suffix   = c_suffix
 
   return deepcopy([c_prefix, c_shim, c_ellipsis, c_suffix])
 endfunction
@@ -76,63 +78,81 @@ endfunction
 let s:Components.get_fillable_width = funcref('s:Components__get_fillable_width')
 
 
+function! s:Components__append_chunks(len_fillable, chs_pending) abort dict
+  for ch_pending in a:chs_pending
+    const line = ch_pending[0]
+    let len_fillable = a:len_fillable
+
+    let len_pending = strdisplaywidth(line)
+    if len_pending == len_fillable
+      let len_fillable = 0
+      return len_fillable
+    elseif len_pending < len_fillable
+      let self.chunks += [ ch_pending ]
+      let len_fillable -= len_pending
+      return len_fillable
+    endif
+
+    let pending_text = ''
+    for char in split(line, '\zs')
+      let len_pending = strdisplaywidth(char)
+      if len_pending > len_fillable
+        let hl_group = ch_pending[1]
+        let self.chunks += [[ pending_text, hl_group ]] + self.c_ellipsis
+        let len_fillable = 0
+        return len_fillable
+      endif
+      let pending_text .= char
+      let len_fillable -= len_pending
+    endfor
+  endfor
+
+  throw '[doppelganger] Fix some logics of this function'
+endfunction
+let s:Components.append_chunks = funcref('s:Components__append_chunks')
+
+
 function! s:Components__ComposeChunks(contents) abort dict
   const curr_lnum = self.curr_lnum
   const corr_lnum = self.corr_lnum
 
-  const [c_prefix, c_shim, c_ellipsis, c_suffix] = self.make_up()
+  let [c_prefix, c_shim, c_ellipsis, c_suffix] = self.make_up()
 
   const len_shim     = self.displaywidth(c_shim)
-  const len_ellipsis = self.displaywidth(c_ellipsis)
+  let len_ellipsis = self.displaywidth(c_ellipsis)
+  let self.len_ellipsis = len_ellipsis
 
   const idx = self.is_reverse ? 1 : 0
   const hl_contents = s:get_config('hl_contents')[idx]
   const hl_text = hl_contents[0]
 
-  let chunks = empty(c_prefix) ? [] : c_prefix
-  let len_rest = self.get_fillable_width()
-  let rest_lines = abs(curr_lnum - corr_lnum)
+  let self.chunks = empty(c_prefix) ? [] : c_prefix
+  let len_fillable = self.get_fillable_width() - len_ellipsis
+  let pending_lines = abs(curr_lnum - corr_lnum)
 
   for line in a:contents
-    let len_pending = strdisplaywidth(line)
-    if len_pending <= len_rest - len_ellipsis
-      let chunks += [[ line, hl_text ]]
-      let len_rest -= len_pending
-    else
-      let pending_text = ''
-      for char in split(line, '\zs')
-        let len_pending = strdisplaywidth(char)
-        if len_pending <= len_rest - len_ellipsis
-          let pending_text .= char
-          let len_rest -= len_pending
-          continue
-        endif
-        let chunks += [[ pending_text, hl_text ]] + c_ellipsis
-        let len_rest = -1
-        break
-      endfor
-
-      if len_rest < 0 | break | endif
-      let chunks += [[ pending_text, hl_text ]]
+    if pending_lines < 1
+      let len_fillable += len_ellipsis
     endif
+    let chs_pending = [[line, hl_text]]
+    let len_fillable = self.append_chunks(len_fillable, chs_pending)
 
-    let rest_lines -= 1
-    if rest_lines < 1 | break | endif
-    let chunks += c_shim
-    let len_rest -= len_shim
+    let pending_lines -= 1
+    if pending_lines < 1 || len_fillable < 1 | break | endif
+    let len_fillable = self.append_chunks(len_fillable, c_shim)
   endfor
 
   if empty(c_suffix)
-    return chunks
+    return self.chunks
   endif
 
-  if len_rest > 0
-    const spaces = repeat(' ', len_rest)
-    let chunks += [[ spaces ]]
+  if len_fillable > 0
+    const spaces = repeat(' ', len_fillable)
+    let self.chunks += [[ spaces ]]
   endif
 
-  let chunks += c_suffix
-  return chunks
+  let self.chunks += c_suffix
+  return self.chunks
 endfunction
 let s:Components.ComposeChunks = funcref('s:Components__ComposeChunks')
 
