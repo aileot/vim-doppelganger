@@ -67,7 +67,7 @@ function! s:Components__get_fillable_width() abort dict
   const len_prefix = self.displaywidth(self.c_prefix)
   const len_suffix = self.displaywidth(self.c_suffix)
   " Add 1 for a space inserted before any virtual text starts.
-  const len_reserved = strdisplaywidth(line . len_prefix . len_suffix) + 1
+  const len_reserved = strdisplaywidth(line) + len_prefix + len_suffix + 1
 
   const max_column_width = eval(s:get_config('max_column_width'))
   const fillable_width = max_column_width - len_reserved
