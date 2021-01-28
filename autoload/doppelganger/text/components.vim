@@ -84,8 +84,9 @@ let s:Components.get_fillable_width = funcref('s:Components__get_fillable_width'
 
 
 function! s:Components__append_chunks(len_fillable, chs_pending) abort dict
+  let cnt = len(a:chs_pending)
   for ch_pending in a:chs_pending
-    const line = ch_pending[0]
+    let line = ch_pending[0]
     let len_fillable = a:len_fillable
 
     let len_pending = strdisplaywidth(line)
@@ -95,6 +96,9 @@ function! s:Components__append_chunks(len_fillable, chs_pending) abort dict
     elseif len_pending < len_fillable
       let self.chunks += [ ch_pending ]
       let len_fillable -= len_pending
+
+      let cnt -= 1
+      if cnt > 0 | continue | endif
       return len_fillable
     endif
 
