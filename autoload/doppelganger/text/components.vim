@@ -102,13 +102,14 @@ function! s:Components__ComposeChunks(contents) abort dict
       let pending_text = ''
       for char in split(line, '\zs')
         let len_pending = strdisplaywidth(char)
-        if len_pending > len_rest - len_ellipsis
-          let chunks += [[ pending_text, hl_text ]] + c_ellipsis
-          let len_rest = -1
-          break
+        if len_pending <= len_rest - len_ellipsis
+          let pending_text .= char
+          let len_rest -= len_pending
+          continue
         endif
-        let pending_text .= char
-        let len_rest -= len_pending
+        let chunks += [[ pending_text, hl_text ]] + c_ellipsis
+        let len_rest = -1
+        break
       endfor
 
       if len_rest < 0 | break | endif
