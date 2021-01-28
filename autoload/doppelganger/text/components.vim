@@ -59,6 +59,11 @@ function! s:Components__make_up() abort dict
   let self.c_ellipsis = c_ellipsis
   let self.c_suffix   = c_suffix
 
+  let self.chunks = empty(c_prefix) ? [] : c_prefix
+
+  let self.len_shim     = self.displaywidth(c_shim)
+  let self.len_ellipsis = self.displaywidth(c_ellipsis)
+
   return deepcopy([c_prefix, c_shim, c_ellipsis, c_suffix])
 endfunction
 let s:Components.make_up = funcref('s:Components__make_up')
@@ -116,17 +121,18 @@ function! s:Components__ComposeChunks(contents) abort dict
   const curr_lnum = self.curr_lnum
   const corr_lnum = self.corr_lnum
 
-  let [c_prefix, c_shim, c_ellipsis, c_suffix] = self.make_up()
+  const c_prefix   = self.c_prefix
+  const c_shim     = self.c_shim
+  const c_ellipsis = self.c_ellipsis
+  const c_suffix   = self.c_suffix
 
-  const len_shim     = self.displaywidth(c_shim)
-  let len_ellipsis = self.displaywidth(c_ellipsis)
-  let self.len_ellipsis = len_ellipsis
+  const len_shim     = self.len_shim
+  const len_ellipsis = self.len_ellipsis
 
   const idx = self.is_reverse ? 1 : 0
   const hl_contents = s:get_config('hl_contents')[idx]
   const hl_text = hl_contents[0]
 
-  let self.chunks = empty(c_prefix) ? [] : c_prefix
   let len_fillable = self.get_fillable_width() - len_ellipsis
   let pending_lines = abs(curr_lnum - corr_lnum)
 
@@ -163,6 +169,8 @@ function! doppelganger#text#components#new(curr_lnum, corr_lnum) abort
   let Components.curr_lnum  = a:curr_lnum
   let Components.corr_lnum  = a:corr_lnum
   let Components.is_reverse  = a:curr_lnum < a:corr_lnum
+
+  call Components.make_up()
 
   return Components
 endfunction
