@@ -49,30 +49,30 @@ function! s:Components__make_up() abort dict
 
   let self.hl_contents = s:get_config('hl_contents')[idx]
 
-  let c_prefix   = self.complete_component('prefix',   idx)
-  let c_shim     = self.complete_component('shim',     idx)
-  let c_ellipsis = self.complete_component('ellipsis', idx)
-  let c_suffix   = self.complete_component('suffix',   idx)
+  let chs_prefix   = self.complete_component('prefix',   idx)
+  let chs_shim     = self.complete_component('shim',     idx)
+  let chs_ellipsis = self.complete_component('ellipsis', idx)
+  let chs_suffix   = self.complete_component('suffix',   idx)
 
-  let self.c_prefix   = c_prefix
-  let self.c_shim     = c_shim
-  let self.c_ellipsis = c_ellipsis
-  let self.c_suffix   = c_suffix
+  let self.chs_prefix   = chs_prefix
+  let self.chs_shim     = chs_shim
+  let self.chs_ellipsis = chs_ellipsis
+  let self.chs_suffix   = chs_suffix
 
-  let self.chunks = empty(c_prefix) ? [] : c_prefix
+  let self.chunks = empty(chs_prefix) ? [] : chs_prefix
 
-  let self.len_shim     = self.displaywidth(c_shim)
-  let self.len_ellipsis = self.displaywidth(c_ellipsis)
+  let self.len_shim     = self.displaywidth(chs_shim)
+  let self.len_ellipsis = self.displaywidth(chs_ellipsis)
 
-  return deepcopy([c_prefix, c_shim, c_ellipsis, c_suffix])
+  return deepcopy([chs_prefix, chs_shim, chs_ellipsis, chs_suffix])
 endfunction
 let s:Components.make_up = funcref('s:Components__make_up')
 
 
 function! s:Components__get_fillable_width() abort dict
   const line = getline(self.curr_lnum)
-  const len_prefix = self.displaywidth(self.c_prefix)
-  const len_suffix = self.displaywidth(self.c_suffix)
+  const len_prefix = self.displaywidth(self.chs_prefix)
+  const len_suffix = self.displaywidth(self.chs_suffix)
   " Add 1 for a space inserted before any virtual text starts.
   const len_reserved = strdisplaywidth(line) + len_prefix + len_suffix + 1
 
@@ -103,7 +103,7 @@ function! s:Components__append_chunks(len_fillable, chs_pending) abort dict
       let len_pending = strdisplaywidth(char)
       if len_pending > len_fillable
         let hl_group = ch_pending[1]
-        let self.chunks += [[ pending_text, hl_group ]] + self.c_ellipsis
+        let self.chunks += [[ pending_text, hl_group ]] + self.chs_ellipsis
         let len_fillable = 0
         return len_fillable
       endif
@@ -121,10 +121,10 @@ function! s:Components__ComposeChunks(contents) abort dict
   const curr_lnum = self.curr_lnum
   const corr_lnum = self.corr_lnum
 
-  const c_prefix   = self.c_prefix
-  const c_shim     = self.c_shim
-  const c_ellipsis = self.c_ellipsis
-  const c_suffix   = self.c_suffix
+  const chs_prefix   = self.chs_prefix
+  const chs_shim     = self.chs_shim
+  const chs_ellipsis = self.chs_ellipsis
+  const chs_suffix   = self.chs_suffix
 
   const len_shim     = self.len_shim
   const len_ellipsis = self.len_ellipsis
@@ -145,10 +145,10 @@ function! s:Components__ComposeChunks(contents) abort dict
 
     let pending_lines -= 1
     if pending_lines < 1 || len_fillable < 1 | break | endif
-    let len_fillable = self.append_chunks(len_fillable, c_shim)
+    let len_fillable = self.append_chunks(len_fillable, chs_shim)
   endfor
 
-  if empty(c_suffix)
+  if empty(chs_suffix)
     return self.chunks
   endif
 
@@ -157,7 +157,7 @@ function! s:Components__ComposeChunks(contents) abort dict
     let self.chunks += [[ spaces ]]
   endif
 
-  let self.chunks += c_suffix
+  let self.chunks += chs_suffix
   return self.chunks
 endfunction
 let s:Components.ComposeChunks = funcref('s:Components__ComposeChunks')
