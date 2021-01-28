@@ -144,7 +144,7 @@ function! s:Components__ComposeChunks(contents) abort dict
     if pending_lines < 1
       let len_fillable += len_ellipsis
     endif
-    let chs_pending = [[line, hl_text]]
+    let chs_pending = [[ line, hl_text ]]
     let len_fillable = self.append_chunks(len_fillable, chs_pending)
 
     let pending_lines -= 1
