@@ -76,11 +76,69 @@ endfunction
 let s:Components.get_fillable_width = funcref('s:Components__get_fillable_width')
 
 
+function! s:Components__ComposeChunks(contents) abort dict
+  const curr_lnum = self.curr_lnum
+  const corr_lnum = self.corr_lnum
+
+  const is_reverse = curr_lnum - corr_lnum < 0
+
+  const [c_prefix, c_shim, c_ellipsis, c_suffix] = self.make_up(is_reverse)
+
+  const len_shim     = self.displaywidth(c_shim)
+  const len_ellipsis = self.displaywidth(c_ellipsis)
+
+  const idx = is_reverse ? 1 : 0
+  const hl_contents = s:get_config('hl_contents')[idx]
+  const hl_text = hl_contents[0]
+
+  let chunks = empty(c_prefix) ? [] : c_prefix
+  let len_rest = self.get_fillable_width()
+  let rest_lines = abs(curr_lnum - corr_lnum)
+
+  for line in a:contents
+    let pending_text = ''
+
+    for char in split(line, '\zs')
+      let len_pending = strdisplaywidth(char)
+      if len_pending > len_rest - len_ellipsis
+        let chunks += [[ pending_text, hl_text ]] + c_ellipsis
+        let len_rest = -1
+        break
+      endif
+      let pending_text .= char
+      let len_rest -= len_pending
+    endfor
+
+    if len_rest < 0 | break | endif
+    let chunks += [[ pending_text, hl_text ]]
+
+    let rest_lines -= 1
+    if rest_lines < 1 | break | endif
+    let chunks += c_shim
+    let len_rest -= len_shim
+  endfor
+
+  if empty(c_suffix)
+    return chunks
+  endif
+
+  if len_rest > 0
+    const spaces = repeat(' ', len_rest)
+    let chunks += [[ spaces ]]
+  endif
+
+  let chunks += c_suffix
+  return chunks
+endfunction
+let s:Components.ComposeChunks = funcref('s:Components__ComposeChunks')
+
+
 function! doppelganger#text#components#new(curr_lnum, corr_lnum) abort
   let Components = deepcopy(s:Components)
 
   let Components.curr_lnum  = a:curr_lnum
   let Components.corr_lnum  = a:corr_lnum
+  let Components.is_reverse  = a:curr_lnum < a:corr_lnum
 
   return Components
 endfunction
