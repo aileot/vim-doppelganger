@@ -44,8 +44,8 @@ endfunction
 let s:Components.displaywidth = funcref('s:Components__displaywidth')
 
 
-function! s:Components__make_up(is_reverse) abort dict
-  let idx = a:is_reverse ? 1 : 0
+function! s:Components__make_up() abort dict
+  let idx = self.is_reverse ? 1 : 0
 
   let self.hl_contents = s:get_config('hl_contents')[idx]
 
@@ -80,14 +80,12 @@ function! s:Components__ComposeChunks(contents) abort dict
   const curr_lnum = self.curr_lnum
   const corr_lnum = self.corr_lnum
 
-  const is_reverse = curr_lnum - corr_lnum < 0
-
-  const [c_prefix, c_shim, c_ellipsis, c_suffix] = self.make_up(is_reverse)
+  const [c_prefix, c_shim, c_ellipsis, c_suffix] = self.make_up()
 
   const len_shim     = self.displaywidth(c_shim)
   const len_ellipsis = self.displaywidth(c_ellipsis)
 
-  const idx = is_reverse ? 1 : 0
+  const idx = self.is_reverse ? 1 : 0
   const hl_contents = s:get_config('hl_contents')[idx]
   const hl_text = hl_contents[0]
 
