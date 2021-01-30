@@ -141,7 +141,7 @@ function! s:Components__ComposeChunks(contents) abort dict
     let chs_pending = [[ line, hl_text ]]
     let len_fillable = self.append_chunks(len_fillable, chs_pending)
     let pending_lines -= 1
-    if pending_lines <= 1 || len_fillable < 1 | break | endif
+    if pending_lines < 0 || len_fillable < 1 | break | endif
     let len_fillable = self.append_chunks(len_fillable, chs_shim)
   endfor
 
