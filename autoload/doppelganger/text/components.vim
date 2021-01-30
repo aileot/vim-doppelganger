@@ -125,10 +125,8 @@ function! s:Components__ComposeChunks(contents) abort dict
   const curr_lnum = self.curr_lnum
   const corr_lnum = self.corr_lnum
 
-  const chs_shim     = self.chs_shim
-  const chs_suffix   = self.chs_suffix
-
-  const len_shim     = self.displaywidth(chs_shim)
+  const chs_shim   = self.chs_shim
+  const chs_suffix = self.chs_suffix
 
   const idx = self.is_reverse ? 1 : 0
   const hl_contents = s:get_config('hl_contents')[idx]
