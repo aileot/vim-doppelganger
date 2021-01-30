@@ -87,6 +87,7 @@ call s:set_default('g:doppelganger#ego#disable_on_filetypes', [
       \ 'gitcommit',
       \ 'gitrebase',
       \ 'help',
+      \ 'man',
       \ 'markdown',
       \ 'netrw',
       \ 'pullrequest',
