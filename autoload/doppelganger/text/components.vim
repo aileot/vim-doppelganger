@@ -61,9 +61,6 @@ function! s:Components__make_up() abort dict
 
   let self.chunks = empty(chs_prefix) ? [] : chs_prefix
 
-  let self.len_shim     = self.displaywidth(chs_shim)
-  let self.len_ellipsis = self.displaywidth(chs_ellipsis)
-
   return deepcopy([chs_prefix, chs_shim, chs_ellipsis, chs_suffix])
 endfunction
 let s:Components.make_up = funcref('s:Components__make_up')
@@ -84,7 +81,7 @@ let s:Components.get_fillable_width = funcref('s:Components__get_fillable_width'
 
 
 function! s:Components__append_chunks(len_fillable, chs_pending) abort dict
-  const len_ellipsis = self.len_ellipsis
+  const len_ellipsis = self.displaywidth(self.chs_ellipsis)
   let len_fillable = a:len_fillable
 
   for ch_pending in a:chs_pending
@@ -129,7 +126,7 @@ function! s:Components__ComposeChunks(contents) abort dict
   const chs_shim     = self.chs_shim
   const chs_suffix   = self.chs_suffix
 
-  const len_shim     = self.len_shim
+  const len_shim     = self.displaywidth(chs_shim)
 
   const idx = self.is_reverse ? 1 : 0
   const hl_contents = s:get_config('hl_contents')[idx]
