@@ -84,39 +84,40 @@ let s:Components.get_fillable_width = funcref('s:Components__get_fillable_width'
 
 
 function! s:Components__append_chunks(len_fillable, chs_pending) abort dict
-  let cnt = len(a:chs_pending)
-  for ch_pending in a:chs_pending
-    let line = ch_pending[0]
-    let len_fillable = a:len_fillable
+  const len_ellipsis = self.len_ellipsis
+  let len_fillable = a:len_fillable
 
-    let len_pending = strdisplaywidth(line)
-    if len_pending == len_fillable
-      let len_fillable = 0
-      return len_fillable
-    elseif len_pending < len_fillable
+  for ch_pending in a:chs_pending
+    let text_pending = ch_pending[0]
+    let len_pending = strdisplaywidth(text_pending)
+
+    if len_pending <= len_fillable - len_ellipsis
       let self.chunks += [ ch_pending ]
       let len_fillable -= len_pending
-
-      let cnt -= 1
-      if cnt > 0 | continue | endif
-      return len_fillable
+      continue
     endif
 
-    let pending_text = ''
-    for char in split(line, '\zs')
+    let chars_pending = ''
+    for char in split(text_pending, '\zs')
       let len_pending = strdisplaywidth(char)
-      if len_pending > len_fillable
-        let hl_group = ch_pending[1]
-        let self.chunks += [[ pending_text, hl_group ]] + self.chs_ellipsis
-        let len_fillable = 0
-        return len_fillable
+      if len_pending <= len_fillable - len_ellipsis
+        let chars_pending .= char
+        let len_fillable -= len_pending
+        continue
       endif
-      let pending_text .= char
-      let len_fillable -= len_pending
+
+      let hl_group = ch_pending[1]
+      let self.chunks += [[ chars_pending, hl_group ]] + self.chs_ellipsis
+      let len_fillable = 0
+      return len_fillable
     endfor
+
+    if text_pending ==# ''
+      throw '[doppelganger] The logics in this function contains some bugs'
+    endif
   endfor
 
-  throw '[doppelganger] Fix some logics of this function'
+  return len_fillable
 endfunction
 let s:Components.append_chunks = funcref('s:Components__append_chunks')
 
@@ -131,24 +132,19 @@ function! s:Components__ComposeChunks(contents) abort dict
   const chs_suffix   = self.chs_suffix
 
   const len_shim     = self.len_shim
-  const len_ellipsis = self.len_ellipsis
 
   const idx = self.is_reverse ? 1 : 0
   const hl_contents = s:get_config('hl_contents')[idx]
   const hl_text = hl_contents[0]
 
-  let len_fillable = self.get_fillable_width() - len_ellipsis
+  let len_fillable = self.get_fillable_width()
   let pending_lines = abs(curr_lnum - corr_lnum)
 
   for line in a:contents
-    if pending_lines < 1
-      let len_fillable += len_ellipsis
-    endif
     let chs_pending = [[ line, hl_text ]]
     let len_fillable = self.append_chunks(len_fillable, chs_pending)
-
     let pending_lines -= 1
-    if pending_lines < 1 || len_fillable < 1 | break | endif
+    if pending_lines <= 1 || len_fillable < 1 | break | endif
     let len_fillable = self.append_chunks(len_fillable, chs_shim)
   endfor
 
