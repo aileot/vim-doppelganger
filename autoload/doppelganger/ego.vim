@@ -41,7 +41,7 @@ function! s:should_disabled() abort "{{{1
   return should_disabled
 endfunction
 
-function! s:ego_update() abort
+function! doppelganger#ego#update() abort
   const offset = g:doppelganger#ego#max_offset
   const top = max([line('w0'), line('.') - offset])
   const bottom = min([line('w$'), line('.') + offset])
@@ -50,7 +50,7 @@ endfunction
 
 function! s:update_window() abort "{{{1
   if s:should_disabled() | return | endif
-  call s:ego_update()
+  call doppelganger#ego#update()
 endfunction
 
 function! doppelganger#ego#is_enabled() abort "{{{1
