@@ -1,3 +1,5 @@
+call doppelganger#init#hl_group()
+
 let s:get_config = function('doppelganger#util#get_config', ['text'])
 
 let s:Components = {}
