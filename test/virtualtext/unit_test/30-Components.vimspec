@@ -90,4 +90,48 @@ Describe Components
 
     End
   End
+
+  Context .append_chunks()
+    Before all
+      hi! link SampleComponents Normal
+    End
+
+    Context with a chunk in a component
+      Before each
+        let len_fillable = 10
+        let Components = doppelganger#text#components#new(2, 1)
+        let chunks = [[ 'foo', 'SampleComponents' ]]
+        let len_fillable = Components.append_chunks(len_fillable, chunks)
+      End
+
+      It reduces fillable width
+        Assert Same(len_fillable, 7)
+      End
+
+      It append a chunk
+        Assert Equals(Components.chunks, chunks)
+      End
+    End
+
+    Context with two chunks in a components
+      Before each
+        let len_fillable = 10
+        let Components = doppelganger#text#components#new(2, 1)
+        let chunks = [
+              \ [ 'foo', 'SampleComponents' ],
+              \ [ 'bar', 'SampleComponents' ],
+              \ ]
+        let len_fillable = Components.append_chunks(len_fillable, chunks)
+      End
+
+      It reduces fillable width
+        Assert Same(len_fillable, 4)
+      End
+
+      It appends chunks
+        Assert Equals(Components.chunks, chunks)
+      End
+
+    End
+  End
 End
