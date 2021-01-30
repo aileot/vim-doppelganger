@@ -126,7 +126,6 @@ function! s:Components__ComposeChunks(contents) abort dict
   const corr_lnum = self.corr_lnum
 
   const chs_shim   = self.chs_shim
-  const chs_suffix = self.chs_suffix
 
   const idx = self.is_reverse ? 1 : 0
   const hl_contents = s:get_config('hl_contents')[idx]
@@ -143,6 +142,7 @@ function! s:Components__ComposeChunks(contents) abort dict
     let len_fillable = self.append_chunks(len_fillable, chs_shim)
   endfor
 
+  const chs_suffix = self.chs_suffix
   if empty(chs_suffix)
     return self.chunks
   endif
