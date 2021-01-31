@@ -42,18 +42,6 @@ USAGE							    *doppelganger-usage*
 ------------------------------------------------------------------------------
 VARIABLE						 *doppelganger-variable*
 
-g:doppelganger#format#contents_depth	 *g:doppelganger#format#contents_depth*
-b:doppelganger_format_contents_depth	 *b:doppelganger_format_contents_depth*
-	(default: 10)
-	Set in |Number| or |v:null|.
-	Max depth to be shown in virtual texts.
-
-	If negative, a depth will be calculated from corresponding line.
-
-	Set to |v:null| if you just want absolute or relative numbers of
-	corresponding line in prefix in the format as you set in
-	|g:doppelganger#format#prefix|.
-
 g:doppelganger#format#prefix			 *g:doppelganger#format#prefix*
 b:doppelganger_format_prefix			 *b:doppelganger_format_prefix*
 	(default: '◂ <absolute>: ')
@@ -79,6 +67,23 @@ b:doppelganger_format_ellipsis		       *b:doppelganger_format_ellipsis*
 	Set in |String|.
 	Replace omitted text with the value.
 	See also |g:dooppelganger#format#max_column_width|.
+
+g:doppelganger#format#contents_depth	 *g:doppelganger#format#contents_depth*
+b:doppelganger_format_contents_depth	 *b:doppelganger_format_contents_depth*
+	(default: 10)
+	Set in |Number| or |v:null|.
+	Max depth of lines to be read before setting each virtual texts.
+
+	Set to 0 to read all the lines within a range.
+	Set to 1 to read only the first line of a corresponding line.
+	Set to 2 to read the first line and the second line of a corresponding
+	line.  The same applies hereafter in a positive number.
+
+	If negative, a depth will be calculated, decreasing from the target
+	line.
+
+	Set to |v:null| if you don't need any contents but just need absolute
+	or relative numbers of corresponding line in prefix or suffix.
 
 				   *g:doppelganger#format#compress_whitespaces*
 				   *b:doppelganger_format_compress_whitespaces*
