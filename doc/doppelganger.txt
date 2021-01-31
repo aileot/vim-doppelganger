@@ -58,6 +58,24 @@ b:doppelganger_format_prefix			 *b:doppelganger_format_prefix*
 
 	You can use some special keywords: `{absolute}`, `{relative}` and `{size}`.
 
+	You can set multiple colors to each templates as the following
+	example:
+>
+	let g:doppelganger#format#prefix = [
+	\ [
+	\	[' {absolute}: ', 'DoppelgangerVirtualtextPrefix']
+	\ ],
+	\ [
+	\	[' ', 'DoppelgangerVirtualtextPrefix'],
+	\	['{absolute}', '<some-highlight-group-you-defined>'],
+	\	[': ', 'NonText'],
+	\ ],
+	\ ]
+<
+	Though |Doppelganger| has some |highlight-groups| predefined as
+	|doppelganger-highlight|, you don't have to use these
+	|highlight-groups| as the example above.
+
 g:doppelganger#format#suffix			 *g:doppelganger#format#suffix*
 b:doppelganger_format_suffix			 *b:doppelganger_format_suffix*
 	(default: [
