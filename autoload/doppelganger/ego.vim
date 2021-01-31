@@ -73,17 +73,9 @@ function! doppelganger#ego#enable() abort "{{{1
 
     au WinLeave * call doppelganger#clear()
 
-    " Define au-commands in different lines to each events because cache which
-    " should be updated could be different between each events.
-    au BufWinLeave * call s:Cache.DropOutdated([
-          \   {'region': 'Haunt'},
-          \ ])
-    au TextChanged * call s:Cache.DropOutdated([
-          \   {'region': 'Haunt'},
-          \ ])
-
-    au WinEnter    * call s:update_window()
-    au TextChanged * call s:update_window()
+    au WinEnter     * call s:update_window()
+    au TextChanged  * call s:update_window()
+    au TextChangedI * call s:update_window()
 
     if s:get_config('update_on_CursorMoved')
       let s:last_lnum = line('.')

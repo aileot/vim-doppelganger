@@ -135,3 +135,24 @@ function! s:is_folded(lnum) abort "{{{2
 endfunction
 
 
+augroup doppelganger/haunt
+  au!
+  au BufWinLeave * call s:Cache.DropOutdated([
+        \   {
+        \   'region': 'Haunt',
+        \   'name':   'chunks',
+        \   },
+        \ ])
+  au TextChanged * call s:Cache.DropOutdated([
+        \   {
+        \   'region': 'Haunt',
+        \   'name':   'chunks',
+        \   },
+        \ ])
+  au TextChangedI * call s:Cache.DropOutdated([
+        \   {
+        \   'region': 'Haunt',
+        \   'name':   'chunks',
+        \   },
+        \ ])
+augroup END
