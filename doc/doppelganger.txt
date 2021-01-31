@@ -85,6 +85,14 @@ b:doppelganger_format_compress_whitespaces
 	if non 0, all the concecutive whitespace characters (<Space> and
 	<Tab>) in |Doppelganger|'s virtualtexts will be replaced with a space.
 
+				      *g:doppelganger#format#ignore_blanklines*
+				      *b:doppelganger_format_ignore_blanklines*
+g:doppelganger#format#ignore_blanklines
+b:doppelganger_format_ignore_blanklines
+	(default: |1|)
+	Set in |Number|.
+	If 0, spaces would be inserted within shims for blank lines.
+
 				       *g:doppelganger#format#max_column_width*
 				       *b:doppelganger_format_max_column_width*
 g:doppelganger#format#max_column_width

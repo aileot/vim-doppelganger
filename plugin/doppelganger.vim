@@ -67,6 +67,7 @@ call s:set_default('g:doppelganger#format#hl_contents',  [
 
 call s:set_default('g:doppelganger#format#contents_depth', 10)
 call s:set_default('g:doppelganger#format#compress_whitespaces', 1)
+call s:set_default('g:doppelganger#format#ignore_blanklines', 1)
 
 call s:set_default('g:doppelganger#format#max_column_width',
       \ 'max([&cc - 1, &tw, 79])')
