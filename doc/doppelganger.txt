@@ -44,26 +44,38 @@ VARIABLE						 *doppelganger-variable*
 
 g:doppelganger#format#prefix			 *g:doppelganger#format#prefix*
 b:doppelganger_format_prefix			 *b:doppelganger_format_prefix*
-	(default: '◂ <absolute>: ')
+	(default: [
+	\ [['◂ {absolute}: ', 'DoppelgangerVirtualtextPrefix']],
+	\ [['◂ {absolute}: ', 'DoppelgangerVirtualtextReversePrefix']],
+	\ ])
 	Set in |String|.
 	You can use some special keywords: `<absolute>`, `<relative>` and `<size>`.
 
 g:doppelganger#format#suffix			 *g:doppelganger#format#suffix*
 b:doppelganger_format_suffix			 *b:doppelganger_format_suffix*
-	(default: ' [<relative>]')
+	(default: [
+	\ [[' [{relative}]', 'DoppelgangerVirtualtextSuffix']],
+	\ [[' [{relative}]', 'DoppelgangerVirtualtextReverseSuffix']],
+	\ ])
 	Set in |String|.
 	See |g:doppelganger#format#prefix| for more detail.
 
 g:doppelganger#format#shim			   *g:doppelganger#format#shim*
 b:doppelganger_format_shim	     		   *b:doppelganger_format_shim*
-	(default: ' ﲖ ')
+	(default: [
+	\ [[' ﲖ ', 'DoppelgangerVirtualtextShim']],
+	\ [[' ﲖ ', 'DoppelgangerVirtualtextReverseShim']],
+	\ ])
 	Set in |String|.
 	When contents within a pair is more than two lines, the characters
 	will be inserted into the joined lines in virtualtexts.
 
 g:doppelganger#format#ellipsis		       *g:doppelganger#format#ellipsis*
 b:doppelganger_format_ellipsis		       *b:doppelganger_format_ellipsis*
-	(default: ' …')
+	(default: [
+	\ [[' …', 'DoppelgangerVirtualtextEllipsis']],
+	\ [[' …', 'DoppelgangerVirtualtextReverseEllipsis']],
+	\ ])
 	Set in |String|.
 	Replace omitted text with the value.
 	See also |g:dooppelganger#format#max_column_width|.
