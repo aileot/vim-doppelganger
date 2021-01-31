@@ -43,6 +43,7 @@ USAGE							    *doppelganger-usage*
 VARIABLE						 *doppelganger-variable*
 
 g:doppelganger#format#contents_depth	 *g:doppelganger#format#contents_depth*
+b:doppelganger_format_contents_depth	 *b:doppelganger_format_contents_depth*
 	(default: 10)
 	Set in |Number| or |v:null|.
 	Max depth to be shown in virtual texts.
@@ -54,11 +55,13 @@ g:doppelganger#format#contents_depth	 *g:doppelganger#format#contents_depth*
 	|g:doppelganger#format#prefix|.
 
 g:doppelganger#format#prefix			 *g:doppelganger#format#prefix*
+b:doppelganger_format_prefix			 *b:doppelganger_format_prefix*
 	(default: '◂ <absolute>: ')
 	Set in |String|.
 	You can use some special keywords: `<absolute>`, `<relative>` and `<size>`.
 
 g:doppelganger#format#suffix			 *g:doppelganger#format#suffix*
+b:doppelganger_format_suffix			 *b:doppelganger_format_suffix*
 	(default: ' [<relative>]')
 	Set in |String|.
 	See |g:doppelganger#format#prefix| for more detail.
@@ -71,6 +74,7 @@ b:doppelganger_format_shim	     		   *b:doppelganger_format_shim*
 	will be inserted into the joined lines in virtualtexts.
 
 g:doppelganger#format#ellipsis		       *g:doppelganger#format#ellipsis*
+b:doppelganger_format_ellipsis		       *b:doppelganger_format_ellipsis*
 	(default: ' …')
 	Set in |String|.
 	Replace omitted text with the value.
