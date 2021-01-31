@@ -135,6 +135,8 @@ function! s:Components__ComposeChunks(contents) abort dict
   let pending_lines = abs(curr_lnum - corr_lnum)
 
   for line in a:contents
+    if len_fillable < 1 | break | endif
+
     let chs_pending = [[ line, hl_text ]]
     let len_fillable = self.append_chunks(len_fillable, chs_pending)
     let pending_lines -= 1
