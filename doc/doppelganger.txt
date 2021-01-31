@@ -275,22 +275,26 @@ COMMAND							  *doppelganger-command*
 ------------------------------------------------------------------------------
 HIGHLIGHT						*doppelganger-highlight*
 
-DoppelgangerVirtualText				       *DoppelgangerVirtualText*
-	(default: `:hi def link DoppelgangerVirtualText NonText`)
-	It affects all the other highlights of |doppelganger| unless they're
-	overwritten individually.
+						*DoppelgangerVirtualtextPrefix*
+					 *DoppelgangerVirtualtextReversePrefix*
+						*DoppelgangerVirtualtextSuffix*
+					 *DoppelgangerVirtualtextReverseSuffix*
+						  *DoppelgangerVirtualtextShim*
+					   *DoppelgangerVirtualtextReverseShim*
+					      *DoppelgangerVirtualtextEllipsis*
+				       *DoppelgangerVirtualtextReverseEllipsis*
+					      *DoppelgangerVirtualtextContents*
+				       *DoppelgangerVirtualtextReverseContents*
 
-DoppelgangerVirtualTextPair			  *DoppelgangerVirtualTextPair*
-	(default: `:hi def link DoppelgangerVirtualText`
-			`\ DoppelgangerVirtualText`)
-	It sets highlight for virtualtexts which created for either
-	|g:doppelganger#pairs| or |b:doppelganger_pairs|.
-
-DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
-	(default: `:hi def link DoppelgangerVirtualText`
-			`\ DoppelgangerVirtualText`)
-	It sets highlight for virtualtexts which created for either
-	|g:doppelganger#pairs_reverse| or |b:doppelganger_pairs_reverse|.
+	These highlight groups above are used in the default templates of
+	chunks like |g:doppelganger#format#prefix|. You can modify them with
+	some scripts:
+>
+	hi! link DoppelgangerVirtualtextPrefix NonText
+	hi! DoppelgangerVirtualtextReversePrefix ctermfg=red guifg=#df0000
+<
+	However, you don't have to use these highlight-groups to the
+	templates.
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
@@ -298,6 +302,8 @@ COMPATIBILITY					    *doppelganger-compatibility*
 2021-01-31
 * Rename g:doppelganger#text#foo to g:doppelganger#format#foo.
 * Rename b:doppelganger_text_foo to b:doppelganger_format_foo.
+* Remove old highlight-groups, DoppelgangerVirtualText,
+  DoppelgangerVirtualTextPair and DoppelgangerVirtualTextPairReverse.
 
 2021-01-25
 * Remove g:doppelganger#text#shim_to_join and b:doppelganger_text_shim_to_join
