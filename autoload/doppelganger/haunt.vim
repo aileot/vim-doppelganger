@@ -155,4 +155,10 @@ augroup doppelganger/haunt
         \   'name':   'chunks',
         \   },
         \ ])
+  au FileChangedShellPost * call s:Cache.DropOutdated([
+        \   {
+        \   'region': 'Haunt',
+        \   'name':   'chunks',
+        \   },
+        \ ])
 augroup END

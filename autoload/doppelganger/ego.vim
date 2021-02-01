@@ -77,6 +77,8 @@ function! doppelganger#ego#enable() abort "{{{1
     au TextChanged  * call s:update_window()
     au TextChangedI * call s:update_window()
 
+    au FileChangedShellPost * call s:update_window()
+
     if s:get_config('update_on_CursorMoved')
       let s:last_lnum = line('.')
       au CursorMoved * call s:update_for_CursorMoved()
