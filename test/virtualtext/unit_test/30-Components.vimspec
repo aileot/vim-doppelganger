@@ -3,13 +3,13 @@ Describe Components
     new
     only!
     let g:doppelganger#cache#disable = v:true
-    let g:doppelganger#text#max_column_width = 80
+    let g:doppelganger#format#max_column_width = 80
 
-    let g:doppelganger#text#prefix   = []
-    let g:doppelganger#text#shim     = []
-    let g:doppelganger#text#ellipsis = []
-    let g:doppelganger#text#suffix   = []
-    let g:doppelganger#text#contents_depth = 1
+    let g:doppelganger#format#prefix   = []
+    let g:doppelganger#format#shim     = []
+    let g:doppelganger#format#ellipsis = []
+    let g:doppelganger#format#suffix   = []
+    let g:doppelganger#format#contents_depth = 1
 
     let default_context = [
           \ 'int main {',
@@ -17,7 +17,7 @@ Describe Components
           \ ]
     1 pu! = default_context
 
-    let Components = doppelganger#text#components#new(2, 1)
+    let Components = doppelganger#format#components#new(2, 1)
   End
 
   Context .make_up()
@@ -25,20 +25,20 @@ Describe Components
 
       It as four empty components
         const expected = [[], [], [], []]
-        let g:doppelganger#text#prefix   = []
-        let g:doppelganger#text#shim     = []
-        let g:doppelganger#text#ellipsis = []
-        let g:doppelganger#text#suffix   = []
+        let g:doppelganger#format#prefix   = []
+        let g:doppelganger#format#shim     = []
+        let g:doppelganger#format#ellipsis = []
+        let g:doppelganger#format#suffix   = []
         const actual = Components.make_up()
         Assert Equals(actual, expected)
       End
 
       It which is composed of chunks filled with simple chars with no hl_groups
         const expected = [[['>', '']], [['+', '']], [['.', '']], [['$', '']]]
-        let g:doppelganger#text#prefix   = [['>']]
-        let g:doppelganger#text#shim     = [['+']]
-        let g:doppelganger#text#ellipsis = [['.']]
-        let g:doppelganger#text#suffix   = [['$']]
+        let g:doppelganger#format#prefix   = [['>']]
+        let g:doppelganger#format#shim     = [['+']]
+        let g:doppelganger#format#ellipsis = [['.']]
+        let g:doppelganger#format#suffix   = [['$']]
         const actual = Components.make_up()
         Assert Equals(actual, expected)
       End
@@ -68,11 +68,11 @@ Describe Components
 
     Context with no decorations
       Before each
-        let g:doppelganger#text#prefix   = []
-        let g:doppelganger#text#shim     = []
-        let g:doppelganger#text#ellipsis = []
-        let g:doppelganger#text#suffix   = []
-        let g:doppelganger#text#contents_depth = 1
+        let g:doppelganger#format#prefix   = []
+        let g:doppelganger#format#shim     = []
+        let g:doppelganger#format#ellipsis = []
+        let g:doppelganger#format#suffix   = []
+        let g:doppelganger#format#contents_depth = 1
       End
 
       It returns a fillable width
@@ -81,7 +81,7 @@ Describe Components
         call Components.make_up()
         const len_fillable = Components.get_fillable_width()
 
-        const max_col_width = g:doppelganger#text#max_column_width
+        const max_col_width = g:doppelganger#format#max_column_width
         const len_actualtext = 1 " The length of `}`
         const len_reserved = len_actualtext + 1
         const len_expected = max_col_width - len_reserved
@@ -99,7 +99,7 @@ Describe Components
     Context with a chunk in a component
       Before each
         let len_fillable = 10
-        let Components = doppelganger#text#components#new(2, 1)
+        let Components = doppelganger#format#components#new(2, 1)
         let chunks = [[ 'foo', 'SampleComponents' ]]
         let len_fillable = Components.append_chunks(len_fillable, chunks)
       End
@@ -116,7 +116,7 @@ Describe Components
     Context with two chunks in a components
       Before each
         let len_fillable = 10
-        let Components = doppelganger#text#components#new(2, 1)
+        let Components = doppelganger#format#components#new(2, 1)
         let chunks = [
               \ [ 'foo', 'SampleComponents' ],
               \ [ 'bar', 'SampleComponents' ],

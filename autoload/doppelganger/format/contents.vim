@@ -1,8 +1,8 @@
-let s:get_config = function('doppelganger#util#get_config', ['text'])
+let s:get_config = function('doppelganger#util#get_config', ['format'])
 
 let s:Contents = {}
 
-function! doppelganger#text#contents#new(lnum, ...) abort
+function! doppelganger#format#contents#new(lnum, ...) abort
   let Contents = deepcopy(s:Contents)
   let Contents.range = a:0 ? [ a:lnum, a:1 ] : [ a:lnum ]
   return Contents

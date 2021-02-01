@@ -70,8 +70,8 @@ function! s:Haunt__GetHaunted() abort dict
       continue
     endif
 
-    let info = Search " TODO: Without this copying, ...#text#new() should just get corr_lnum
-    let Text = doppelganger#text#new(info)
+    let info = Search " TODO: Without this copying, ...#format#new() should just get corr_lnum
+    let Text = doppelganger#format#new(info)
     let chunks = Text.ComposeChunks()
 
     call s:set_virtualtext(s:curr_lnum, chunks)

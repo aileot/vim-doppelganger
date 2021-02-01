@@ -42,7 +42,7 @@ USAGE							    *doppelganger-usage*
 ------------------------------------------------------------------------------
 VARIABLE						 *doppelganger-variable*
 
-g:doppelganger#text#contents_depth	   *g:doppelganger#text#contents_depth*
+g:doppelganger#format#contents_depth	 *g:doppelganger#format#contents_depth*
 	(default: 10)
 	Set in |Number| or |v:null|.
 	Max depth to be shown in virtual texts.
@@ -51,52 +51,54 @@ g:doppelganger#text#contents_depth	   *g:doppelganger#text#contents_depth*
 
 	Set to |v:null| if you just want absolute or relative numbers of
 	corresponding line in prefix in the format as you set in
-	|g:doppelganger#text#prefix|.
+	|g:doppelganger#format#prefix|.
 
-g:doppelganger#text#prefix			   *g:doppelganger#text#prefix*
+g:doppelganger#format#prefix			 *g:doppelganger#format#prefix*
 	(default: '◂ <absolute>: ')
 	Set in |String|.
 	You can use some special keywords: `<absolute>`, `<relative>` and `<size>`.
 
-g:doppelganger#text#suffix			   *g:doppelganger#text#suffix*
+g:doppelganger#format#suffix			 *g:doppelganger#format#suffix*
 	(default: ' [<relative>]')
 	Set in |String|.
-	See |g:doppelganger#text#prefix| for more detail.
+	See |g:doppelganger#format#prefix| for more detail.
 
-g:doppelganger#text#shim			     *g:doppelganger#text#shim*
-b:doppelganger_text_shim	     		     *b:doppelganger_text_shim*
+g:doppelganger#format#shim			   *g:doppelganger#format#shim*
+b:doppelganger_format_shim	     		   *b:doppelganger_format_shim*
 	(default: ' ﲖ ')
 	Set in |String|.
 	When contents within a pair is more than two lines, the characters
 	will be inserted into the joined lines in virtualtexts.
 
-g:doppelganger#text#ellipsis			 *g:doppelganger#text#ellipsis*
+g:doppelganger#format#ellipsis		       *g:doppelganger#format#ellipsis*
 	(default: ' …')
 	Set in |String|.
 	Replace omitted text with the value.
-	See also |g:dooppelganger#text#max_column_width|.
+	See also |g:dooppelganger#format#max_column_width|.
 
-				     *g:doppelganger#text#compress_whitespaces*
-				     *b:doppelganger_text_compress_whitespaces*
-g:doppelganger#text#compress_whitespaces
-b:doppelganger_text_compress_whitespaces
+				   *g:doppelganger#format#compress_whitespaces*
+				   *b:doppelganger_format_compress_whitespaces*
+g:doppelganger#format#compress_whitespaces
+b:doppelganger_format_compress_whitespaces
 	(default: 1)
 	Set in |Number|.
 	if non 0, all the concecutive whitespace characters (<Space> and
 	<Tab>) in |Doppelganger|'s virtualtexts will be replaced with a space.
 
-g:doppelganger#text#max_column_width     *g:doppelganger#text#max_column_width*
-b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
+				       *g:doppelganger#format#max_column_width*
+				       *b:doppelganger_format_max_column_width*
+g:doppelganger#format#max_column_width
+b:doppelganger_format_max_column_width
 	(default: 'max([&cc - 1, &tw, 79])')
 	Set in |Number| or in an evaluable string which returns a |Number|.
 
 	|Doppelganger| truncates virtualtexts in the column width.
 	The trimmed part of texts will be replaced with a text defined in
-	|g:doppelganger#text#ellipsis|.
+	|g:doppelganger#format#ellipsis|.
 
 	You can also define by another logic to a buffer as the following:
 >
-	let b:doppelganger_text_max_column_width = &tw
+	let b:doppelganger_format_max_column_width = &tw
 <
 	Such scripts should written in a vimrc file under `ftplugin/` or with
 	|:autocmd| as your preference.
@@ -254,6 +256,10 @@ DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
+
+2021-01-31
+* Rename g:doppelganger#text#foo to g:doppelganger#format#foo.
+* Rename b:doppelganger_text_foo to b:doppelganger_format_foo.
 
 2021-01-25
 * Remove g:doppelganger#text#shim_to_join and b:doppelganger_text_shim_to_join

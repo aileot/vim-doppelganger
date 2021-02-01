@@ -44,32 +44,33 @@ function! s:set_default(var, default) abort
   let {a:var} = get({prefix}, suffix, a:default)
 endfunction
 
-call s:set_default('g:doppelganger#text#contents_depth', 10)
-
-call s:set_default('g:doppelganger#text#prefix',       [
+call s:set_default('g:doppelganger#format#prefix',       [
       \ [['◂ {absolute}: ', 'DoppelgangerVirtualtextPrefix']],
       \ [['◂ {absolute}: ', 'DoppelgangerVirtualtextReversePrefix']],
       \ ])
-call s:set_default('g:doppelganger#text#suffix',       [
+call s:set_default('g:doppelganger#format#suffix',       [
       \ [[' [{relative}]', 'DoppelgangerVirtualtextSuffix']],
       \ [[' [{relative}]', 'DoppelgangerVirtualtextReverseSuffix']],
       \ ])
-call s:set_default('g:doppelganger#text#shim', [
+call s:set_default('g:doppelganger#format#shim', [
       \ [[' ﲖ ', 'DoppelgangerVirtualtextShim']],
       \ [[' ﲖ ', 'DoppelgangerVirtualtextReverseShim']],
       \ ])
-call s:set_default('g:doppelganger#text#ellipsis',     [
+call s:set_default('g:doppelganger#format#ellipsis',     [
       \ [[' …', 'DoppelgangerVirtualtextEllipsis']],
       \ [[' …', 'DoppelgangerVirtualtextReverseEllipsis']],
       \ ])
-call s:set_default('g:doppelganger#text#hl_contents',  [
+call s:set_default('g:doppelganger#format#hl_contents',  [
       \ ['DoppelgangerVirtualtextContents'],
       \ ['DoppelgangerVirtualtextReverseContents'],
       \ ])
 
-call s:set_default('g:doppelganger#text#compress_whitespaces', 1)
-call s:set_default('g:doppelganger#text#max_column_width',
+call s:set_default('g:doppelganger#format#contents_depth', 10)
+call s:set_default('g:doppelganger#format#compress_whitespaces', 1)
+
+call s:set_default('g:doppelganger#format#max_column_width',
       \ 'max([&cc - 1, &tw, 79])')
+
 call s:set_default('g:doppelganger#search#pairs', {
       \ '_': [
       \   ['{', '}[,;]\?'],

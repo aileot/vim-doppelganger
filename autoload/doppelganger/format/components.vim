@@ -134,8 +134,11 @@ function! s:Components__ComposeChunks(contents) abort dict
   let len_fillable = self.get_fillable_width()
   let pending_lines = abs(curr_lnum - corr_lnum)
 
+  const ignore_blanklines = s:get_config('ignore_blanklines')
+
   for line in a:contents
     if len_fillable < 1 | break | endif
+    if ignore_blanklines && line =~# '^\s*$' | continue | endif
 
     let chs_pending = [[ line, hl_text ]]
     let len_fillable = self.append_chunks(len_fillable, chs_pending)
@@ -160,7 +163,7 @@ endfunction
 let s:Components.ComposeChunks = funcref('s:Components__ComposeChunks')
 
 
-function! doppelganger#text#components#new(curr_lnum, corr_lnum) abort
+function! doppelganger#format#components#new(curr_lnum, corr_lnum) abort
   let Components = deepcopy(s:Components)
 
   let Components.curr_lnum  = a:curr_lnum
