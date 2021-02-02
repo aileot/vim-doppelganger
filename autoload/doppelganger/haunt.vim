@@ -13,13 +13,18 @@ endfunction
 let s:Haunt.SetMinRange = funcref('s:Haunt__SetMinRange')
 
 function! s:set_virtualtext(lnum, chunks) abort
-  call nvim_buf_set_virtual_text(
-        \ 0,
-        \ g:__doppelganger_namespace,
-        \ a:lnum - 1,
-        \ a:chunks,
-        \ {}
-        \ )
+  try
+    call nvim_buf_set_virtual_text(
+          \ 0,
+          \ g:__doppelganger_namespace,
+          \ a:lnum - 1,
+          \ a:chunks,
+          \ {}
+          \ )
+  catch /E5555/
+    const description = 'You set chunks in wrong format to nvim_buf_set_virtual_text()'
+    call doppelganger#debug#set_errormsg('virtualtext', description, a:chunks)
+  endtry
 endfunction
 
 function! s:Haunt__GetHaunted() abort dict
@@ -65,13 +70,8 @@ function! s:Haunt__GetHaunted() abort dict
       continue
     endif
 
-    let hl_group = Search.IsReverse()
-          \ ? g:doppelganger#highlight#_pair_reverse
-          \ : g:doppelganger#highlight#_pair
-
-    let info = Search " TODO: Without this copying, ...#text#new() should just get corr_lnum
-    let Text = doppelganger#text#new(info)
-    call Text.SetHlGroup(hl_group)
+    let info = Search " TODO: Without this copying, ...#format#new() should just get corr_lnum
+    let Text = doppelganger#format#new(info)
     let chunks = Text.ComposeChunks()
 
     call s:set_virtualtext(s:curr_lnum, chunks)

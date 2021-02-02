@@ -1,0 +1,27 @@
+Describe 10-Unit-Test -- Haunt
+  Before each
+    InitBuffer
+    DoppelgangerSetSimplestState
+  End
+
+  Before all
+    hi link SampleGroup Normal
+
+    let s:scope = themis#helper('scope')
+    let s:haunt = s:scope.funcs('autoload/doppelganger/haunt.vim')
+  End
+
+  Context s:set_virtualtext(lnum, chunks)
+
+    It set a virtual text by given chunks
+      const printed_lnum = 2
+      call s:haunt.set_virtualtext(printed_lnum, [['foo', 'SampleGroup']])
+      const texts = GetVirtualTextsAsPlainTexts()
+      const actual = texts[printed_lnum]
+      const expected = 'foo'
+      Assert Equals(actual, expected)
+    End
+
+  End
+
+End

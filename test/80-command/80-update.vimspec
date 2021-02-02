@@ -1,50 +1,44 @@
-Describe :DoppelgangerUpdate
-  Before all
-    Doppelganger ego/disable
-    new
-  End
-
+Describe 80-Command -- `:Doppelganger update`
   Before each
-    Doppelganger clear
-    let g:doppelganger#text#prefix = '>'
-    let g:doppelganger#text#suffix = ''
+    InitBuffer
+    DoppelgangerSetSimplestState
   End
 
   Context in a cpp-like file
     Before each
-      call setline(1, ['int main() {', '}'])
+      const default_context = [
+            \ 'int main() {',
+            \ '}',
+            \ ]
+      InitBufferAs default_context
       Doppelganger update
     End
 
-    After each
-      Doppelganger clear
-    End
-
     It shows a virtualtext at least at this test
-      let assert = themis#helper('assert')
-      let virtualtexts = GetVirtualTexts()[2]
-      Assert assert.not_empty(virtualtexts)
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
+      let actual = virtualtexts[2]
+      Assert NotEmpty(actual)
     End
 
     It shows the line that contains the other end of pair which ends current line
-      let virtualtexts = GetVirtualTexts()[2]
-      let prefix = g:doppelganger#text#prefix
-      let expected_virtualtext = '^'. prefix .'int main() {$'
-      Assert Match(virtualtexts[0], expected_virtualtext)
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
+      let actual = virtualtexts[2]
+      let expected = 'int main() {'
+      Assert Same(actual, expected)
     End
-
- End
+  End
 
   Context with reverse search
     Before each
       call setline(1, ['do {', '} while (foo);'])
       Doppelganger update
     End
+
     It shows while-statement in a virtual text
-      let virtualtexts = GetVirtualTexts()[1] " after `do {`
-      let prefix = g:doppelganger#text#prefix
-      let expected_virtualtext = prefix .'} while (foo);'
-      Assert Equals(virtualtexts[0], expected_virtualtext)
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
+      let actual = virtualtexts[1] " after `do {`
+      let expected = '} while (foo);'
+      Assert Equals(actual, expected)
     End
   End
 
@@ -86,7 +80,7 @@ Describe :DoppelgangerUpdate
 
     After each
       Doppelganger update
-      let virtualtexts = GetVirtualTexts()
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
       Assert len(virtualtexts) > 0
     End
   End

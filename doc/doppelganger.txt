@@ -42,50 +42,119 @@ USAGE							    *doppelganger-usage*
 ------------------------------------------------------------------------------
 VARIABLE						 *doppelganger-variable*
 
-g:doppelganger#text#prefix			   *g:doppelganger#text#prefix*
-	(default: '◂ <absolute>: ')
-	Set in |String|.
-	You can use some special keywords: `<absolute>`, `<relative>` and `<size>`.
+g:doppelganger#format#prefix			 *g:doppelganger#format#prefix*
+b:doppelganger_format_prefix			 *b:doppelganger_format_prefix*
+	(default: [
+	\ [['◂ {absolute}: ', 'DoppelgangerVirtualtextPrefix']],
+	\ [['◂ {absolute}: ', 'DoppelgangerVirtualtextReversePrefix']],
+	\ ])
+	Set in a |List| of {chunks}.
+	Set `[]` if you don't want any prefix.
 
-g:doppelganger#text#suffix			   *g:doppelganger#text#suffix*
-	(default: ' [<relative>]')
-	Set in |String|.
-	See |g:doppelganger#text#prefix| for more detail.
+	The first chunks would be used as a template of prefix for pair in
+	backward search like `if...endif` in VimL.
+	The second chunks would be used as a template of prefix for pair in
+	forward search like `do-while` loop.
 
-g:doppelganger#text#shim_to_join	     *g:doppelganger#text#shim_to_join*
-b:doppelganger_text_shim_to_join	     *b:doppelganger_text_shim_to_join*
-	(default: ' ﲖ ')
-	Set in |String|.
+	You can use some special keywords: `{absolute}`, `{relative}` and `{size}`.
+
+	You can set multiple colors to each templates as the following
+	example:
+>
+	let g:doppelganger#format#prefix = [
+	\ [
+	\	[' {absolute}: ', 'DoppelgangerVirtualtextPrefix']
+	\ ],
+	\ [
+	\	[' ', 'DoppelgangerVirtualtextPrefix'],
+	\	['{absolute}', '<some-highlight-group-you-defined>'],
+	\	[': ', 'NonText'],
+	\ ],
+	\ ]
+<
+	Though |Doppelganger| has some |highlight-groups| predefined as
+	|doppelganger-highlight|, you don't have to use these
+	|highlight-groups| as the example above.
+
+g:doppelganger#format#suffix			 *g:doppelganger#format#suffix*
+b:doppelganger_format_suffix			 *b:doppelganger_format_suffix*
+	(default: [
+	\ [[' [{relative}]', 'DoppelgangerVirtualtextSuffix']],
+	\ [[' [{relative}]', 'DoppelgangerVirtualtextReverseSuffix']],
+	\ ])
+	Set in a |List| of {chunks}.
+	See |g:doppelganger#format#prefix| for more detail.
+
+g:doppelganger#format#shim			   *g:doppelganger#format#shim*
+b:doppelganger_format_shim	     		   *b:doppelganger_format_shim*
+	(default: [
+	\ [[' ﲖ ', 'DoppelgangerVirtualtextShim']],
+	\ [[' ﲖ ', 'DoppelgangerVirtualtextReverseShim']],
+	\ ])
+	Set in a |List| of {chunks}.
 	When contents within a pair is more than two lines, the characters
 	will be inserted into the joined lines in virtualtexts.
+	See |g:doppelganger#format#prefix| for more detail.
 
-g:doppelganger#text#ellipsis			 *g:doppelganger#text#ellipsis*
-	(default: ' …')
-	Set in |String|.
+g:doppelganger#format#ellipsis		       *g:doppelganger#format#ellipsis*
+b:doppelganger_format_ellipsis		       *b:doppelganger_format_ellipsis*
+	(default: [
+	\ [[' …', 'DoppelgangerVirtualtextEllipsis']],
+	\ [[' …', 'DoppelgangerVirtualtextReverseEllipsis']],
+	\ ])
+	Set in a |List| of {chunks}.
 	Replace omitted text with the value.
-	See also |g:dooppelganger#text#max_column_width|.
+	See also |g:dooppelganger#format#max_column_width|.
+	See |g:doppelganger#format#prefix| for more detail.
 
-				     *g:doppelganger#text#compress_whitespaces*
-				     *b:doppelganger_text_compress_whitespaces*
-g:doppelganger#text#compress_whitespaces
-b:doppelganger_text_compress_whitespaces
+g:doppelganger#format#contents_depth	 *g:doppelganger#format#contents_depth*
+b:doppelganger_format_contents_depth	 *b:doppelganger_format_contents_depth*
+	(default: 10)
+	Set in |Number| or |v:null|.
+	Max depth of lines to be read before setting each virtual texts.
+
+	Set to 0 to read all the lines within a range.
+	Set to 1 to read only the first line of a corresponding line.
+	Set to 2 to read the first line and the second line of a corresponding
+	line.  The same applies hereafter in a positive number.
+
+	If negative, a depth will be calculated, decreasing from the target
+	line.
+
+	Set to |v:null| if you don't need any contents but just need absolute
+	or relative numbers of corresponding line in prefix or suffix.
+
+				   *g:doppelganger#format#compress_whitespaces*
+				   *b:doppelganger_format_compress_whitespaces*
+g:doppelganger#format#compress_whitespaces
+b:doppelganger_format_compress_whitespaces
 	(default: 1)
 	Set in |Number|.
 	if non 0, all the concecutive whitespace characters (<Space> and
 	<Tab>) in |Doppelganger|'s virtualtexts will be replaced with a space.
 
-g:doppelganger#text#max_column_width     *g:doppelganger#text#max_column_width*
-b:doppelganger_text_max_column_width     *b:doppelganger_text_max_column_width*
+				      *g:doppelganger#format#ignore_blanklines*
+				      *b:doppelganger_format_ignore_blanklines*
+g:doppelganger#format#ignore_blanklines
+b:doppelganger_format_ignore_blanklines
+	(default: |1|)
+	Set in |Number|.
+	If 0, spaces would be inserted within shims for blank lines.
+
+				       *g:doppelganger#format#max_column_width*
+				       *b:doppelganger_format_max_column_width*
+g:doppelganger#format#max_column_width
+b:doppelganger_format_max_column_width
 	(default: 'max([&cc - 1, &tw, 79])')
 	Set in |Number| or in an evaluable string which returns a |Number|.
 
 	|Doppelganger| truncates virtualtexts in the column width.
 	The trimmed part of texts will be replaced with a text defined in
-	|g:doppelganger#text#ellipsis|.
+	|g:doppelganger#format#ellipsis|.
 
 	You can also define by another logic to a buffer as the following:
 >
-	let b:doppelganger_text_max_column_width = &tw
+	let b:doppelganger_format_max_column_width = &tw
 <
 	Such scripts should written in a vimrc file under `ftplugin/` or with
 	|:autocmd| as your preference.
@@ -224,25 +293,39 @@ COMMAND							  *doppelganger-command*
 ------------------------------------------------------------------------------
 HIGHLIGHT						*doppelganger-highlight*
 
-DoppelgangerVirtualText				       *DoppelgangerVirtualText*
-	(default: `:hi def link DoppelgangerVirtualText NonText`)
-	It affects all the other highlights of |doppelganger| unless they're
-	overwritten individually.
+						*DoppelgangerVirtualtextPrefix*
+					 *DoppelgangerVirtualtextReversePrefix*
+						*DoppelgangerVirtualtextSuffix*
+					 *DoppelgangerVirtualtextReverseSuffix*
+						  *DoppelgangerVirtualtextShim*
+					   *DoppelgangerVirtualtextReverseShim*
+					      *DoppelgangerVirtualtextEllipsis*
+				       *DoppelgangerVirtualtextReverseEllipsis*
+					      *DoppelgangerVirtualtextContents*
+				       *DoppelgangerVirtualtextReverseContents*
 
-DoppelgangerVirtualTextPair			  *DoppelgangerVirtualTextPair*
-	(default: `:hi def link DoppelgangerVirtualText`
-			`\ DoppelgangerVirtualText`)
-	It sets highlight for virtualtexts which created for either
-	|g:doppelganger#pairs| or |b:doppelganger_pairs|.
-
-DoppelgangerVirtualTextPairReverse	   *DoppelgangerVirtualTextPairReverse*
-	(default: `:hi def link DoppelgangerVirtualText`
-			`\ DoppelgangerVirtualText`)
-	It sets highlight for virtualtexts which created for either
-	|g:doppelganger#pairs_reverse| or |b:doppelganger_pairs_reverse|.
+	These highlight groups above are used in the default templates of
+	chunks like |g:doppelganger#format#prefix|. You can modify them with
+	some scripts:
+>
+	hi! link DoppelgangerVirtualtextPrefix NonText
+	hi! DoppelgangerVirtualtextReversePrefix ctermfg=red guifg=#df0000
+<
+	However, you don't have to use these highlight-groups to the
+	templates.
 
 ==============================================================================
 COMPATIBILITY					    *doppelganger-compatibility*
+
+2021-01-31
+* Rename g:doppelganger#text#foo to g:doppelganger#format#foo.
+* Rename b:doppelganger_text_foo to b:doppelganger_format_foo.
+* Remove old highlight-groups, DoppelgangerVirtualText,
+  DoppelgangerVirtualTextPair and DoppelgangerVirtualTextPairReverse.
+
+2021-01-25
+* Remove g:doppelganger#text#shim_to_join and b:doppelganger_text_shim_to_join
+  use g:doppelganger#text#shim and b:doppelganger_text_shim instead.
 
 2021-01-22
 * Remove old commands, :DoppelgangerUpdate, :DoppelgangerClear,

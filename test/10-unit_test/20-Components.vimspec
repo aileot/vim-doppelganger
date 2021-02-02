@@ -1,0 +1,116 @@
+Describe 10-Unit-Test -- Components
+  Before each
+    DoppelgangerSetSimplestState
+
+    const default_context = [
+          \ 'int main() {',
+          \ '}'
+          \ ]
+    InitBufferAs default_context
+
+    let Components = doppelganger#format#components#new(2, 1)
+  End
+
+  Context .make_up()
+    Context returns expected, completed components
+
+      It as four empty components
+        const expected = [[], [], [], []]
+        const actual = Components.make_up()
+        Assert Equals(actual, expected)
+      End
+
+      It which is composed of chunks filled with simple chars with no hl_groups
+        const expected = [[['>', '']], [['+', '']], [['.', '']], [['$', '']]]
+        let g:doppelganger#format#prefix   = [['>']]
+        let g:doppelganger#format#shim     = [['+']]
+        let g:doppelganger#format#ellipsis = [['.']]
+        let g:doppelganger#format#suffix   = [['$']]
+        const actual = Components.make_up()
+        Assert Equals(actual, expected)
+      End
+
+    End
+  End
+
+  Context .displaywidth()
+    It returns 1
+      let c = [['+']]
+      Assert Equals(Components.displaywidth(c), 1)
+    End
+
+    It returns 1 for a unicode
+      let c = [['ﲖ']]
+      Assert Equals(Components.displaywidth(c), 1)
+    End
+
+    It returns 2 for an ambiguous width char
+      let c = [['あ']]
+      Assert Equals(Components.displaywidth(c), 2)
+    End
+
+  End
+
+  Context .get_fillable_width()
+
+    Context with no decorations
+      It returns a fillable width
+        " Reduce 1 for a space is inserted between any an actual text and virtual
+        " text.
+        call Components.make_up()
+        const len_fillable = Components.get_fillable_width()
+
+        const max_col_width = g:doppelganger#format#max_column_width
+        const len_actualtext = 1 " The length of `}`
+        const len_reserved = len_actualtext + 1
+        const len_expected = max_col_width - len_reserved
+        Assert Equals(len_fillable, len_expected)
+      End
+
+    End
+  End
+
+  Context .append_chunks()
+    Before all
+      hi! link SampleComponents Normal
+    End
+
+    Context with a chunk in a component
+      Before each
+        let len_fillable = 10
+        let Components = doppelganger#format#components#new(2, 1)
+        let chunks = [[ 'foo', 'SampleComponents' ]]
+        let len_fillable = Components.append_chunks(len_fillable, chunks)
+      End
+
+      It reduces fillable width
+        Assert Same(len_fillable, 7)
+      End
+
+      It append a chunk
+        Assert Equals(Components.chunks, chunks)
+      End
+    End
+
+    Context with two chunks in a components
+      Before each
+        let len_fillable = 10
+        let Components = doppelganger#format#components#new(2, 1)
+        let chunks = [
+              \ [ 'foo', 'SampleComponents' ],
+              \ [ 'bar', 'SampleComponents' ],
+              \ ]
+        let len_fillable = Components.append_chunks(len_fillable, chunks)
+      End
+
+      It reduces fillable width
+        Assert Same(len_fillable, 4)
+      End
+
+      It appends chunks
+        Assert Equals(Components.chunks, chunks)
+      End
+
+    End
+  End
+End

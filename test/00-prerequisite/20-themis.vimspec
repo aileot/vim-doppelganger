@@ -1,0 +1,32 @@
+Describe 00-Prerequisite -- 20-Themis:
+  Before each
+    InitBuffer
+    DoppelgangerSetSimplestState
+  End
+
+  Context GetVirtualTextsAsPlainTexts()
+
+    Context in cpp file
+      Before each
+        setlocal ft=cpp
+        const default_context = [
+              \ 'int main() {',
+              \ '}'
+              \ ]
+        InitBufferAs default_context
+        Doppelganger update
+      End
+
+      It returns correctly
+        let virtualtexts = GetVirtualTextsAsPlainTexts()
+        let actual = virtualtexts[2]
+        let expected = 'int main() {'
+        Assert Same(actual, expected)
+      End
+
+    End
+
+  End
+
+End
+

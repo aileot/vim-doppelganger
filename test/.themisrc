@@ -6,18 +6,58 @@ call themis#option('exclude', ['test/_testdata/'])
 let s:helper = themis#helper('assert')
 call themis#helper('command').with(s:helper)
 
-function! GetVirtualTexts() abort
+function! GetVirtualTextsAsPlainTexts() abort
   " Return a Dict in the format, {lnum : virt_text}
 
   let virt_texts = {}
 
-  const namespace = nvim_get_namespaces().doppelganger
-  const marks = nvim_buf_get_extmarks(0, namespace, 0, -1, {'details': 1})
-  for m in marks
+  const ns = nvim_get_namespaces().doppelganger
+  const extmarks = nvim_buf_get_extmarks(0, ns, 0, -1, {'details': 1})
+  for m in extmarks
+    let info = m[3]
+    let chunks = get(info, 'virt_text', [])
+    let texts = map(deepcopy(chunks), 'len(v:val) == 2 ? v:val[0] : ""')
     let lnum = m[1] + 1
-    let info = m[3].virt_text
-    call extend(virt_texts, {lnum : map(info, 'v:val[0]')})
+    call extend(virt_texts, {lnum : join(texts, '')})
   endfor
 
   return virt_texts
 endfunction
+
+
+function! s:doppelganger_set_simplest_decorations() abort
+  let g:doppelganger#cache#disable = v:true
+
+  let g:doppelganger#format#prefix   = []
+  let g:doppelganger#format#shim     = []
+  let g:doppelganger#format#ellipsis = []
+  let g:doppelganger#format#suffix   = []
+
+  let g:doppelganger#format#contents_depth = 1
+  let g:doppelganger#format#max_column_width = 80
+endfunction
+
+function! s:doppelganger_set_simplest_state() abort
+  call s:doppelganger_set_simplest_decorations()
+  Doppelganger ego/disable
+  Doppelganger clear
+endfunction
+
+command! DoppelgangerSetSimplestDecorations :call s:doppelganger_set_simplest_decorations()
+command! DoppelgangerSetSimplestState :call s:doppelganger_set_simplest_state()
+
+
+function! s:init_buffer() abort
+  tabonly!
+  only!
+  enew!
+endfunction
+
+function! s:init_buffer_as(lines) abort
+  call s:init_buffer()
+  put! = a:lines
+endfunction
+
+command! -nargs=0 InitBuffer   :call s:init_buffer()
+command! -nargs=1 InitBufferAs :call s:init_buffer_as(<args>)
+
