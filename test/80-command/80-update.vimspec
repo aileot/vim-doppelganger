@@ -1,0 +1,96 @@
+Describe 80-Command -- `:Doppelganger update`
+  Before all
+    Doppelganger ego/disable
+  End
+
+  Before each
+    new
+    only!
+
+    Doppelganger clear
+    let g:doppelganger#format#prefix = []
+    let g:doppelganger#format#suffix = []
+    let g:doppelganger#format#contents_depth = 1
+  End
+
+  Context in a cpp-like file
+    Before each
+      call setline(1, ['int main() {', '}'])
+      Doppelganger update
+    End
+
+    After each
+      Doppelganger clear
+    End
+
+    It shows a virtualtext at least at this test
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
+      let actual = virtualtexts[2]
+      Assert NotEmpty(actual)
+    End
+
+    It shows the line that contains the other end of pair which ends current line
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
+      let actual = virtualtexts[2]
+      let expected = 'int main() {'
+      Assert Same(actual, expected)
+    End
+  End
+
+  Context with reverse search
+    Before each
+      call setline(1, ['do {', '} while (foo);'])
+      Doppelganger update
+    End
+
+    It shows while-statement in a virtual text
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
+      let actual = virtualtexts[1] " after `do {`
+      let expected = '} while (foo);'
+      Assert Equals(actual, expected)
+    End
+  End
+
+  Context with magic patterns
+    Before each
+      call setline(1, ['function! foo()', 'endfunction'])
+      let b:_doppelganger_pairs = []
+    End
+
+    It gets expected pair without any magic
+      let b:doppelganger_pairs = [['fun.*', 'endf.*']]
+    End
+
+    It gets expected pair with '\v'
+      let b:doppelganger_pairs = [['\vfun.*', '\vendf.*']]
+    End
+    It gets expected pair with '\V'
+      let b:doppelganger_pairs = [['\Vfun\.\*', '\Vendf\.\*']]
+    End
+    It gets expected pair with '\m'
+      let b:doppelganger_pairs = [['\mfun.*', '\mendf.*']]
+    End
+    It gets expected pair with '\M'
+      let b:doppelganger_pairs = [['\Mfun\.\*', '\Mendf\.\*']]
+    End
+
+    It gets expected pair with '\v' with '$'
+      let b:doppelganger_pairs = [['\vfun.*', '\vendf.*$']]
+    End
+    It gets expected pair with '\V' with '$'
+      let b:doppelganger_pairs = [['\Vfun\.\*', '\Vendf\.\*\$']]
+    End
+    It gets expected pair with '\m' with '$'
+      let b:doppelganger_pairs = [['\mfun.*', '\mendf.*$']]
+    End
+    It gets expected pair with '\M' with '$'
+      let b:doppelganger_pairs = [['\Mfun\.\*', '\Mendf\.\*$']]
+    End
+
+    After each
+      Doppelganger update
+      let virtualtexts = GetVirtualTextsAsPlainTexts()
+      Assert len(virtualtexts) > 0
+    End
+  End
+End

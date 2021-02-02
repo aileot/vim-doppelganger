@@ -1,4 +1,9 @@
-Describe Haunt
+Describe 10-Unit-Test -- Haunt
+  Before each
+    new
+    only!
+  End
+
   Before all
     hi link SampleGroup Normal
 
