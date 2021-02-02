@@ -1,37 +1,32 @@
 Describe 00-Prerequisite -- 20-Themis:
   Before each
-    new
-    only!
+    InitBuffer
+    DoppelgangerSetSimplestState
   End
 
   Context GetVirtualTextsAsPlainTexts()
 
-    Context with simplest doppelganger's setting
+    Context in cpp file
       Before each
-        let g:doppelganger#format#prefix = []
-        let g:doppelganger#format#suffix = []
-        let g:doppelganger#format#contents_depth = 1
+        setlocal ft=cpp
+        const default_context = [
+              \ 'int main() {',
+              \ '}'
+              \ ]
+        InitBufferAs default_context
+        Doppelganger update
       End
 
-      Context in cpp file
-        Before each
-          setlocal ft=cpp
-          call setline(1, ['int main() {', '}'])
-          Doppelganger update
-        End
-
-        After each
-          Doppelganger clear
-        End
-
-        It returns correctly
-          let virtualtexts = GetVirtualTextsAsPlainTexts()
-          let actual = virtualtexts[2]
-          let expected = 'int main() {'
-          Assert Same(actual, expected)
-        End
+      It returns correctly
+        let virtualtexts = GetVirtualTextsAsPlainTexts()
+        let actual = virtualtexts[2]
+        let expected = 'int main() {'
+        Assert Same(actual, expected)
       End
+
     End
+
   End
+
 End
 

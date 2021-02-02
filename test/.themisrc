@@ -23,3 +23,41 @@ function! GetVirtualTextsAsPlainTexts() abort
 
   return virt_texts
 endfunction
+
+
+function! s:doppelganger_set_simplest_decorations() abort
+  let g:doppelganger#cache#disable = v:true
+
+  let g:doppelganger#format#prefix   = []
+  let g:doppelganger#format#shim     = []
+  let g:doppelganger#format#ellipsis = []
+  let g:doppelganger#format#suffix   = []
+
+  let g:doppelganger#format#contents_depth = 1
+  let g:doppelganger#format#max_column_width = 80
+endfunction
+
+function! s:doppelganger_set_simplest_state() abort
+  call s:doppelganger_set_simplest_decorations()
+  Doppelganger ego/disable
+  Doppelganger clear
+endfunction
+
+command! DoppelgangerSetSimplestDecorations :call s:doppelganger_set_simplest_decorations()
+command! DoppelgangerSetSimplestState :call s:doppelganger_set_simplest_state()
+
+
+function! s:init_buffer() abort
+  tabonly!
+  only!
+  enew!
+endfunction
+
+function! s:init_buffer_as(lines) abort
+  call s:init_buffer()
+  put! = a:lines
+endfunction
+
+command! -nargs=0 InitBuffer   :call s:init_buffer()
+command! -nargs=1 InitBufferAs :call s:init_buffer_as(<args>)
+

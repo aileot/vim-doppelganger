@@ -1,7 +1,7 @@
 Describe 10-Unit-Test -- Haunt
   Before each
-    new
-    only!
+    InitBuffer
+    DoppelgangerSetSimplestState
   End
 
   Before all

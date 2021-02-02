@@ -6,11 +6,9 @@ Describe `:Doppelganger update`
   Before each
     new
     only!
-
     Doppelganger clear
-    let g:doppelganger#format#prefix = []
-    let g:doppelganger#format#suffix = []
-    let g:doppelganger#format#contents_depth = 1
+
+    call DoppelgangerSetSimplestDecorations()
   End
 
   Context in a cpp-like file

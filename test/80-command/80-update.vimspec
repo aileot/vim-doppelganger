@@ -1,26 +1,17 @@
 Describe 80-Command -- `:Doppelganger update`
-  Before all
-    Doppelganger ego/disable
-  End
-
   Before each
-    new
-    only!
-
-    Doppelganger clear
-    let g:doppelganger#format#prefix = []
-    let g:doppelganger#format#suffix = []
-    let g:doppelganger#format#contents_depth = 1
+    InitBuffer
+    DoppelgangerSetSimplestState
   End
 
   Context in a cpp-like file
     Before each
-      call setline(1, ['int main() {', '}'])
+      const default_context = [
+            \ 'int main() {',
+            \ '}',
+            \ ]
+      InitBufferAs default_context
       Doppelganger update
-    End
-
-    After each
-      Doppelganger clear
     End
 
     It shows a virtualtext at least at this test

@@ -1,21 +1,12 @@
 Describe 10-Unit-Test -- Components
   Before each
-    new
-    only!
-    let g:doppelganger#cache#disable = v:true
-    let g:doppelganger#format#max_column_width = 80
+    DoppelgangerSetSimplestState
 
-    let g:doppelganger#format#prefix   = []
-    let g:doppelganger#format#shim     = []
-    let g:doppelganger#format#ellipsis = []
-    let g:doppelganger#format#suffix   = []
-    let g:doppelganger#format#contents_depth = 1
-
-    let default_context = [
-          \ 'int main {',
+    const default_context = [
+          \ 'int main() {',
           \ '}'
           \ ]
-    1 pu! = default_context
+    InitBufferAs default_context
 
     let Components = doppelganger#format#components#new(2, 1)
   End
@@ -25,10 +16,6 @@ Describe 10-Unit-Test -- Components
 
       It as four empty components
         const expected = [[], [], [], []]
-        let g:doppelganger#format#prefix   = []
-        let g:doppelganger#format#shim     = []
-        let g:doppelganger#format#ellipsis = []
-        let g:doppelganger#format#suffix   = []
         const actual = Components.make_up()
         Assert Equals(actual, expected)
       End
@@ -67,14 +54,6 @@ Describe 10-Unit-Test -- Components
   Context .get_fillable_width()
 
     Context with no decorations
-      Before each
-        let g:doppelganger#format#prefix   = []
-        let g:doppelganger#format#shim     = []
-        let g:doppelganger#format#ellipsis = []
-        let g:doppelganger#format#suffix   = []
-        let g:doppelganger#format#contents_depth = 1
-      End
-
       It returns a fillable width
         " Reduce 1 for a space is inserted between any an actual text and virtual
         " text.
