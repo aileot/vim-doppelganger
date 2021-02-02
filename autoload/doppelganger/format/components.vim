@@ -17,7 +17,7 @@ function! s:Components__replace_keywords(text) abort dict
 endfunction
 let s:Components.replace_keywords = funcref('s:Components__replace_keywords')
 
-function! s:Component__complete_component(name, idx) abort dict
+function! s:Component__complete(name, idx) abort dict
   const template = deepcopy(s:get_config(a:name))
   const len = len(template)
   if len == 0
@@ -34,7 +34,7 @@ function! s:Component__complete_component(name, idx) abort dict
   endtry
   return component
 endfunction
-let s:Components.complete_component = funcref('s:Component__complete_component')
+let s:Components.complete = funcref('s:Component__complete')
 
 
 function! s:Components__displaywidth(component) abort dict
@@ -51,10 +51,10 @@ function! s:Components__make_up() abort dict
 
   let self.hl_contents = s:get_config('hl_contents')[idx]
 
-  let chs_prefix   = self.complete_component('prefix',   idx)
-  let chs_shim     = self.complete_component('shim',     idx)
-  let chs_ellipsis = self.complete_component('ellipsis', idx)
-  let chs_suffix   = self.complete_component('suffix',   idx)
+  let chs_prefix   = self.complete('prefix',   idx)
+  let chs_shim     = self.complete('shim',     idx)
+  let chs_ellipsis = self.complete('ellipsis', idx)
+  let chs_suffix   = self.complete('suffix',   idx)
 
   let self.chs_prefix   = chs_prefix
   let self.chs_shim     = chs_shim
