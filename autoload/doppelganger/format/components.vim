@@ -105,8 +105,12 @@ function! s:Components__append_chunks(len_fillable, chs_pending) abort dict
         continue
       endif
 
-      let hl_group = ch_pending[1]
-      let self.chunks += [[ chars_pending, hl_group ]] + self.chs_ellipsis
+      if len(chars_pending) > 0
+        let hl_group = ch_pending[1]
+        let self.chunks += [[ chars_pending, hl_group ]]
+      endif
+      let self.chunks += self.chs_ellipsis
+
       let len_fillable = 0
       return len_fillable
     endfor
