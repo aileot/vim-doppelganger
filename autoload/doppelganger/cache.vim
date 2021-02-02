@@ -136,6 +136,12 @@ endfunction
 let s:Cache.Restore = funcref('s:Cache__Restore')
 
 
+function! s:Cache__clear() abort dict
+  silent! unlet w:__doppelganger_cache
+endfunction
+let s:Cache.clear = funcref('s:Cache__clear')
+
+
 function! doppelganger#cache#new(region) abort
   let Cache = deepcopy(s:Cache)
   let Cache.region = a:region

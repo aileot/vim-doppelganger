@@ -10,6 +10,8 @@ let s:candidates = [
       \ 'ego',
       \ 'ego/disable',
       \ 'ego/enable',
+      \
+      \ 'cache/clear',
       \ ]
 
 function! doppelganger#command#complete(A, L, P) abort
@@ -33,7 +35,10 @@ endfunction
 function! doppelganger#command#do(line1, line2, ...) abort
   const args = get(a:, 1, '')
 
-  if args =~# '\<ego/disable\>'
+  if args =~# '\<cache/clear\>'
+    let Cache = doppelganger#cache#new('command')
+    call Cache.clear()
+  elseif args =~# '\<ego/disable\>'
     call doppelganger#ego#disable()
   elseif args =~# '\<ego/enable\>'
     call doppelganger#ego#enable()
