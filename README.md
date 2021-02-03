@@ -45,17 +45,13 @@ Additional doppelgangers are said to haunt with `plugin/matchit` or
 ### Configuration
 
 ```vim
-" default: the highlight groups links to `NonText`
-hi! DoppelgangerVirtualTextPair ctermfg=64 guifg=#5f8700 cterm=italic gui=italic
-hi! DoppelgangerVirtualTextPairReverse ctermfg=130 guifg=#df5f29 cterm=italic gui=italic
-
 " default
 let g:doppelganger#pairs = {
       \ '_': [
-      \   ['{', '}'],
-      \   ['(', ')'],
-      \   ['\[', ']'],
-      \ ],
+      \   ['{', '}[,;]\?'],
+      \   ['(', ')[,;]\?'],
+      \   ['\[', '\][,;]\?'],
+      \   ],
       \ }
 
 " default
@@ -89,4 +85,3 @@ For more detail and the other configurations, read
 ## License
 
 MIT
-
