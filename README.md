@@ -48,10 +48,10 @@ Additional doppelgangers are said to haunt with `plugin/matchit` or
 " default
 let g:doppelganger#pairs = {
       \ '_': [
-      \   ['{', '}'],
-      \   ['(', ')'],
-      \   ['\[', ']'],
-      \ ],
+      \   ['{', '}[,;]\?'],
+      \   ['(', ')[,;]\?'],
+      \   ['\[', '\][,;]\?'],
+      \   ],
       \ }
 
 " default
