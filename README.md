@@ -85,4 +85,3 @@ For more detail and the other configurations, read
 ## License
 
 MIT
-
