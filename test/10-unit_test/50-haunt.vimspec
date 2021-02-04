@@ -1,7 +1,7 @@
 Describe 10-Unit-Test -- Haunt
   Before each
     InitBuffer
-    DoppelgangerSetSimplestState
+    DoppelgangerResetState
   End
 
   Before all

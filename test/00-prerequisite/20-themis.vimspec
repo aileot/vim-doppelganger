@@ -1,7 +1,7 @@
 Describe 00-Prerequisite -- 20-Themis:
   Before each
     InitBuffer
-    DoppelgangerSetSimplestState
+    DoppelgangerResetState
   End
 
   Context GetVirtualTextsAsPlainTexts()
