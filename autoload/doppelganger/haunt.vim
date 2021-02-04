@@ -27,6 +27,16 @@ function! s:set_virtualtext(lnum, chunks) abort
   endtry
 endfunction
 
+function! s:Haunt__is_hl_group_to_skip() abort dict
+  const Get_ft_config = function('doppelganger#util#get_config_as_filetype', [''])
+  const ignored_groups = Get_ft_config('hl_groups_to_skip')
+  const lnum = self.curr_lnum
+  const col = len(getline(lnum))
+  const group = synIDattr(synID(lnum, col, 0), 'name')
+  return group =~? join(ignored_groups, '\|')
+endfunction
+let s:Haunt.is_hl_group_to_skip = funcref('s:Haunt__is_hl_group_to_skip')
+
 function! s:Haunt__GetHaunted() abort dict
   let save_view = winsaveview()
 
@@ -50,7 +60,7 @@ function! s:Haunt__GetHaunted() abort dict
 
     let chunks = []
 
-    if doppelganger#highlight#_is_hl_group_to_skip()
+    if self.is_hl_group_to_skip()
       " Note: It's too slow without this guard up to hl_group though this check
       " is too rough for a line which contains both codes and the hl_group.
       call s:Cache.Update({
