@@ -25,6 +25,14 @@ function! s:Search__IsReverse() abort dict
 endfunction
 let s:Search.IsReverse = funcref('s:Search__IsReverse')
 
+
+function! s:is_hl_group_to_skip() abort
+  let Get_ft_config = function('doppelganger#util#get_config_as_filetype', [''])
+  const ignored_groups = Get_ft_config('hl_groups_to_skip')
+  const group = synIDattr(synID(line('.'), col('.'), 0), 'name')
+  return group =~? join(ignored_groups, '\|')
+endfunction
+
 function! s:Search__SearchPair() abort dict
   const ignored_range = self.ignored_range
   const curr_lnum = self.curr_lnum
@@ -96,7 +104,7 @@ endfunction
 
 function! s:_search_leader_lnum(pat_leader, pat_follower) abort "{{{1
   let flags_unmove_downward_exc = 'nWz'
-  let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
+  let Skip_comments = 's:is_hl_group_to_skip()'
   let lnum_leader = searchpair(a:pat_leader, '', a:pat_follower,
         \ flags_unmove_downward_exc, Skip_comments)
   return lnum_leader
@@ -154,7 +162,7 @@ function! s:get_lnum_open(pair_dict, ignored_range) abort
   let pat_close = a:pair_dict[-1]
   let flags_mobile_upward_inc = 'cbW'
   let flags_unmove_upward_exc = 'nbWz'
-  let Skip_comments = 'doppelganger#highlight#_is_hl_group_to_skip()'
+  let Skip_comments = 's:is_hl_group_to_skip()'
 
   norm! $
   let lnum_close = search(pat_close, flags_mobile_upward_inc)
