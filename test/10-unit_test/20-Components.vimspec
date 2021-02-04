@@ -1,6 +1,6 @@
 Describe 10-Unit-Test -- Components
   Before each
-    DoppelgangerSetSimplestState
+    DoppelgangerResetState
 
     const default_context = [
           \ 'int main() {',

@@ -1,7 +1,7 @@
 Describe 80-Command -- `:Doppelganger update`
   Before each
     InitBuffer
-    DoppelgangerSetSimplestState
+    DoppelgangerResetState
   End
 
   Context in a cpp-like file

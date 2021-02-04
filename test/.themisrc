@@ -37,14 +37,15 @@ function! s:doppelganger_set_simplest_decorations() abort
   let g:doppelganger#format#max_column_width = 80
 endfunction
 
-function! s:doppelganger_set_simplest_state() abort
+function! s:doppelganger_reset_state() abort
   call s:doppelganger_set_simplest_decorations()
   Doppelganger ego/disable
   Doppelganger clear
+  Doppelganger cache/clear
 endfunction
 
 command! DoppelgangerSetSimplestDecorations :call s:doppelganger_set_simplest_decorations()
-command! DoppelgangerSetSimplestState :call s:doppelganger_set_simplest_state()
+command! DoppelgangerResetState :call s:doppelganger_reset_state()
 
 
 function! s:init_buffer() abort
