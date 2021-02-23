@@ -43,8 +43,21 @@ endfunction
 
 function! doppelganger#ego#update() abort
   const offset = g:doppelganger#ego#max_offset
-  const top = max([line('w0'), line('.') - offset])
-  const bottom = min([line('w$'), line('.') + offset])
+  const lnum = line('.')
+
+  call s:Cache.Attach(lnum)
+  const range = s:Cache.Restore('range')
+
+  if range is# v:null
+    const top    = doppelganger#folded#get_apparent_lnum(lnum, - offset)
+    const bottom = doppelganger#folded#get_apparent_lnum(lnum,   offset)
+    call s:Cache.Update({
+          \ 'range': [ top, bottom ],
+          \ })
+  else
+    const [top, bottom] = range
+  endif
+
   call doppelganger#update(top, bottom, g:doppelganger#ego#min_range_of_pairs)
 endfunction
 
