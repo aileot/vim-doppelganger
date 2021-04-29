@@ -62,20 +62,20 @@ let g:doppelganger#pairs_reverse = {
       \ }
 
 " default: 0
-" If you prefer manual use with :DoppelgangerToggle or other commands, comment
-" out the config
+" If you prefer manual use with `:Doppelganger update` or other commands,
+" comment out the config.
 " let g:doppelganger#ego#disable_autostart = 1
 
 " default: 3
-" Doppelganger appears in the range aroud cursor.  All the variables whose name
-" contain 'ego' only affect ego feature, i.e., both `DoppelgangerUpdate` and
-" `:DoppelgangerToggle` always ignores the value.
+" Doppelgangers will appear in the range around cursor. All the variables
+" whose name contain 'ego' only affect ego feature, i.e., `Doppelganger update`
+" always ignores the value.
 let g:doppelganger#ego#max_offset = 5
 
 " default: 4
-" Doppelganger only appears when the range of pairs is wider than the value.
-" When the value is less than 1, doppelganger will always appear even when a
-" pair is in the same line.
+" Doppelgangers will appear only when the range of pairs is wider than the
+" value. When the value is less than 1, doppelganger will always appear even
+" when a pair is in the same line.
 let g:doppelganger#ego#min_range_of_pairs = 0
 ```
 
