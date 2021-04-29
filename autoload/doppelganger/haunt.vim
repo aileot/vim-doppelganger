@@ -27,6 +27,37 @@ function! s:set_virtualtext(lnum, chunks) abort
   endtry
 endfunction
 
+function! s:Haunt__is_hl_group_to_skip() abort dict
+  const Get_ft_config = function('doppelganger#util#get_config_as_filetype', [''])
+  const ignored_groups = Get_ft_config('hl_groups_to_skip')
+  const lnum = self.curr_lnum
+  const col = len(getline(lnum))
+  const group = synIDattr(synID(lnum, col, 0), 'name')
+  return group =~? join(ignored_groups, '\|')
+endfunction
+let s:Haunt.is_hl_group_to_skip = funcref('s:Haunt__is_hl_group_to_skip')
+
+function! s:get_next_unfolded_lnum(lnum, stopline) abort
+  const min = line('w0')
+  let lnum = a:lnum
+  let cnt = a:stopline - a:lnum
+  if cnt <= 0
+    return -1
+  endif
+
+  while cnt && lnum > min
+    let foldstart = foldclosed(lnum)
+    let lnum = foldstart == -1 ? lnum - 1 : foldstart - 1
+    let cnt -= 1
+  endwhile
+
+  if foldstart != -1
+    return -1
+  endif
+
+  return lnum
+endfunction
+
 function! s:Haunt__GetHaunted() abort dict
   let save_view = winsaveview()
 
@@ -34,39 +65,47 @@ function! s:Haunt__GetHaunted() abort dict
   const min_range = self.min_range_to_search
 
   " Search upward from a line under the bottom of window (by an offset).
-  let s:curr_lnum = s:get_bottom_lnum(below)
+  let self.curr_lnum = below
   let stop_lnum = s:get_top_lnum(above)
-  while s:curr_lnum >= stop_lnum
-    let s:curr_lnum = s:update_curpos(stop_lnum)
+  while self.curr_lnum >= stop_lnum
+    if foldclosed(self.curr_lnum) != -1
+      let self.curr_lnum = s:get_next_unfolded_lnum(
+            \ self.curr_lnum,
+            \ stop_lnum,
+            \ )
+      if self.curr_lnum < 1
+        break
+      endif
+    endif
 
-    call s:Cache.Attach(s:curr_lnum)
+    call s:Cache.Attach(self.curr_lnum)
     let chunks = s:Cache.Restore('chunks')
 
     if chunks isnot# v:null
-      call s:set_virtualtext(s:curr_lnum, chunks)
-      let s:curr_lnum -= 1
+      call s:set_virtualtext(self.curr_lnum, chunks)
+      let self.curr_lnum -= 1
       continue
     endif
 
     let chunks = []
 
-    if doppelganger#highlight#_is_hl_group_to_skip()
+    if self.is_hl_group_to_skip()
       " Note: It's too slow without this guard up to hl_group though this check
       " is too rough for a line which contains both codes and the hl_group.
       call s:Cache.Update({
             \ 'chunks': chunks,
             \ })
-      let s:curr_lnum -= 1
+      let self.curr_lnum -= 1
       continue
     endif
 
-    let Search = doppelganger#search#new(s:curr_lnum)
+    let Search = doppelganger#search#new(self.curr_lnum)
     call Search.SetIgnoredRange(min_range)
     call Search.SearchPair()
     let [curr_lnum, corr_lnum] = Search.GetPairLnums()
 
     if corr_lnum < 1
-      let s:curr_lnum -= 1
+      let self.curr_lnum -= 1
       continue
     endif
 
@@ -74,66 +113,20 @@ function! s:Haunt__GetHaunted() abort dict
     let Text = doppelganger#format#new(info)
     let chunks = Text.ComposeChunks()
 
-    call s:set_virtualtext(s:curr_lnum, chunks)
+    call s:set_virtualtext(self.curr_lnum, chunks)
     call s:Cache.Update({
           \ 'chunks': chunks,
           \ })
-    let s:curr_lnum -= 1
+    let self.curr_lnum -= 1
   endwhile
   call winrestview(save_view)
 endfunction
 let s:Haunt.GetHaunted = funcref('s:Haunt__GetHaunted')
 
-function! s:get_bottom_lnum(lnum) abort "{{{2
-  " close side like '}'
-  let lnum = a:lnum < 0 ? 1 : a:lnum
-  if !s:is_folded(lnum)
-    return lnum
-  endif
-
-  let diff = lnum - foldclosed(lnum)
-  while diff > 0
-    " FIXME: Consider range over mixed lines folded and raw.
-    let ret = lnum + diff
-    if !s:is_folded(ret)
-      return ret
-    endif
-    let diff = ret - foldclosed(ret)
-  endwhile
-endfunction
-
 function! s:get_top_lnum(lnum) abort "{{{2
-  " open side like '{'
-  let lnum = a:lnum > line('$') ? line('$') : a:lnum
-  let foldstart = foldclosed(lnum)
-  let ret = foldstart == -1 ? lnum : foldstart
-  return ret
+  const foldstart = foldclosed(a:lnum)
+  return foldstart == -1 ? a:lnum : foldstart
 endfunction
-
-function! s:update_curpos(stop_lnum) abort "{{{2
-  let lnum = s:curr_lnum
-  if !s:is_folded(lnum)
-    exe lnum
-    return lnum
-  endif
-
-  let save_next = lnum
-  while s:is_folded(lnum) || lnum > a:stop_lnum
-    if lnum > 0
-      let save_next = lnum
-      let lnum -= 1
-    endif
-    let lnum = foldclosed(lnum)
-  endwhile
-
-  exe save_next
-  return save_next
-endfunction
-
-function! s:is_folded(lnum) abort "{{{2
-  return foldclosed(a:lnum) != -1
-endfunction
-
 
 augroup doppelganger/haunt
   au!
@@ -153,6 +146,7 @@ augroup doppelganger/haunt
         \   {
         \   'region': 'Haunt',
         \   'name':   'chunks',
+        \   'lnum': line('.'),
         \   },
         \ ])
   au FileChangedShellPost * call s:Cache.DropOutdated([
