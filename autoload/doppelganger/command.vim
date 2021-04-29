@@ -17,7 +17,7 @@ let s:candidates = [
 function! doppelganger#command#complete(A, L, P) abort
   let candidates = deepcopy(s:candidates)
 
-  if doppelganger#ego#is_enabled()
+  if doppelganger#ego#is_haunted()
     call filter(candidates, 'v:val !=# "ego/enable"')
   else
     call filter(candidates, 'v:val !=# "ego/disable"')

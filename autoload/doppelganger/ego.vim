@@ -29,7 +29,7 @@ let s:save_cpo = &cpo
 set cpo&vim
 "}}}
 
-let s:has_ego = 0
+let s:is_enabled = 0
 
 let s:Cache = doppelganger#cache#new('ego')
 let s:get_config = function('doppelganger#util#get_config', ['ego'])
@@ -66,8 +66,8 @@ function! s:update_window() abort "{{{1
   call doppelganger#ego#update()
 endfunction
 
-function! doppelganger#ego#is_enabled() abort "{{{1
-  return s:has_ego
+function! doppelganger#ego#is_haunted() abort "{{{1
+  return s:is_enabled && !s:should_disabled()
 endfunction
 
 function! doppelganger#ego#disable() abort "{{{1
@@ -77,7 +77,7 @@ function! doppelganger#ego#disable() abort "{{{1
   let save_winID = win_getid()
   windo call doppelganger#clear()
   call win_gotoid(save_winID)
-  let s:has_ego = 0
+  let s:is_enabled = 0
 endfunction
 
 function! doppelganger#ego#enable() abort "{{{1
@@ -98,11 +98,11 @@ function! doppelganger#ego#enable() abort "{{{1
     endif
 
   augroup END
-  let s:has_ego = 1
+  let s:is_enabled = 1
 endfunction
 
 function! doppelganger#ego#toggle() abort "{{{1
-  if s:has_ego
+  if s:is_enabled
     call doppelganger#ego#disable()
     return
   endif

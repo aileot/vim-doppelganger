@@ -6,7 +6,7 @@ set cpo&vim
 let s:get_config = function('doppelganger#util#get_config', ['mapping'])
 
 function! s:manual_update() abort
-  if !doppelganger#ego#is_enabled() | return | endif
+  if !doppelganger#ego#is_haunted() | return | endif
   call doppelganger#ego#update()
 endfunction
 
