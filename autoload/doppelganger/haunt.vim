@@ -146,6 +146,7 @@ augroup doppelganger/haunt
         \   {
         \   'region': 'Haunt',
         \   'name':   'chunks',
+        \   'lnum': line('.'),
         \   },
         \ ])
   au FileChangedShellPost * call s:Cache.DropOutdated([
