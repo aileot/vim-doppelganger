@@ -37,6 +37,27 @@ function! s:Haunt__is_hl_group_to_skip() abort dict
 endfunction
 let s:Haunt.is_hl_group_to_skip = funcref('s:Haunt__is_hl_group_to_skip')
 
+function! s:get_next_unfolded_lnum(lnum, stopline) abort
+  const min = line('w0')
+  let lnum = a:lnum
+  let cnt = a:stopline - a:lnum
+  if cnt <= 0
+    return -1
+  endif
+
+  while cnt && lnum > min
+    let foldstart = foldclosed(lnum)
+    let lnum = foldstart == -1 ? lnum - 1 : foldstart - 1
+    let cnt -= 1
+  endwhile
+
+  if foldstart != -1
+    return -1
+  endif
+
+  return lnum
+endfunction
+
 function! s:Haunt__GetHaunted() abort dict
   let save_view = winsaveview()
 
@@ -44,10 +65,18 @@ function! s:Haunt__GetHaunted() abort dict
   const min_range = self.min_range_to_search
 
   " Search upward from a line under the bottom of window (by an offset).
-  let self.curr_lnum = s:get_bottom_lnum(below)
+  let self.curr_lnum = below
   let stop_lnum = s:get_top_lnum(above)
   while self.curr_lnum >= stop_lnum
-    let self.curr_lnum = self.update_curpos(stop_lnum)
+    if foldclosed(self.curr_lnum) != -1
+      let self.curr_lnum = s:get_next_unfolded_lnum(
+            \ self.curr_lnum,
+            \ stop_lnum,
+            \ )
+      if self.curr_lnum < 1
+        break
+      endif
+    endif
 
     call s:Cache.Attach(self.curr_lnum)
     let chunks = s:Cache.Restore('chunks')
@@ -94,57 +123,10 @@ function! s:Haunt__GetHaunted() abort dict
 endfunction
 let s:Haunt.GetHaunted = funcref('s:Haunt__GetHaunted')
 
-function! s:get_bottom_lnum(lnum) abort "{{{2
-  " close side like '}'
-  let lnum = a:lnum < 0 ? 1 : a:lnum
-  if !s:is_folded(lnum)
-    return lnum
-  endif
-
-  let diff = lnum - foldclosed(lnum)
-  while diff > 0
-    " FIXME: Consider range over mixed lines folded and raw.
-    let ret = lnum + diff
-    if !s:is_folded(ret)
-      return ret
-    endif
-    let diff = ret - foldclosed(ret)
-  endwhile
-endfunction
-
 function! s:get_top_lnum(lnum) abort "{{{2
-  " open side like '{'
-  let lnum = a:lnum > line('$') ? line('$') : a:lnum
-  let foldstart = foldclosed(lnum)
-  let ret = foldstart == -1 ? lnum : foldstart
-  return ret
+  const foldstart = foldclosed(a:lnum)
+  return foldstart == -1 ? a:lnum : foldstart
 endfunction
-
-function! s:Haunt__update_curpos(stop_lnum) abort dict "{{{2
-  let lnum = self.curr_lnum
-  if !s:is_folded(lnum)
-    exe lnum
-    return lnum
-  endif
-
-  let save_next = lnum
-  while s:is_folded(lnum) || lnum > a:stop_lnum
-    if lnum > 0
-      let save_next = lnum
-      let lnum -= 1
-    endif
-    let lnum = foldclosed(lnum)
-  endwhile
-
-  exe save_next
-  return save_next
-endfunction
-let s:Haunt.update_curpos = funcref('s:Haunt__update_curpos')
-
-function! s:is_folded(lnum) abort "{{{2
-  return foldclosed(a:lnum) != -1
-endfunction
-
 
 augroup doppelganger/haunt
   au!
