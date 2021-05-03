@@ -63,7 +63,7 @@ endfunction
 
 function! s:update_window() abort "{{{1
   if s:should_disabled() | return | endif
-  call doppelganger#ego#update()
+  lua require('doppelganger.haunted.cursor').update()
 endfunction
 
 function! doppelganger#ego#is_haunted() abort "{{{1
