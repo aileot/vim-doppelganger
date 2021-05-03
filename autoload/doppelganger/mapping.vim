@@ -7,7 +7,7 @@ let s:get_config = function('doppelganger#util#get_config', ['mapping'])
 
 function! s:manual_update() abort
   if !doppelganger#ego#is_haunted() | return | endif
-  call doppelganger#ego#update()
+  lua require('doppelganger.haunted.cursor').update()
 endfunction
 
 nnoremap <silent> <Plug>(doppelganger-ego-manual-update) :<C-u>call <SID>manual_update()<CR>
