@@ -31,7 +31,6 @@ set cpo&vim
 
 let s:is_enabled = 0
 
-let s:Cache = doppelganger#cache#new('ego')
 let s:get_config = function('doppelganger#util#get_config', ['ego'])
 
 function! s:should_disabled() abort "{{{1
@@ -39,26 +38,6 @@ function! s:should_disabled() abort "{{{1
         \ || index(g:doppelganger#ego#disable_on_buftypes, &bt) >= 0
         \ || index(g:doppelganger#ego#disable_on_filetypes, &ft) >= 0
   return should_disabled
-endfunction
-
-function! doppelganger#ego#update() abort
-  const offset = g:doppelganger#ego#max_offset
-  const lnum = line('.')
-
-  call s:Cache.Attach(lnum)
-  const range = s:Cache.Restore('range')
-
-  if range is# v:null
-    const top    = doppelganger#folded#get_apparent_lnum(lnum, - offset)
-    const bottom = doppelganger#folded#get_apparent_lnum(lnum,   offset)
-    call s:Cache.Update({
-          \ 'range': [ top, bottom ],
-          \ })
-  else
-    const [top, bottom] = range
-  endif
-
-  call doppelganger#update(top, bottom, g:doppelganger#ego#min_range_of_pairs)
 endfunction
 
 function! s:update_window() abort "{{{1
