@@ -1,6 +1,7 @@
 let g:repo_root = fnamemodify(expand('<sfile>'), ':p:h:h')
 
 call themis#option('recursive', 1)
+call themis#option('exclude', ['test/plenary/'])
 call themis#option('exclude', ['test/_testdata/'])
 
 let s:helper = themis#helper('assert')
