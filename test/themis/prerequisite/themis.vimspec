@@ -1,4 +1,4 @@
-Describe 00-Prerequisite -- 20-Themis:
+Describe Prerequisite -- Themis:
   Before each
     InitBuffer
     DoppelgangerResetState

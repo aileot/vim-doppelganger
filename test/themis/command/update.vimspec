@@ -1,4 +1,4 @@
-Describe 80-Command -- `:Doppelganger update`
+Describe Command -- `:Doppelganger update`
   Before each
     InitBuffer
     DoppelgangerResetState

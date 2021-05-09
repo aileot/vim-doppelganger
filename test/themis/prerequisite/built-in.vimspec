@@ -1,4 +1,4 @@
-Describe 00-Prerequisite -- 10-Built-In:
+Describe Prerequisite -- Built-In:
 
   It requires Neovim, not Vim
     Assert True(has('nvim'))
