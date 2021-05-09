@@ -1,0 +1,101 @@
+Describe Set virtualtexts within max column width
+
+  Before each
+    InitBuffer
+    DoppelgangerResetState
+    let g:doppelganger#format#contents_depth = 0
+  End
+
+  Context foo
+    Before each
+      const lines = [
+            \ 'if ABC {',
+            \ 'DEF',
+            \ 'GHI',
+            \ 'JKL',
+            \ '}',
+            \ ]
+      InitBufferAs lines
+      const printed_lnum = len(lines)
+
+      const len_actual_text = 1
+      const len_space_before_virt_text = 1
+      const len_reserved = len_actual_text + len_space_before_virt_text
+    End
+
+    Context with no decorations
+
+      It with max_col_width=9
+        const expected = 'if ABC '
+        let g:doppelganger#format#max_column_width = 9
+        Doppelganger update
+        const texts = GetVirtualTextsAsPlainTexts()
+        const actual = texts[printed_lnum]
+        Assert Same(actual, expected)
+      End
+
+      It with max_col_width=10
+        const expected = 'if ABC {'
+        let g:doppelganger#format#max_column_width = 10
+        Doppelganger update
+        const texts = GetVirtualTextsAsPlainTexts()
+        const actual = texts[printed_lnum]
+        Assert Same(actual, expected)
+      End
+
+      It with max_col_width=11
+        const expected = 'if ABC {D'
+        let g:doppelganger#format#max_column_width = 11
+        Doppelganger update
+        const texts = GetVirtualTextsAsPlainTexts()
+        const actual = texts[printed_lnum]
+        Assert Same(actual, expected)
+      End
+
+      It with max_col_width=12
+        const expected = 'if ABC {DE'
+        let g:doppelganger#format#max_column_width = 12
+        Doppelganger update
+        const texts = GetVirtualTextsAsPlainTexts()
+        const actual = texts[printed_lnum]
+        Assert Same(actual, expected)
+      End
+
+    End
+
+
+    Context with a suffix-"$"
+      Before each
+        let g:doppelganger#format#suffix = [[['$', 'Normal']]]
+      End
+
+      It with max_col_width=10
+        let g:doppelganger#format#max_column_width = 10
+        const expected = 'if ABC $'
+        Doppelganger update
+        const texts = GetVirtualTextsAsPlainTexts()
+        const actual = texts[printed_lnum]
+        Assert Same(actual, expected)
+      End
+
+      It with max_col_width=11
+        let g:doppelganger#format#max_column_width = 11
+        const expected = 'if ABC {$'
+        Doppelganger update
+        const texts = GetVirtualTextsAsPlainTexts()
+        const actual = texts[printed_lnum]
+        Assert Same(actual, expected)
+      End
+
+      It with max_col_width=12
+        let g:doppelganger#format#max_column_width = 12
+        const expected = 'if ABC {D$'
+        Doppelganger update
+        const texts = GetVirtualTextsAsPlainTexts()
+        const actual = texts[printed_lnum]
+        Assert Same(actual, expected)
+      End
+
+    End
+  End
+End
