@@ -1,4 +1,4 @@
-Describe 10-Unit-Test -- Haunt
+Describe Unit-Test -- Haunt
   Before each
     InitBuffer
     DoppelgangerResetState
