@@ -1,7 +1,7 @@
 let s:script_path = expand('<sfile>:p')
 let s:repo_root = fnamemodify(s:script_path, ':h:h:h')
 exe 'set rtp+='. s:repo_root
-exe 'set rtp+='. s:repo_root .'/../../nvim-lua/plenary.nvim'
+exe 'set rtp+='. s:repo_root .'/plenary.nvim'
 
 filetype indent off
 syntax off
