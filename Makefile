@@ -5,7 +5,8 @@ lua_version:
 	@echo
 
 t_plenary: lua_version
-	nvim --headless --noplugin -u ./test/plenary/minimal.vim
+	nvim --headless --noplugin -u test/plenary/minimal.vim \
+		-c "PlenaryBustedDirectory test/plenary/ {minimal_init = 'test/plenary/minimal.vim'}"
 
 t_themis:
 	THEMIS_VIM=nvim themis --reporter dot

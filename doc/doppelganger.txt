@@ -276,6 +276,11 @@ g:doppelganger#cache#disable			 *g:doppelganger#cache#disable*
 	(default: |v:false|)
 	If true, disable cache.
 
+g:doppelganger#debug                                     *g:doppelganger#debug*
+	(default: |v:false|)
+	If true, enable debug features. Use this option to test private
+	functions written in Lua. Restart nvim instance to apply the change.
+
 ------------------------------------------------------------------------------
 COMMAND							  *doppelganger-command*
 
