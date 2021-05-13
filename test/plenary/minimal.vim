@@ -9,5 +9,8 @@ set noswapfile
 set nobackup
 set nowritebackup
 
+" Especially to test private lua functions.
+let g:doppelganger#debug = v:true
+
 runtime plugin/plenary.vim
 runtime plugin/doppelganger.vim
