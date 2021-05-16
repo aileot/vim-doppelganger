@@ -7,8 +7,12 @@ local utils = require('doppelganger.utils')
 
 ---@class Cache
 ---@field caches caches
+---@field selected_row cache_row|nil currently selected row; unselect once calling any method.
+---@field row_required table<cache_key, boolean>: save if row is required for the key.
 local Cache = {
   caches = {},
+  selected_row = nil,
+  row_required = {},
 }
 Cache.__index = Cache
 
@@ -28,15 +32,14 @@ Cache.new = function()
 end
 
 
----Update value which must be unique at name/row in cache.
+---Set value to key.
 ---@param self Cache
 ---@param key cache_key
 ---@param value cache_value
----@param row cache_row?
----@return cache_value
----@todo Find a structure which won't increase complexity but will let us check if it requires row to restore. The
----current detection structure simply increases cache size.
-Cache.update = function(self, key, value, row)
+---@return nil
+Cache._set = function(self, key, value)
+  local row = self.selected_row
+  self.row_required[key] = row ~= nil
   if row == nil then
     self.caches[key] = value
   elseif self.caches[key] then
@@ -46,37 +49,84 @@ Cache.update = function(self, key, value, row)
       [row] = value,
     }
   end
+  self:_unbind()
+end
+
+---Get value as key.
+---@param self Cache
+---@param key cache_key
+---@return cache_value
+Cache._get = function(self, key)
+  local row = self.selected_row
+  if row then
+    self:_unbind()
+    if self.caches then
+      return nil
+    end
+    return self.caches[key][row]
+  end
+  if self.row_required[key] == true then
+    utils.throw('you must bind a row to get cached value for "' .. key .. '"')
+  end
+  return self.caches[key]
+end
+
+
+
+---@param self Cache
+---@return nil
+Cache._unbind = function(self)
+  self.selected_row = nil
+end
+
+---Select which row's cache to be read. The row should be clear after updated/dropped.
+---@param self Cache
+---@param row cache_row
+---@return nil
+Cache._bind = function(self, row)
+  self.selected_row = row
+end
+
+---A syntax sugar of :_bind().
+---@param self Cache
+---@param row cache_row
+---@return Cache
+Cache.at = function(self, row)
+  self:_bind(row)
+  return self
+end
+
+
+---Update value which must be unique at name/row in cache.
+---@param self Cache
+---@param key cache_key
+---@param value cache_value
+---@return nil
+---@todo Find a structure which won't increase complexity but will let us check if it requires row to restore. The
+---current detection structure simply increases cache size.
+Cache.update = function(self, key, value)
+  self:_set(key, value)
 end
 
 ---Drop cache the same as the query at both key and row.
 ---@param self Cache
 ---@param key cache_key
----@param row cache_value
----@return Cache
-Cache.drop = function(self, key, row)
-  if row then
-    self.caches[key][row] = nil
-  else
-    self.caches[key] = nil
-  end
+---@return nil
+Cache.drop = function(self, key)
+  self:_set(key, nil)
 end
 
 ---Restore cache as name
 ---@param self Cache
 ---@param key cache_key
----@param row cache_row?
 ---@return cache_value?: if no cache has been stored, return nil.
-Cache.restore = function(self, key, row)
-  local cache = self.caches[key]
-  if cache == nil then return nil end
-  ---@todo Validate cache is table<row, value> or table<value>.
-  if row then return cache[row] end
-  return cache
+Cache.restore = function(self, key)
+  return self:_get(key)
 end
 
 Cache.clear = function(self)
-  for i=1, #self.caches do
-    self.caches[i] = nil
+  for key=1, self.caches do
+    self:_set(key, nil)
   end
 end
 

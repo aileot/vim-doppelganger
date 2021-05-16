@@ -64,8 +64,8 @@ describe("cache_manager", function()
 
       it("return the very {'foo', 'bar'} as saved by :update() as current row is 1000", function()
         local sample3 = {'foo', 'bar'}
-        common.cache:update('sample3', sample3, 1000)
-        local actual = common.cache:restore('sample3', 1000)
+        common.cache:at(1000):update('sample3', sample3)
+        local actual = common.cache:at(1000):restore('sample3')
         local expected = {'foo', 'bar'}
         assert.is.same(expected, actual)
       end)

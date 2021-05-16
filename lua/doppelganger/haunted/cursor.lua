@@ -43,7 +43,7 @@ M.update = function()
 
   local wn = fn.winnr()
   local cache = cache_manager:attach(wn)
-  local range = cache:restore('range', current_row)
+  local range = cache:at(current_row):restore('range')
   local top, bottom
   if range then
     top    = range[1]
@@ -51,7 +51,7 @@ M.update = function()
   else
     top    = apparent_top(current_row, offset)
     bottom = apparent_bottom(current_row, offset)
-    cache:update('range', { top, bottom }, current_row)
+    cache:at(current_row):update('range', { top, bottom })
   end
 
   local min_range = g['doppelganger#ego#min_range_of_pairs']
