@@ -1,8 +1,7 @@
-local cmd = vim.cmd
 local g = vim.g
 local fn = vim.fn
+local cmd = vim.cmd
 local cache_manager = require('doppelganger.cache.cache_manager').register('haunted_cursor')
-
 
 --- Convert relative offset into absolute row.
 local apparent_top = function(std_row, offset)
@@ -41,8 +40,19 @@ local M = {}
 M.update = function()
   local current_row = fn.line('.')
   local offset = g['doppelganger#ego#max_offset']
-  local top    = apparent_top(current_row, offset)
-  local bottom = apparent_bottom(current_row, offset)
+
+  local wn = fn.winnr()
+  local cache = cache_manager:attach(wn)
+  local range = cache:restore('range', current_row)
+  local top, bottom
+  if range then
+    top    = range[1]
+    bottom = range[2]
+  else
+    top    = apparent_top(current_row, offset)
+    bottom = apparent_bottom(current_row, offset)
+    cache:update('range', { top, bottom }, current_row)
+  end
 
   local min_range = g['doppelganger#ego#min_range_of_pairs']
   fn['doppelganger#update'](top, bottom, min_range)
