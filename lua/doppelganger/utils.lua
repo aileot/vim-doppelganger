@@ -1,7 +1,6 @@
 local g = vim.g
 local b = vim.b
 local bo = vim.bo
-local cmd = vim.cmd
 
 ---@class utils
 ---@description All the member must be a static method.
@@ -56,21 +55,18 @@ function utils.get_ftconfig(name)
   return local_conf
 end
 
----@static
----@description A wrapper to define augroup. It's recommended to start the autocmds with `autocmds!`.
----@param au_name string
----@vararg string: autocmd
----@note '\n' instead of `[[
----]]` didn't work.
-function utils.augroup(au_name, ...)
-  local autocmds = ""
-  for i=1, select('#', ...) do
-    autocmds = autocmds .. select(i, ...) .. [[
-    ]]
-  end
-  au_name = 'doppelganger/' .. au_name
-  cmd('augroup ' .. au_name .. [[
-    ]] .. autocmds .. [[
-    augroup END]])
-end
+--  ---@static
+--  ---@description A wrapper to define augroup. It's recommended to start the autocmds with `autocmds!`.
+--  ---@param au_name string
+--  ---@vararg string: autocmd
+--  ---@note define augroup without E216.
+--  function utils.augroup(au_name, ...)
+--    au_name = "doppelganger/" .. au_name
+--    cmd("augroup " .. au_name)
+--    for i=1, select("#", ...) do
+--      cmd(select(i, ...))
+--    end
+--    cmd("augroup END")
+--  end
+
 return utils
