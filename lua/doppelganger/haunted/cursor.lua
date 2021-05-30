@@ -53,10 +53,8 @@ end
 M.cache_manager = cache_manager
 cmd("augroup doppelganger/cache/haunted_cursor")
 cmd("autocmd!")
-cmd([[autocmd TextChanged,TextChangedI,TextChangedP *
-\ lua require('doppelganger.haunted.cursor').cache_manager:attach(vim.fn.winnr()):drop('range')]])
-cmd([[autocmd FileChangedShellPost *
-\ lua require('doppelganger.haunted.cursor').cache_manager:clear('range')]])
+cmd([[autocmd TextChanged,TextChangedI,TextChangedP * lua require('doppelganger.haunted.cursor').cache_manager:attach(vim.fn.winnr()):drop('range')]])
+cmd([[autocmd FileChangedShellPost * lua require('doppelganger.haunted.cursor').cache_manager:clear('range')]])
 cmd("augroup END")
 
 
