@@ -5,7 +5,7 @@ local cache_manager = require('doppelganger.cache.cache_manager').register('haun
 
 --- Convert relative offset into absolute row.
 local apparent_top = function(std_row, offset)
-  local min = fn.line('w0')
+  local min = 0
   local row = std_row
   local cnt = offset
 
@@ -20,7 +20,7 @@ end
 
 --- Convert relative offset into absolute row.
 local apparent_bottom = function(std_row, offset)
-  local max = fn.line('w$')
+  local max = fn.line('$')
   local row = std_row
   local cnt = offset
 
