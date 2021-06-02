@@ -1,5 +1,5 @@
 function! s:apparent_top(lnum, offset) abort
-  const min = line('w0')
+  const min = 0
   let lnum = a:lnum
   let cnt = a:offset
 
@@ -13,7 +13,7 @@ function! s:apparent_top(lnum, offset) abort
 endfunction
 
 function! s:apparent_bottom(lnum, offset) abort
-  const max = line('w$')
+  const max = line('$')
   let lnum = a:lnum
   let cnt = a:offset
 
