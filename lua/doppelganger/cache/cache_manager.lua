@@ -188,7 +188,6 @@ end
 M.clear = function(self, id)
   if id then
     local cache = self.collection[id]
-    self.collection[id] = nil
     cache:clear()
     return
   end
